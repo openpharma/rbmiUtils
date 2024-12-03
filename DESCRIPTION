@@ -1,0 +1,37 @@
+Package: rbmiUtils
+Title: Utility functions to work with and extend the rbmi package 
+Version: 0.0.1
+Authors@R: c( 
+    person("Mark", "Baillie", email = "mark.baillie@novartis.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-5618-0667")),
+    person("Tobias", "Mütze", email = "tobias.muetze@novartis.com", role = c("aut"),
+           comment = c(ORCID = "0000-0002-4111-1941")),
+    person("Jack", "Talboys", email = "jack.talboys@novartis.com", role = c("ctb")),
+    person("Lukas A.", "Widmer", role = "ctb", comment = c(ORCID = "0000-0003-1471-3493"))
+    )
+Description: This package provides additional functionality for rbmi to enable trial analysis and reporting aligned with CDISC ADaM.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    knitr,
+    rmarkdown,
+    spelling,
+    testthat (>= 3.0.0),
+    tidyr,
+    readr, 
+    ggplot2,
+    beeca
+Config/testthat/edition: 3
+Language: en-US
+Imports: 
+    assertthat,
+    dplyr,
+    purrr,
+    rbmi,
+    rlang
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
+LazyData: true

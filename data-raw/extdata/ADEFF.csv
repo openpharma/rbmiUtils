@@ -1,0 +1,1001 @@
+USUBJID,STRATA,REGION,REGIONC,TRT01P,BASE,AVISIT,AVAL,PARAM,CHG
+ID001,A,North America,1,Drug A,16,Week 24,12,ESSDAI score,-4
+ID001,A,North America,1,Drug A,16,Week 48,13,ESSDAI score,-3
+ID002,A,Asia,4,Drug A,10,Week 24,7,ESSDAI score,-3
+ID002,A,Asia,4,Drug A,10,Week 48,5,ESSDAI score,-5
+ID003,A,South America,2,Drug A,12,Week 24,9,ESSDAI score,-3
+ID003,A,South America,2,Drug A,12,Week 48,10,ESSDAI score,-2
+ID004,A,Europe,3,Placebo,11,Week 24,9,ESSDAI score,-2
+ID004,A,Europe,3,Placebo,11,Week 48,13,ESSDAI score,2
+ID005,A,South America,2,Drug A,9,Week 24,4,ESSDAI score,-5
+ID005,A,South America,2,Drug A,9,Week 48,0,ESSDAI score,-9
+ID006,A,Europe,3,Placebo,10,Week 24,13,ESSDAI score,3
+ID006,A,Europe,3,Placebo,10,Week 48,13,ESSDAI score,3
+ID007,A,North America,1,Placebo,14,Week 24,15,ESSDAI score,1
+ID007,A,North America,1,Placebo,14,Week 48,13,ESSDAI score,-1
+ID008,A,Asia,4,Placebo,9,Week 24,9,ESSDAI score,0
+ID008,A,Asia,4,Placebo,9,Week 48,12,ESSDAI score,3
+ID009,B,South America,2,Drug A,2,Week 24,0,ESSDAI score,-2
+ID009,B,South America,2,Drug A,2,Week 48,0,ESSDAI score,-2
+ID010,A,Europe,3,Drug A,9,Week 24,7,ESSDAI score,-2
+ID010,A,Europe,3,Drug A,9,Week 48,4,ESSDAI score,-5
+ID011,A,North America,1,Placebo,12,Week 24,10,ESSDAI score,-2
+ID011,A,North America,1,Placebo,12,Week 48,NA,ESSDAI score,NA
+ID012,A,Asia,4,Placebo,12,Week 24,9,ESSDAI score,-3
+ID012,A,Asia,4,Placebo,12,Week 48,9,ESSDAI score,-3
+ID013,B,South America,2,Placebo,12,Week 24,12,ESSDAI score,0
+ID013,B,South America,2,Placebo,12,Week 48,10,ESSDAI score,-2
+ID014,A,Europe,3,Drug A,3,Week 24,NA,ESSDAI score,NA
+ID014,A,Europe,3,Drug A,3,Week 48,2,ESSDAI score,-1
+ID015,B,South America,2,Placebo,11,Week 24,16,ESSDAI score,5
+ID015,B,South America,2,Placebo,11,Week 48,14,ESSDAI score,3
+ID016,A,North America,1,Drug A,14,Week 24,10,ESSDAI score,-4
+ID016,A,North America,1,Drug A,14,Week 48,7,ESSDAI score,-7
+ID017,A,Europe,3,Placebo,15,Week 24,15,ESSDAI score,0
+ID017,A,Europe,3,Placebo,15,Week 48,16,ESSDAI score,1
+ID018,B,Europe,3,Drug A,9,Week 24,NA,ESSDAI score,NA
+ID018,B,Europe,3,Drug A,9,Week 48,4,ESSDAI score,-5
+ID019,A,Asia,4,Drug A,9,Week 24,7,ESSDAI score,-2
+ID019,A,Asia,4,Drug A,9,Week 48,9,ESSDAI score,0
+ID020,B,Asia,4,Drug A,16,Week 24,12,ESSDAI score,-4
+ID020,B,Asia,4,Drug A,16,Week 48,9,ESSDAI score,-7
+ID021,A,Europe,3,Drug A,3,Week 24,0,ESSDAI score,-3
+ID021,A,Europe,3,Drug A,3,Week 48,0,ESSDAI score,-3
+ID022,A,North America,1,Placebo,8,Week 24,8,ESSDAI score,0
+ID022,A,North America,1,Placebo,8,Week 48,4,ESSDAI score,-4
+ID023,A,Asia,4,Drug A,12,Week 24,9,ESSDAI score,-3
+ID023,A,Asia,4,Drug A,12,Week 48,5,ESSDAI score,-7
+ID024,A,Europe,3,Drug A,4,Week 24,3,ESSDAI score,-1
+ID024,A,Europe,3,Drug A,4,Week 48,3,ESSDAI score,-1
+ID025,A,South America,2,Drug A,11,Week 24,9,ESSDAI score,-2
+ID025,A,South America,2,Drug A,11,Week 48,5,ESSDAI score,-6
+ID026,A,South America,2,Drug A,18,Week 24,16,ESSDAI score,-2
+ID026,A,South America,2,Drug A,18,Week 48,15,ESSDAI score,-3
+ID027,B,South America,2,Placebo,10,Week 24,11,ESSDAI score,1
+ID027,B,South America,2,Placebo,10,Week 48,13,ESSDAI score,3
+ID028,A,Europe,3,Placebo,9,Week 24,9,ESSDAI score,0
+ID028,A,Europe,3,Placebo,9,Week 48,10,ESSDAI score,1
+ID029,B,North America,1,Drug A,12,Week 24,10,ESSDAI score,-2
+ID029,B,North America,1,Drug A,12,Week 48,7,ESSDAI score,-5
+ID030,A,North America,1,Placebo,9,Week 24,9,ESSDAI score,0
+ID030,A,North America,1,Placebo,9,Week 48,8,ESSDAI score,-1
+ID031,B,South America,2,Drug A,13,Week 24,12,ESSDAI score,-1
+ID031,B,South America,2,Drug A,13,Week 48,12,ESSDAI score,-1
+ID032,A,South America,2,Placebo,14,Week 24,13,ESSDAI score,-1
+ID032,A,South America,2,Placebo,14,Week 48,14,ESSDAI score,0
+ID033,A,Asia,4,Drug A,10,Week 24,8,ESSDAI score,-2
+ID033,A,Asia,4,Drug A,10,Week 48,NA,ESSDAI score,NA
+ID034,B,Europe,3,Placebo,5,Week 24,3,ESSDAI score,-2
+ID034,B,Europe,3,Placebo,5,Week 48,2,ESSDAI score,-3
+ID035,A,South America,2,Placebo,5,Week 24,5,ESSDAI score,0
+ID035,A,South America,2,Placebo,5,Week 48,4,ESSDAI score,-1
+ID036,B,South America,2,Drug A,8,Week 24,6,ESSDAI score,-2
+ID036,B,South America,2,Drug A,8,Week 48,4,ESSDAI score,-4
+ID037,A,North America,1,Drug A,13,Week 24,12,ESSDAI score,-1
+ID037,A,North America,1,Drug A,13,Week 48,9,ESSDAI score,-4
+ID038,B,Europe,3,Drug A,2,Week 24,2,ESSDAI score,0
+ID038,B,Europe,3,Drug A,2,Week 48,0,ESSDAI score,-2
+ID039,A,North America,1,Drug A,2,Week 24,4,ESSDAI score,2
+ID039,A,North America,1,Drug A,2,Week 48,1,ESSDAI score,-1
+ID040,A,Europe,3,Placebo,7,Week 24,7,ESSDAI score,0
+ID040,A,Europe,3,Placebo,7,Week 48,7,ESSDAI score,0
+ID041,B,Europe,3,Drug A,12,Week 24,9,ESSDAI score,-3
+ID041,B,Europe,3,Drug A,12,Week 48,10,ESSDAI score,-2
+ID042,A,Europe,3,Placebo,6,Week 24,4,ESSDAI score,-2
+ID042,A,Europe,3,Placebo,6,Week 48,4,ESSDAI score,-2
+ID043,B,Europe,3,Placebo,14,Week 24,17,ESSDAI score,3
+ID043,B,Europe,3,Placebo,14,Week 48,17,ESSDAI score,3
+ID044,A,South America,2,Drug A,11,Week 24,6,ESSDAI score,-5
+ID044,A,South America,2,Drug A,11,Week 48,5,ESSDAI score,-6
+ID045,B,South America,2,Drug A,9,Week 24,7,ESSDAI score,-2
+ID045,B,South America,2,Drug A,9,Week 48,4,ESSDAI score,-5
+ID046,B,Asia,4,Drug A,13,Week 24,11,ESSDAI score,-2
+ID046,B,Asia,4,Drug A,13,Week 48,9,ESSDAI score,-4
+ID047,A,Asia,4,Drug A,12,Week 24,9,ESSDAI score,-3
+ID047,A,Asia,4,Drug A,12,Week 48,6,ESSDAI score,-6
+ID048,B,Asia,4,Placebo,8,Week 24,8,ESSDAI score,0
+ID048,B,Asia,4,Placebo,8,Week 48,8,ESSDAI score,0
+ID049,B,North America,1,Drug A,11,Week 24,9,ESSDAI score,-2
+ID049,B,North America,1,Drug A,11,Week 48,8,ESSDAI score,-3
+ID050,A,North America,1,Drug A,13,Week 24,9,ESSDAI score,-4
+ID050,A,North America,1,Drug A,13,Week 48,7,ESSDAI score,-6
+ID051,A,Asia,4,Placebo,11,Week 24,8,ESSDAI score,-3
+ID051,A,Asia,4,Placebo,11,Week 48,9,ESSDAI score,-2
+ID052,A,Asia,4,Drug A,7,Week 24,6,ESSDAI score,-1
+ID052,A,Asia,4,Drug A,7,Week 48,4,ESSDAI score,-3
+ID053,A,Asia,4,Drug A,13,Week 24,13,ESSDAI score,0
+ID053,A,Asia,4,Drug A,13,Week 48,11,ESSDAI score,-2
+ID054,B,Europe,3,Drug A,15,Week 24,12,ESSDAI score,-3
+ID054,B,Europe,3,Drug A,15,Week 48,9,ESSDAI score,-6
+ID055,A,South America,2,Drug A,11,Week 24,8,ESSDAI score,-3
+ID055,A,South America,2,Drug A,11,Week 48,8,ESSDAI score,-3
+ID056,A,North America,1,Placebo,11,Week 24,12,ESSDAI score,1
+ID056,A,North America,1,Placebo,11,Week 48,11,ESSDAI score,0
+ID057,A,South America,2,Placebo,10,Week 24,11,ESSDAI score,1
+ID057,A,South America,2,Placebo,10,Week 48,10,ESSDAI score,0
+ID058,A,South America,2,Drug A,19,Week 24,17,ESSDAI score,-2
+ID058,A,South America,2,Drug A,19,Week 48,12,ESSDAI score,-7
+ID059,A,Asia,4,Placebo,11,Week 24,11,ESSDAI score,0
+ID059,A,Asia,4,Placebo,11,Week 48,11,ESSDAI score,0
+ID060,A,South America,2,Drug A,9,Week 24,7,ESSDAI score,-2
+ID060,A,South America,2,Drug A,9,Week 48,9,ESSDAI score,0
+ID061,A,Asia,4,Drug A,-0,Week 24,NA,ESSDAI score,NA
+ID061,A,Asia,4,Drug A,-0,Week 48,0,ESSDAI score,0
+ID062,B,North America,1,Placebo,4,Week 24,3,ESSDAI score,-1
+ID062,B,North America,1,Placebo,4,Week 48,2,ESSDAI score,-2
+ID063,B,Europe,3,Placebo,10,Week 24,11,ESSDAI score,1
+ID063,B,Europe,3,Placebo,10,Week 48,12,ESSDAI score,2
+ID064,A,Europe,3,Drug A,11,Week 24,10,ESSDAI score,-1
+ID064,A,Europe,3,Drug A,11,Week 48,10,ESSDAI score,-1
+ID065,A,South America,2,Drug A,11,Week 24,10,ESSDAI score,-1
+ID065,A,South America,2,Drug A,11,Week 48,10,ESSDAI score,-1
+ID066,A,South America,2,Placebo,13,Week 24,13,ESSDAI score,0
+ID066,A,South America,2,Placebo,13,Week 48,11,ESSDAI score,-2
+ID067,A,South America,2,Drug A,9,Week 24,8,ESSDAI score,-1
+ID067,A,South America,2,Drug A,9,Week 48,5,ESSDAI score,-4
+ID068,B,North America,1,Drug A,15,Week 24,16,ESSDAI score,1
+ID068,B,North America,1,Drug A,15,Week 48,12,ESSDAI score,-3
+ID069,A,Europe,3,Drug A,6,Week 24,1,ESSDAI score,-5
+ID069,A,Europe,3,Drug A,6,Week 48,0,ESSDAI score,-6
+ID070,B,North America,1,Drug A,5,Week 24,2,ESSDAI score,-3
+ID070,B,North America,1,Drug A,5,Week 48,2,ESSDAI score,-3
+ID071,A,South America,2,Placebo,5,Week 24,3,ESSDAI score,-2
+ID071,A,South America,2,Placebo,5,Week 48,NA,ESSDAI score,NA
+ID072,B,Europe,3,Drug A,13,Week 24,15,ESSDAI score,2
+ID072,B,Europe,3,Drug A,13,Week 48,17,ESSDAI score,4
+ID073,A,Asia,4,Drug A,10,Week 24,4,ESSDAI score,-6
+ID073,A,Asia,4,Drug A,10,Week 48,NA,ESSDAI score,NA
+ID074,A,North America,1,Drug A,13,Week 24,4,ESSDAI score,-9
+ID074,A,North America,1,Drug A,13,Week 48,0,ESSDAI score,-13
+ID075,B,North America,1,Drug A,9,Week 24,7,ESSDAI score,-2
+ID075,B,North America,1,Drug A,9,Week 48,NA,ESSDAI score,NA
+ID076,B,South America,2,Placebo,8,Week 24,10,ESSDAI score,2
+ID076,B,South America,2,Placebo,8,Week 48,15,ESSDAI score,7
+ID077,A,Asia,4,Placebo,9,Week 24,6,ESSDAI score,-3
+ID077,A,Asia,4,Placebo,9,Week 48,5,ESSDAI score,-4
+ID078,A,Europe,3,Drug A,3,Week 24,2,ESSDAI score,-1
+ID078,A,Europe,3,Drug A,3,Week 48,1,ESSDAI score,-2
+ID079,A,North America,1,Placebo,5,Week 24,5,ESSDAI score,0
+ID079,A,North America,1,Placebo,5,Week 48,6,ESSDAI score,1
+ID080,A,South America,2,Placebo,4,Week 24,6,ESSDAI score,2
+ID080,A,South America,2,Placebo,4,Week 48,11,ESSDAI score,7
+ID081,B,Asia,4,Placebo,14,Week 24,14,ESSDAI score,0
+ID081,B,Asia,4,Placebo,14,Week 48,9,ESSDAI score,-5
+ID082,B,North America,1,Placebo,8,Week 24,7,ESSDAI score,-1
+ID082,B,North America,1,Placebo,8,Week 48,6,ESSDAI score,-2
+ID083,B,North America,1,Drug A,13,Week 24,12,ESSDAI score,-1
+ID083,B,North America,1,Drug A,13,Week 48,10,ESSDAI score,-3
+ID084,A,Europe,3,Placebo,16,Week 24,14,ESSDAI score,-2
+ID084,A,Europe,3,Placebo,16,Week 48,14,ESSDAI score,-2
+ID085,B,Asia,4,Placebo,9,Week 24,9,ESSDAI score,0
+ID085,B,Asia,4,Placebo,9,Week 48,8,ESSDAI score,-1
+ID086,A,Europe,3,Placebo,11,Week 24,13,ESSDAI score,2
+ID086,A,Europe,3,Placebo,11,Week 48,12,ESSDAI score,1
+ID087,A,Europe,3,Drug A,3,Week 24,0,ESSDAI score,-3
+ID087,A,Europe,3,Drug A,3,Week 48,0,ESSDAI score,-3
+ID088,A,Europe,3,Drug A,7,Week 24,8,ESSDAI score,1
+ID088,A,Europe,3,Drug A,7,Week 48,6,ESSDAI score,-1
+ID089,B,Europe,3,Placebo,10,Week 24,13,ESSDAI score,3
+ID089,B,Europe,3,Placebo,10,Week 48,18,ESSDAI score,8
+ID090,A,South America,2,Drug A,11,Week 24,10,ESSDAI score,-1
+ID090,A,South America,2,Drug A,11,Week 48,8,ESSDAI score,-3
+ID091,A,Europe,3,Placebo,7,Week 24,8,ESSDAI score,1
+ID091,A,Europe,3,Placebo,7,Week 48,5,ESSDAI score,-2
+ID092,A,South America,2,Placebo,21,Week 24,19,ESSDAI score,-2
+ID092,A,South America,2,Placebo,21,Week 48,17,ESSDAI score,-4
+ID093,B,Europe,3,Drug A,8,Week 24,NA,ESSDAI score,NA
+ID093,B,Europe,3,Drug A,8,Week 48,8,ESSDAI score,0
+ID094,A,South America,2,Placebo,10,Week 24,12,ESSDAI score,2
+ID094,A,South America,2,Placebo,10,Week 48,11,ESSDAI score,1
+ID095,A,Europe,3,Placebo,13,Week 24,15,ESSDAI score,2
+ID095,A,Europe,3,Placebo,13,Week 48,16,ESSDAI score,3
+ID096,B,South America,2,Drug A,10,Week 24,10,ESSDAI score,0
+ID096,B,South America,2,Drug A,10,Week 48,8,ESSDAI score,-2
+ID097,A,South America,2,Drug A,7,Week 24,7,ESSDAI score,0
+ID097,A,South America,2,Drug A,7,Week 48,6,ESSDAI score,-1
+ID098,A,Europe,3,Placebo,14,Week 24,NA,ESSDAI score,NA
+ID098,A,Europe,3,Placebo,14,Week 48,12,ESSDAI score,-2
+ID099,B,Asia,4,Drug A,16,Week 24,16,ESSDAI score,0
+ID099,B,Asia,4,Drug A,16,Week 48,16,ESSDAI score,0
+ID100,A,South America,2,Drug A,10,Week 24,7,ESSDAI score,-3
+ID100,A,South America,2,Drug A,10,Week 48,7,ESSDAI score,-3
+ID101,A,North America,1,Drug A,12,Week 24,10,ESSDAI score,-2
+ID101,A,North America,1,Drug A,12,Week 48,12,ESSDAI score,0
+ID102,A,Europe,3,Placebo,10,Week 24,13,ESSDAI score,3
+ID102,A,Europe,3,Placebo,10,Week 48,15,ESSDAI score,5
+ID103,A,North America,1,Placebo,14,Week 24,19,ESSDAI score,5
+ID103,A,North America,1,Placebo,14,Week 48,NA,ESSDAI score,NA
+ID104,A,Europe,3,Drug A,5,Week 24,1,ESSDAI score,-4
+ID104,A,Europe,3,Drug A,5,Week 48,1,ESSDAI score,-4
+ID105,A,South America,2,Placebo,19,Week 24,21,ESSDAI score,2
+ID105,A,South America,2,Placebo,19,Week 48,25,ESSDAI score,6
+ID106,B,Asia,4,Placebo,8,Week 24,8,ESSDAI score,0
+ID106,B,Asia,4,Placebo,8,Week 48,NA,ESSDAI score,NA
+ID107,A,North America,1,Drug A,4,Week 24,2,ESSDAI score,-2
+ID107,A,North America,1,Drug A,4,Week 48,0,ESSDAI score,-4
+ID108,B,North America,1,Drug A,9,Week 24,10,ESSDAI score,1
+ID108,B,North America,1,Drug A,9,Week 48,8,ESSDAI score,-1
+ID109,A,Europe,3,Drug A,11,Week 24,11,ESSDAI score,0
+ID109,A,Europe,3,Drug A,11,Week 48,10,ESSDAI score,-1
+ID110,A,North America,1,Placebo,16,Week 24,12,ESSDAI score,-4
+ID110,A,North America,1,Placebo,16,Week 48,13,ESSDAI score,-3
+ID111,A,South America,2,Placebo,14,Week 24,16,ESSDAI score,2
+ID111,A,South America,2,Placebo,14,Week 48,16,ESSDAI score,2
+ID112,A,Europe,3,Placebo,11,Week 24,10,ESSDAI score,-1
+ID112,A,Europe,3,Placebo,11,Week 48,11,ESSDAI score,0
+ID113,A,Asia,4,Placebo,4,Week 24,1,ESSDAI score,-3
+ID113,A,Asia,4,Placebo,4,Week 48,0,ESSDAI score,-4
+ID114,B,Asia,4,Drug A,7,Week 24,3,ESSDAI score,-4
+ID114,B,Asia,4,Drug A,7,Week 48,2,ESSDAI score,-5
+ID115,A,Asia,4,Drug A,9,Week 24,9,ESSDAI score,0
+ID115,A,Asia,4,Drug A,9,Week 48,9,ESSDAI score,0
+ID116,B,Europe,3,Placebo,20,Week 24,22,ESSDAI score,2
+ID116,B,Europe,3,Placebo,20,Week 48,21,ESSDAI score,1
+ID117,B,Asia,4,Placebo,3,Week 24,1,ESSDAI score,-2
+ID117,B,Asia,4,Placebo,3,Week 48,1,ESSDAI score,-2
+ID118,B,South America,2,Placebo,15,Week 24,14,ESSDAI score,-1
+ID118,B,South America,2,Placebo,15,Week 48,14,ESSDAI score,-1
+ID119,B,South America,2,Drug A,8,Week 24,5,ESSDAI score,-3
+ID119,B,South America,2,Drug A,8,Week 48,1,ESSDAI score,-7
+ID120,A,South America,2,Placebo,17,Week 24,20,ESSDAI score,3
+ID120,A,South America,2,Placebo,17,Week 48,NA,ESSDAI score,NA
+ID121,B,Europe,3,Drug A,5,Week 24,4,ESSDAI score,-1
+ID121,B,Europe,3,Drug A,5,Week 48,3,ESSDAI score,-2
+ID122,B,Asia,4,Placebo,11,Week 24,14,ESSDAI score,3
+ID122,B,Asia,4,Placebo,11,Week 48,12,ESSDAI score,1
+ID123,B,Europe,3,Drug A,6,Week 24,1,ESSDAI score,-5
+ID123,B,Europe,3,Drug A,6,Week 48,0,ESSDAI score,-6
+ID124,A,Europe,3,Drug A,14,Week 24,15,ESSDAI score,1
+ID124,A,Europe,3,Drug A,14,Week 48,10,ESSDAI score,-4
+ID125,A,South America,2,Drug A,16,Week 24,16,ESSDAI score,0
+ID125,A,South America,2,Drug A,16,Week 48,13,ESSDAI score,-3
+ID126,A,Asia,4,Placebo,18,Week 24,20,ESSDAI score,2
+ID126,A,Asia,4,Placebo,18,Week 48,21,ESSDAI score,3
+ID127,A,North America,1,Placebo,13,Week 24,18,ESSDAI score,5
+ID127,A,North America,1,Placebo,13,Week 48,19,ESSDAI score,6
+ID128,B,Europe,3,Drug A,17,Week 24,16,ESSDAI score,-1
+ID128,B,Europe,3,Drug A,17,Week 48,10,ESSDAI score,-7
+ID129,A,Europe,3,Drug A,15,Week 24,15,ESSDAI score,0
+ID129,A,Europe,3,Drug A,15,Week 48,11,ESSDAI score,-4
+ID130,A,Europe,3,Drug A,9,Week 24,6,ESSDAI score,-3
+ID130,A,Europe,3,Drug A,9,Week 48,7,ESSDAI score,-2
+ID131,B,Europe,3,Placebo,12,Week 24,12,ESSDAI score,0
+ID131,B,Europe,3,Placebo,12,Week 48,10,ESSDAI score,-2
+ID132,B,Europe,3,Drug A,6,Week 24,3,ESSDAI score,-3
+ID132,B,Europe,3,Drug A,6,Week 48,4,ESSDAI score,-2
+ID133,A,Europe,3,Placebo,9,Week 24,10,ESSDAI score,1
+ID133,A,Europe,3,Placebo,9,Week 48,11,ESSDAI score,2
+ID134,B,Asia,4,Placebo,15,Week 24,13,ESSDAI score,-2
+ID134,B,Asia,4,Placebo,15,Week 48,15,ESSDAI score,0
+ID135,A,Asia,4,Placebo,12,Week 24,13,ESSDAI score,1
+ID135,A,Asia,4,Placebo,12,Week 48,12,ESSDAI score,0
+ID136,A,North America,1,Placebo,12,Week 24,14,ESSDAI score,2
+ID136,A,North America,1,Placebo,12,Week 48,14,ESSDAI score,2
+ID137,B,North America,1,Placebo,6,Week 24,9,ESSDAI score,3
+ID137,B,North America,1,Placebo,6,Week 48,9,ESSDAI score,3
+ID138,B,Asia,4,Placebo,8,Week 24,5,ESSDAI score,-3
+ID138,B,Asia,4,Placebo,8,Week 48,5,ESSDAI score,-3
+ID139,B,North America,1,Placebo,7,Week 24,9,ESSDAI score,2
+ID139,B,North America,1,Placebo,7,Week 48,12,ESSDAI score,5
+ID140,A,North America,1,Drug A,12,Week 24,12,ESSDAI score,0
+ID140,A,North America,1,Drug A,12,Week 48,9,ESSDAI score,-3
+ID141,A,North America,1,Placebo,6,Week 24,3,ESSDAI score,-3
+ID141,A,North America,1,Placebo,6,Week 48,3,ESSDAI score,-3
+ID142,B,South America,2,Placebo,12,Week 24,15,ESSDAI score,3
+ID142,B,South America,2,Placebo,12,Week 48,15,ESSDAI score,3
+ID143,B,North America,1,Placebo,6,Week 24,8,ESSDAI score,2
+ID143,B,North America,1,Placebo,6,Week 48,5,ESSDAI score,-1
+ID144,A,South America,2,Drug A,17,Week 24,12,ESSDAI score,-5
+ID144,A,South America,2,Drug A,17,Week 48,9,ESSDAI score,-8
+ID145,A,South America,2,Placebo,12,Week 24,14,ESSDAI score,2
+ID145,A,South America,2,Placebo,12,Week 48,14,ESSDAI score,2
+ID146,A,Asia,4,Placebo,7,Week 24,5,ESSDAI score,-2
+ID146,A,Asia,4,Placebo,7,Week 48,6,ESSDAI score,-1
+ID147,B,Asia,4,Placebo,11,Week 24,11,ESSDAI score,0
+ID147,B,Asia,4,Placebo,11,Week 48,13,ESSDAI score,2
+ID148,A,Asia,4,Drug A,9,Week 24,5,ESSDAI score,-4
+ID148,A,Asia,4,Drug A,9,Week 48,0,ESSDAI score,-9
+ID149,A,Asia,4,Placebo,11,Week 24,NA,ESSDAI score,NA
+ID149,A,Asia,4,Placebo,11,Week 48,13,ESSDAI score,2
+ID150,A,Asia,4,Placebo,11,Week 24,12,ESSDAI score,1
+ID150,A,Asia,4,Placebo,11,Week 48,NA,ESSDAI score,NA
+ID151,B,Europe,3,Drug A,6,Week 24,6,ESSDAI score,0
+ID151,B,Europe,3,Drug A,6,Week 48,5,ESSDAI score,-1
+ID152,B,Asia,4,Placebo,7,Week 24,6,ESSDAI score,-1
+ID152,B,Asia,4,Placebo,7,Week 48,2,ESSDAI score,-5
+ID153,A,Europe,3,Drug A,11,Week 24,8,ESSDAI score,-3
+ID153,A,Europe,3,Drug A,11,Week 48,7,ESSDAI score,-4
+ID154,A,North America,1,Placebo,17,Week 24,20,ESSDAI score,3
+ID154,A,North America,1,Placebo,17,Week 48,21,ESSDAI score,4
+ID155,B,South America,2,Drug A,14,Week 24,12,ESSDAI score,-2
+ID155,B,South America,2,Drug A,14,Week 48,9,ESSDAI score,-5
+ID156,B,South America,2,Drug A,8,Week 24,3,ESSDAI score,-5
+ID156,B,South America,2,Drug A,8,Week 48,0,ESSDAI score,-8
+ID157,B,North America,1,Drug A,13,Week 24,10,ESSDAI score,-3
+ID157,B,North America,1,Drug A,13,Week 48,12,ESSDAI score,-1
+ID158,A,Asia,4,Drug A,10,Week 24,5,ESSDAI score,-5
+ID158,A,Asia,4,Drug A,10,Week 48,7,ESSDAI score,-3
+ID159,A,Europe,3,Drug A,11,Week 24,NA,ESSDAI score,NA
+ID159,A,Europe,3,Drug A,11,Week 48,10,ESSDAI score,-1
+ID160,A,Europe,3,Drug A,11,Week 24,10,ESSDAI score,-1
+ID160,A,Europe,3,Drug A,11,Week 48,8,ESSDAI score,-3
+ID161,B,Asia,4,Drug A,20,Week 24,18,ESSDAI score,-2
+ID161,B,Asia,4,Drug A,20,Week 48,21,ESSDAI score,1
+ID162,B,South America,2,Placebo,5,Week 24,3,ESSDAI score,-2
+ID162,B,South America,2,Placebo,5,Week 48,4,ESSDAI score,-1
+ID163,A,North America,1,Placebo,10,Week 24,12,ESSDAI score,2
+ID163,A,North America,1,Placebo,10,Week 48,11,ESSDAI score,1
+ID164,B,Asia,4,Placebo,3,Week 24,3,ESSDAI score,0
+ID164,B,Asia,4,Placebo,3,Week 48,4,ESSDAI score,1
+ID165,A,Europe,3,Drug A,12,Week 24,9,ESSDAI score,-3
+ID165,A,Europe,3,Drug A,12,Week 48,11,ESSDAI score,-1
+ID166,A,South America,2,Placebo,14,Week 24,16,ESSDAI score,2
+ID166,A,South America,2,Placebo,14,Week 48,15,ESSDAI score,1
+ID167,B,North America,1,Drug A,16,Week 24,NA,ESSDAI score,NA
+ID167,B,North America,1,Drug A,16,Week 48,13,ESSDAI score,-3
+ID168,A,Europe,3,Drug A,2,Week 24,0,ESSDAI score,-2
+ID168,A,Europe,3,Drug A,2,Week 48,0,ESSDAI score,-2
+ID169,A,Asia,4,Placebo,12,Week 24,11,ESSDAI score,-1
+ID169,A,Asia,4,Placebo,12,Week 48,NA,ESSDAI score,NA
+ID170,A,South America,2,Drug A,16,Week 24,13,ESSDAI score,-3
+ID170,A,South America,2,Drug A,16,Week 48,12,ESSDAI score,-4
+ID171,A,Asia,4,Placebo,8,Week 24,3,ESSDAI score,-5
+ID171,A,Asia,4,Placebo,8,Week 48,5,ESSDAI score,-3
+ID172,A,South America,2,Placebo,9,Week 24,11,ESSDAI score,2
+ID172,A,South America,2,Placebo,9,Week 48,9,ESSDAI score,0
+ID173,A,Asia,4,Placebo,10,Week 24,7,ESSDAI score,-3
+ID173,A,Asia,4,Placebo,10,Week 48,7,ESSDAI score,-3
+ID174,A,Asia,4,Placebo,11,Week 24,11,ESSDAI score,0
+ID174,A,Asia,4,Placebo,11,Week 48,12,ESSDAI score,1
+ID175,A,Asia,4,Drug A,13,Week 24,12,ESSDAI score,-1
+ID175,A,Asia,4,Drug A,13,Week 48,7,ESSDAI score,-6
+ID176,A,South America,2,Drug A,15,Week 24,10,ESSDAI score,-5
+ID176,A,South America,2,Drug A,15,Week 48,9,ESSDAI score,-6
+ID177,B,South America,2,Drug A,10,Week 24,NA,ESSDAI score,NA
+ID177,B,South America,2,Drug A,10,Week 48,6,ESSDAI score,-4
+ID178,A,South America,2,Placebo,11,Week 24,11,ESSDAI score,0
+ID178,A,South America,2,Placebo,11,Week 48,12,ESSDAI score,1
+ID179,A,North America,1,Placebo,20,Week 24,21,ESSDAI score,1
+ID179,A,North America,1,Placebo,20,Week 48,17,ESSDAI score,-3
+ID180,A,North America,1,Placebo,12,Week 24,10,ESSDAI score,-2
+ID180,A,North America,1,Placebo,12,Week 48,8,ESSDAI score,-4
+ID181,B,Europe,3,Placebo,11,Week 24,11,ESSDAI score,0
+ID181,B,Europe,3,Placebo,11,Week 48,13,ESSDAI score,2
+ID182,B,North America,1,Drug A,5,Week 24,6,ESSDAI score,1
+ID182,B,North America,1,Drug A,5,Week 48,0,ESSDAI score,-5
+ID183,B,North America,1,Drug A,10,Week 24,7,ESSDAI score,-3
+ID183,B,North America,1,Drug A,10,Week 48,5,ESSDAI score,-5
+ID184,B,Europe,3,Drug A,9,Week 24,6,ESSDAI score,-3
+ID184,B,Europe,3,Drug A,9,Week 48,4,ESSDAI score,-5
+ID185,B,North America,1,Drug A,10,Week 24,13,ESSDAI score,3
+ID185,B,North America,1,Drug A,10,Week 48,11,ESSDAI score,1
+ID186,A,Asia,4,Placebo,8,Week 24,5,ESSDAI score,-3
+ID186,A,Asia,4,Placebo,8,Week 48,1,ESSDAI score,-7
+ID187,A,Asia,4,Placebo,7,Week 24,6,ESSDAI score,-1
+ID187,A,Asia,4,Placebo,7,Week 48,7,ESSDAI score,0
+ID188,A,South America,2,Drug A,7,Week 24,4,ESSDAI score,-3
+ID188,A,South America,2,Drug A,7,Week 48,3,ESSDAI score,-4
+ID189,A,Europe,3,Drug A,9,Week 24,8,ESSDAI score,-1
+ID189,A,Europe,3,Drug A,9,Week 48,8,ESSDAI score,-1
+ID190,A,Europe,3,Placebo,15,Week 24,NA,ESSDAI score,NA
+ID190,A,Europe,3,Placebo,15,Week 48,11,ESSDAI score,-4
+ID191,A,South America,2,Placebo,14,Week 24,17,ESSDAI score,3
+ID191,A,South America,2,Placebo,14,Week 48,18,ESSDAI score,4
+ID192,A,South America,2,Drug A,9,Week 24,4,ESSDAI score,-5
+ID192,A,South America,2,Drug A,9,Week 48,-0,ESSDAI score,-9
+ID193,A,North America,1,Drug A,3,Week 24,2,ESSDAI score,-1
+ID193,A,North America,1,Drug A,3,Week 48,0,ESSDAI score,-3
+ID194,A,Asia,4,Placebo,7,Week 24,7,ESSDAI score,0
+ID194,A,Asia,4,Placebo,7,Week 48,10,ESSDAI score,3
+ID195,A,Europe,3,Placebo,8,Week 24,9,ESSDAI score,1
+ID195,A,Europe,3,Placebo,8,Week 48,10,ESSDAI score,2
+ID196,A,Europe,3,Drug A,10,Week 24,10,ESSDAI score,0
+ID196,A,Europe,3,Drug A,10,Week 48,5,ESSDAI score,-5
+ID197,A,North America,1,Drug A,7,Week 24,8,ESSDAI score,1
+ID197,A,North America,1,Drug A,7,Week 48,7,ESSDAI score,0
+ID198,A,Asia,4,Placebo,18,Week 24,17,ESSDAI score,-1
+ID198,A,Asia,4,Placebo,18,Week 48,18,ESSDAI score,0
+ID199,A,Europe,3,Drug A,9,Week 24,6,ESSDAI score,-3
+ID199,A,Europe,3,Drug A,9,Week 48,3,ESSDAI score,-6
+ID200,A,North America,1,Placebo,5,Week 24,11,ESSDAI score,6
+ID200,A,North America,1,Placebo,5,Week 48,11,ESSDAI score,6
+ID201,B,North America,1,Placebo,9,Week 24,9,ESSDAI score,0
+ID201,B,North America,1,Placebo,9,Week 48,9,ESSDAI score,0
+ID202,A,Asia,4,Placebo,6,Week 24,7,ESSDAI score,1
+ID202,A,Asia,4,Placebo,6,Week 48,NA,ESSDAI score,NA
+ID203,A,South America,2,Placebo,11,Week 24,10,ESSDAI score,-1
+ID203,A,South America,2,Placebo,11,Week 48,9,ESSDAI score,-2
+ID204,B,North America,1,Drug A,11,Week 24,NA,ESSDAI score,NA
+ID204,B,North America,1,Drug A,11,Week 48,5,ESSDAI score,-6
+ID205,A,North America,1,Placebo,11,Week 24,14,ESSDAI score,3
+ID205,A,North America,1,Placebo,11,Week 48,13,ESSDAI score,2
+ID206,A,North America,1,Placebo,4,Week 24,3,ESSDAI score,-1
+ID206,A,North America,1,Placebo,4,Week 48,6,ESSDAI score,2
+ID207,A,Asia,4,Placebo,11,Week 24,11,ESSDAI score,0
+ID207,A,Asia,4,Placebo,11,Week 48,10,ESSDAI score,-1
+ID208,A,North America,1,Drug A,11,Week 24,6,ESSDAI score,-5
+ID208,A,North America,1,Drug A,11,Week 48,4,ESSDAI score,-7
+ID209,A,North America,1,Placebo,4,Week 24,3,ESSDAI score,-1
+ID209,A,North America,1,Placebo,4,Week 48,5,ESSDAI score,1
+ID210,A,North America,1,Placebo,14,Week 24,18,ESSDAI score,4
+ID210,A,North America,1,Placebo,14,Week 48,20,ESSDAI score,6
+ID211,A,Europe,3,Placebo,13,Week 24,10,ESSDAI score,-3
+ID211,A,Europe,3,Placebo,13,Week 48,11,ESSDAI score,-2
+ID212,A,Europe,3,Drug A,19,Week 24,16,ESSDAI score,-3
+ID212,A,Europe,3,Drug A,19,Week 48,15,ESSDAI score,-4
+ID213,A,Asia,4,Drug A,11,Week 24,8,ESSDAI score,-3
+ID213,A,Asia,4,Drug A,11,Week 48,8,ESSDAI score,-3
+ID214,B,North America,1,Placebo,10,Week 24,13,ESSDAI score,3
+ID214,B,North America,1,Placebo,10,Week 48,NA,ESSDAI score,NA
+ID215,A,Asia,4,Placebo,10,Week 24,6,ESSDAI score,-4
+ID215,A,Asia,4,Placebo,10,Week 48,3,ESSDAI score,-7
+ID216,A,North America,1,Placebo,10,Week 24,12,ESSDAI score,2
+ID216,A,North America,1,Placebo,10,Week 48,10,ESSDAI score,0
+ID217,A,Europe,3,Placebo,3,Week 24,5,ESSDAI score,2
+ID217,A,Europe,3,Placebo,3,Week 48,2,ESSDAI score,-1
+ID218,A,Asia,4,Drug A,3,Week 24,-0,ESSDAI score,-3
+ID218,A,Asia,4,Drug A,3,Week 48,0,ESSDAI score,-3
+ID219,B,Asia,4,Placebo,10,Week 24,8,ESSDAI score,-2
+ID219,B,Asia,4,Placebo,10,Week 48,8,ESSDAI score,-2
+ID220,A,Asia,4,Drug A,8,Week 24,8,ESSDAI score,0
+ID220,A,Asia,4,Drug A,8,Week 48,7,ESSDAI score,-1
+ID221,A,South America,2,Placebo,10,Week 24,12,ESSDAI score,2
+ID221,A,South America,2,Placebo,10,Week 48,16,ESSDAI score,6
+ID222,B,South America,2,Drug A,2,Week 24,3,ESSDAI score,1
+ID222,B,South America,2,Drug A,2,Week 48,2,ESSDAI score,0
+ID223,B,Asia,4,Drug A,4,Week 24,4,ESSDAI score,0
+ID223,B,Asia,4,Drug A,4,Week 48,-0,ESSDAI score,-4
+ID224,B,Asia,4,Drug A,6,Week 24,4,ESSDAI score,-2
+ID224,B,Asia,4,Drug A,6,Week 48,2,ESSDAI score,-4
+ID225,A,Europe,3,Placebo,14,Week 24,12,ESSDAI score,-2
+ID225,A,Europe,3,Placebo,14,Week 48,15,ESSDAI score,1
+ID226,B,Europe,3,Placebo,6,Week 24,8,ESSDAI score,2
+ID226,B,Europe,3,Placebo,6,Week 48,9,ESSDAI score,3
+ID227,B,South America,2,Drug A,7,Week 24,3,ESSDAI score,-4
+ID227,B,South America,2,Drug A,7,Week 48,0,ESSDAI score,-7
+ID228,A,Asia,4,Drug A,10,Week 24,9,ESSDAI score,-1
+ID228,A,Asia,4,Drug A,10,Week 48,NA,ESSDAI score,NA
+ID229,B,Europe,3,Placebo,9,Week 24,8,ESSDAI score,-1
+ID229,B,Europe,3,Placebo,9,Week 48,11,ESSDAI score,2
+ID230,A,Asia,4,Drug A,11,Week 24,9,ESSDAI score,-2
+ID230,A,Asia,4,Drug A,11,Week 48,4,ESSDAI score,-7
+ID231,A,Asia,4,Drug A,19,Week 24,14,ESSDAI score,-5
+ID231,A,Asia,4,Drug A,19,Week 48,9,ESSDAI score,-10
+ID232,B,Europe,3,Placebo,6,Week 24,9,ESSDAI score,3
+ID232,B,Europe,3,Placebo,6,Week 48,16,ESSDAI score,10
+ID233,A,North America,1,Placebo,9,Week 24,8,ESSDAI score,-1
+ID233,A,North America,1,Placebo,9,Week 48,13,ESSDAI score,4
+ID234,B,South America,2,Drug A,8,Week 24,4,ESSDAI score,-4
+ID234,B,South America,2,Drug A,8,Week 48,5,ESSDAI score,-3
+ID235,A,Asia,4,Placebo,16,Week 24,18,ESSDAI score,2
+ID235,A,Asia,4,Placebo,16,Week 48,18,ESSDAI score,2
+ID236,A,South America,2,Placebo,7,Week 24,6,ESSDAI score,-1
+ID236,A,South America,2,Placebo,7,Week 48,5,ESSDAI score,-2
+ID237,B,South America,2,Placebo,10,Week 24,10,ESSDAI score,0
+ID237,B,South America,2,Placebo,10,Week 48,NA,ESSDAI score,NA
+ID238,B,South America,2,Placebo,13,Week 24,16,ESSDAI score,3
+ID238,B,South America,2,Placebo,13,Week 48,17,ESSDAI score,4
+ID239,A,Asia,4,Placebo,6,Week 24,5,ESSDAI score,-1
+ID239,A,Asia,4,Placebo,6,Week 48,5,ESSDAI score,-1
+ID240,A,North America,1,Drug A,17,Week 24,13,ESSDAI score,-4
+ID240,A,North America,1,Drug A,17,Week 48,14,ESSDAI score,-3
+ID241,B,North America,1,Drug A,13,Week 24,9,ESSDAI score,-4
+ID241,B,North America,1,Drug A,13,Week 48,3,ESSDAI score,-10
+ID242,A,South America,2,Placebo,6,Week 24,8,ESSDAI score,2
+ID242,A,South America,2,Placebo,6,Week 48,4,ESSDAI score,-2
+ID243,A,South America,2,Drug A,12,Week 24,12,ESSDAI score,0
+ID243,A,South America,2,Drug A,12,Week 48,11,ESSDAI score,-1
+ID244,A,Asia,4,Placebo,9,Week 24,8,ESSDAI score,-1
+ID244,A,Asia,4,Placebo,9,Week 48,8,ESSDAI score,-1
+ID245,A,North America,1,Drug A,11,Week 24,11,ESSDAI score,0
+ID245,A,North America,1,Drug A,11,Week 48,11,ESSDAI score,0
+ID246,A,Asia,4,Drug A,10,Week 24,8,ESSDAI score,-2
+ID246,A,Asia,4,Drug A,10,Week 48,5,ESSDAI score,-5
+ID247,B,Europe,3,Drug A,14,Week 24,10,ESSDAI score,-4
+ID247,B,Europe,3,Drug A,14,Week 48,5,ESSDAI score,-9
+ID248,A,North America,1,Placebo,5,Week 24,6,ESSDAI score,1
+ID248,A,North America,1,Placebo,5,Week 48,5,ESSDAI score,0
+ID249,A,Europe,3,Placebo,8,Week 24,9,ESSDAI score,1
+ID249,A,Europe,3,Placebo,8,Week 48,11,ESSDAI score,3
+ID250,B,Europe,3,Placebo,9,Week 24,8,ESSDAI score,-1
+ID250,B,Europe,3,Placebo,9,Week 48,10,ESSDAI score,1
+ID251,A,South America,2,Drug A,6,Week 24,6,ESSDAI score,0
+ID251,A,South America,2,Drug A,6,Week 48,5,ESSDAI score,-1
+ID252,A,Europe,3,Placebo,6,Week 24,6,ESSDAI score,0
+ID252,A,Europe,3,Placebo,6,Week 48,5,ESSDAI score,-1
+ID253,A,Europe,3,Placebo,10,Week 24,9,ESSDAI score,-1
+ID253,A,Europe,3,Placebo,10,Week 48,6,ESSDAI score,-4
+ID254,A,Asia,4,Drug A,9,Week 24,6,ESSDAI score,-3
+ID254,A,Asia,4,Drug A,9,Week 48,5,ESSDAI score,-4
+ID255,A,Europe,3,Drug A,-0,Week 24,0,ESSDAI score,0
+ID255,A,Europe,3,Drug A,-0,Week 48,0,ESSDAI score,0
+ID256,A,North America,1,Drug A,14,Week 24,8,ESSDAI score,-6
+ID256,A,North America,1,Drug A,14,Week 48,7,ESSDAI score,-7
+ID257,A,Europe,3,Drug A,11,Week 24,8,ESSDAI score,-3
+ID257,A,Europe,3,Drug A,11,Week 48,6,ESSDAI score,-5
+ID258,B,North America,1,Drug A,20,Week 24,20,ESSDAI score,0
+ID258,B,North America,1,Drug A,20,Week 48,16,ESSDAI score,-4
+ID259,A,Europe,3,Placebo,13,Week 24,17,ESSDAI score,4
+ID259,A,Europe,3,Placebo,13,Week 48,18,ESSDAI score,5
+ID260,A,North America,1,Drug A,8,Week 24,4,ESSDAI score,-4
+ID260,A,North America,1,Drug A,8,Week 48,0,ESSDAI score,-8
+ID261,A,North America,1,Placebo,21,Week 24,19,ESSDAI score,-2
+ID261,A,North America,1,Placebo,21,Week 48,22,ESSDAI score,1
+ID262,A,South America,2,Placebo,21,Week 24,22,ESSDAI score,1
+ID262,A,South America,2,Placebo,21,Week 48,21,ESSDAI score,0
+ID263,A,South America,2,Placebo,5,Week 24,6,ESSDAI score,1
+ID263,A,South America,2,Placebo,5,Week 48,3,ESSDAI score,-2
+ID264,A,North America,1,Drug A,12,Week 24,8,ESSDAI score,-4
+ID264,A,North America,1,Drug A,12,Week 48,7,ESSDAI score,-5
+ID265,A,North America,1,Placebo,9,Week 24,8,ESSDAI score,-1
+ID265,A,North America,1,Placebo,9,Week 48,8,ESSDAI score,-1
+ID266,A,North America,1,Drug A,11,Week 24,8,ESSDAI score,-3
+ID266,A,North America,1,Drug A,11,Week 48,7,ESSDAI score,-4
+ID267,A,Europe,3,Placebo,11,Week 24,9,ESSDAI score,-2
+ID267,A,Europe,3,Placebo,11,Week 48,9,ESSDAI score,-2
+ID268,A,North America,1,Drug A,5,Week 24,2,ESSDAI score,-3
+ID268,A,North America,1,Drug A,5,Week 48,1,ESSDAI score,-4
+ID269,A,North America,1,Drug A,11,Week 24,9,ESSDAI score,-2
+ID269,A,North America,1,Drug A,11,Week 48,5,ESSDAI score,-6
+ID270,A,South America,2,Drug A,17,Week 24,16,ESSDAI score,-1
+ID270,A,South America,2,Drug A,17,Week 48,13,ESSDAI score,-4
+ID271,B,North America,1,Drug A,9,Week 24,7,ESSDAI score,-2
+ID271,B,North America,1,Drug A,9,Week 48,3,ESSDAI score,-6
+ID272,B,North America,1,Drug A,9,Week 24,8,ESSDAI score,-1
+ID272,B,North America,1,Drug A,9,Week 48,2,ESSDAI score,-7
+ID273,A,Europe,3,Drug A,16,Week 24,15,ESSDAI score,-1
+ID273,A,Europe,3,Drug A,16,Week 48,14,ESSDAI score,-2
+ID274,B,South America,2,Placebo,14,Week 24,14,ESSDAI score,0
+ID274,B,South America,2,Placebo,14,Week 48,14,ESSDAI score,0
+ID275,A,Asia,4,Drug A,3,Week 24,1,ESSDAI score,-2
+ID275,A,Asia,4,Drug A,3,Week 48,2,ESSDAI score,-1
+ID276,A,Asia,4,Placebo,11,Week 24,9,ESSDAI score,-2
+ID276,A,Asia,4,Placebo,11,Week 48,8,ESSDAI score,-3
+ID277,A,Europe,3,Drug A,17,Week 24,12,ESSDAI score,-5
+ID277,A,Europe,3,Drug A,17,Week 48,8,ESSDAI score,-9
+ID278,A,South America,2,Drug A,16,Week 24,17,ESSDAI score,1
+ID278,A,South America,2,Drug A,16,Week 48,16,ESSDAI score,0
+ID279,A,Asia,4,Drug A,12,Week 24,10,ESSDAI score,-2
+ID279,A,Asia,4,Drug A,12,Week 48,7,ESSDAI score,-5
+ID280,B,Europe,3,Drug A,13,Week 24,10,ESSDAI score,-3
+ID280,B,Europe,3,Drug A,13,Week 48,10,ESSDAI score,-3
+ID281,A,North America,1,Placebo,5,Week 24,3,ESSDAI score,-2
+ID281,A,North America,1,Placebo,5,Week 48,1,ESSDAI score,-4
+ID282,B,Asia,4,Placebo,11,Week 24,10,ESSDAI score,-1
+ID282,B,Asia,4,Placebo,11,Week 48,7,ESSDAI score,-4
+ID283,A,South America,2,Drug A,6,Week 24,4,ESSDAI score,-2
+ID283,A,South America,2,Drug A,6,Week 48,3,ESSDAI score,-3
+ID284,A,Asia,4,Drug A,8,Week 24,7,ESSDAI score,-1
+ID284,A,Asia,4,Drug A,8,Week 48,9,ESSDAI score,1
+ID285,B,South America,2,Drug A,14,Week 24,11,ESSDAI score,-3
+ID285,B,South America,2,Drug A,14,Week 48,9,ESSDAI score,-5
+ID286,A,South America,2,Placebo,5,Week 24,5,ESSDAI score,0
+ID286,A,South America,2,Placebo,5,Week 48,6,ESSDAI score,1
+ID287,A,South America,2,Placebo,11,Week 24,11,ESSDAI score,0
+ID287,A,South America,2,Placebo,11,Week 48,8,ESSDAI score,-3
+ID288,A,South America,2,Placebo,12,Week 24,14,ESSDAI score,2
+ID288,A,South America,2,Placebo,12,Week 48,13,ESSDAI score,1
+ID289,A,Asia,4,Drug A,10,Week 24,8,ESSDAI score,-2
+ID289,A,Asia,4,Drug A,10,Week 48,4,ESSDAI score,-6
+ID290,B,North America,1,Placebo,17,Week 24,16,ESSDAI score,-1
+ID290,B,North America,1,Placebo,17,Week 48,16,ESSDAI score,-1
+ID291,B,Europe,3,Drug A,6,Week 24,2,ESSDAI score,-4
+ID291,B,Europe,3,Drug A,6,Week 48,5,ESSDAI score,-1
+ID292,A,South America,2,Drug A,12,Week 24,9,ESSDAI score,-3
+ID292,A,South America,2,Drug A,12,Week 48,5,ESSDAI score,-7
+ID293,A,Europe,3,Drug A,10,Week 24,8,ESSDAI score,-2
+ID293,A,Europe,3,Drug A,10,Week 48,10,ESSDAI score,0
+ID294,A,South America,2,Drug A,9,Week 24,4,ESSDAI score,-5
+ID294,A,South America,2,Drug A,9,Week 48,3,ESSDAI score,-6
+ID295,B,North America,1,Drug A,12,Week 24,10,ESSDAI score,-2
+ID295,B,North America,1,Drug A,12,Week 48,10,ESSDAI score,-2
+ID296,A,Europe,3,Placebo,6,Week 24,5,ESSDAI score,-1
+ID296,A,Europe,3,Placebo,6,Week 48,2,ESSDAI score,-4
+ID297,A,South America,2,Placebo,5,Week 24,5,ESSDAI score,0
+ID297,A,South America,2,Placebo,5,Week 48,4,ESSDAI score,-1
+ID298,A,Asia,4,Placebo,8,Week 24,8,ESSDAI score,0
+ID298,A,Asia,4,Placebo,8,Week 48,9,ESSDAI score,1
+ID299,A,Europe,3,Drug A,17,Week 24,18,ESSDAI score,1
+ID299,A,Europe,3,Drug A,17,Week 48,15,ESSDAI score,-2
+ID300,A,South America,2,Drug A,10,Week 24,8,ESSDAI score,-2
+ID300,A,South America,2,Drug A,10,Week 48,NA,ESSDAI score,NA
+ID301,A,Europe,3,Placebo,11,Week 24,11,ESSDAI score,0
+ID301,A,Europe,3,Placebo,11,Week 48,9,ESSDAI score,-2
+ID302,A,Europe,3,Placebo,9,Week 24,8,ESSDAI score,-1
+ID302,A,Europe,3,Placebo,9,Week 48,10,ESSDAI score,1
+ID303,A,South America,2,Drug A,12,Week 24,12,ESSDAI score,0
+ID303,A,South America,2,Drug A,12,Week 48,8,ESSDAI score,-4
+ID304,A,Asia,4,Placebo,6,Week 24,9,ESSDAI score,3
+ID304,A,Asia,4,Placebo,6,Week 48,6,ESSDAI score,0
+ID305,A,South America,2,Drug A,15,Week 24,11,ESSDAI score,-4
+ID305,A,South America,2,Drug A,15,Week 48,7,ESSDAI score,-8
+ID306,B,Asia,4,Drug A,12,Week 24,13,ESSDAI score,1
+ID306,B,Asia,4,Drug A,12,Week 48,14,ESSDAI score,2
+ID307,A,Asia,4,Placebo,7,Week 24,7,ESSDAI score,0
+ID307,A,Asia,4,Placebo,7,Week 48,8,ESSDAI score,1
+ID308,A,South America,2,Drug A,10,Week 24,10,ESSDAI score,0
+ID308,A,South America,2,Drug A,10,Week 48,10,ESSDAI score,0
+ID309,B,Europe,3,Drug A,13,Week 24,13,ESSDAI score,0
+ID309,B,Europe,3,Drug A,13,Week 48,9,ESSDAI score,-4
+ID310,A,North America,1,Drug A,12,Week 24,9,ESSDAI score,-3
+ID310,A,North America,1,Drug A,12,Week 48,6,ESSDAI score,-6
+ID311,A,Asia,4,Placebo,16,Week 24,18,ESSDAI score,2
+ID311,A,Asia,4,Placebo,16,Week 48,18,ESSDAI score,2
+ID312,A,North America,1,Drug A,8,Week 24,4,ESSDAI score,-4
+ID312,A,North America,1,Drug A,8,Week 48,-0,ESSDAI score,-8
+ID313,A,North America,1,Placebo,14,Week 24,17,ESSDAI score,3
+ID313,A,North America,1,Placebo,14,Week 48,17,ESSDAI score,3
+ID314,B,Asia,4,Drug A,14,Week 24,11,ESSDAI score,-3
+ID314,B,Asia,4,Drug A,14,Week 48,7,ESSDAI score,-7
+ID315,B,Europe,3,Placebo,9,Week 24,9,ESSDAI score,0
+ID315,B,Europe,3,Placebo,9,Week 48,13,ESSDAI score,4
+ID316,A,North America,1,Placebo,6,Week 24,5,ESSDAI score,-1
+ID316,A,North America,1,Placebo,6,Week 48,0,ESSDAI score,-6
+ID317,A,South America,2,Placebo,6,Week 24,6,ESSDAI score,0
+ID317,A,South America,2,Placebo,6,Week 48,9,ESSDAI score,3
+ID318,A,Europe,3,Placebo,12,Week 24,13,ESSDAI score,1
+ID318,A,Europe,3,Placebo,12,Week 48,15,ESSDAI score,3
+ID319,A,North America,1,Drug A,10,Week 24,8,ESSDAI score,-2
+ID319,A,North America,1,Drug A,10,Week 48,7,ESSDAI score,-3
+ID320,A,South America,2,Drug A,17,Week 24,15,ESSDAI score,-2
+ID320,A,South America,2,Drug A,17,Week 48,12,ESSDAI score,-5
+ID321,A,South America,2,Drug A,12,Week 24,7,ESSDAI score,-5
+ID321,A,South America,2,Drug A,12,Week 48,4,ESSDAI score,-8
+ID322,A,Europe,3,Placebo,9,Week 24,8,ESSDAI score,-1
+ID322,A,Europe,3,Placebo,9,Week 48,10,ESSDAI score,1
+ID323,A,South America,2,Drug A,6,Week 24,5,ESSDAI score,-1
+ID323,A,South America,2,Drug A,6,Week 48,4,ESSDAI score,-2
+ID324,B,Asia,4,Drug A,8,Week 24,7,ESSDAI score,-1
+ID324,B,Asia,4,Drug A,8,Week 48,5,ESSDAI score,-3
+ID325,B,South America,2,Placebo,11,Week 24,11,ESSDAI score,0
+ID325,B,South America,2,Placebo,11,Week 48,12,ESSDAI score,1
+ID326,A,Europe,3,Drug A,8,Week 24,4,ESSDAI score,-4
+ID326,A,Europe,3,Drug A,8,Week 48,0,ESSDAI score,-8
+ID327,A,South America,2,Drug A,12,Week 24,10,ESSDAI score,-2
+ID327,A,South America,2,Drug A,12,Week 48,9,ESSDAI score,-3
+ID328,A,Asia,4,Placebo,9,Week 24,5,ESSDAI score,-4
+ID328,A,Asia,4,Placebo,9,Week 48,4,ESSDAI score,-5
+ID329,A,Asia,4,Drug A,10,Week 24,8,ESSDAI score,-2
+ID329,A,Asia,4,Drug A,10,Week 48,4,ESSDAI score,-6
+ID330,B,Asia,4,Placebo,7,Week 24,5,ESSDAI score,-2
+ID330,B,Asia,4,Placebo,7,Week 48,6,ESSDAI score,-1
+ID331,A,North America,1,Placebo,18,Week 24,16,ESSDAI score,-2
+ID331,A,North America,1,Placebo,18,Week 48,19,ESSDAI score,1
+ID332,B,Europe,3,Placebo,11,Week 24,9,ESSDAI score,-2
+ID332,B,Europe,3,Placebo,11,Week 48,NA,ESSDAI score,NA
+ID333,A,North America,1,Drug A,11,Week 24,12,ESSDAI score,1
+ID333,A,North America,1,Drug A,11,Week 48,9,ESSDAI score,-2
+ID334,B,Europe,3,Drug A,3,Week 24,NA,ESSDAI score,NA
+ID334,B,Europe,3,Drug A,3,Week 48,0,ESSDAI score,-3
+ID335,A,Europe,3,Drug A,13,Week 24,13,ESSDAI score,0
+ID335,A,Europe,3,Drug A,13,Week 48,10,ESSDAI score,-3
+ID336,A,South America,2,Drug A,6,Week 24,NA,ESSDAI score,NA
+ID336,A,South America,2,Drug A,6,Week 48,2,ESSDAI score,-4
+ID337,B,Asia,4,Placebo,6,Week 24,3,ESSDAI score,-3
+ID337,B,Asia,4,Placebo,6,Week 48,1,ESSDAI score,-5
+ID338,A,Europe,3,Drug A,14,Week 24,13,ESSDAI score,-1
+ID338,A,Europe,3,Drug A,14,Week 48,14,ESSDAI score,0
+ID339,A,Europe,3,Drug A,8,Week 24,2,ESSDAI score,-6
+ID339,A,Europe,3,Drug A,8,Week 48,1,ESSDAI score,-7
+ID340,A,South America,2,Drug A,3,Week 24,-0,ESSDAI score,-3
+ID340,A,South America,2,Drug A,3,Week 48,0,ESSDAI score,-3
+ID341,B,Asia,4,Drug A,17,Week 24,19,ESSDAI score,2
+ID341,B,Asia,4,Drug A,17,Week 48,17,ESSDAI score,0
+ID342,B,Europe,3,Placebo,0,Week 24,0,ESSDAI score,0
+ID342,B,Europe,3,Placebo,0,Week 48,-0,ESSDAI score,-0
+ID343,A,North America,1,Placebo,12,Week 24,10,ESSDAI score,-2
+ID343,A,North America,1,Placebo,12,Week 48,6,ESSDAI score,-6
+ID344,A,South America,2,Drug A,14,Week 24,14,ESSDAI score,0
+ID344,A,South America,2,Drug A,14,Week 48,11,ESSDAI score,-3
+ID345,A,South America,2,Placebo,7,Week 24,6,ESSDAI score,-1
+ID345,A,South America,2,Placebo,7,Week 48,4,ESSDAI score,-3
+ID346,A,North America,1,Drug A,12,Week 24,10,ESSDAI score,-2
+ID346,A,North America,1,Drug A,12,Week 48,6,ESSDAI score,-6
+ID347,B,North America,1,Drug A,12,Week 24,11,ESSDAI score,-1
+ID347,B,North America,1,Drug A,12,Week 48,10,ESSDAI score,-2
+ID348,A,Europe,3,Drug A,14,Week 24,8,ESSDAI score,-6
+ID348,A,Europe,3,Drug A,14,Week 48,7,ESSDAI score,-7
+ID349,A,Europe,3,Placebo,12,Week 24,13,ESSDAI score,1
+ID349,A,Europe,3,Placebo,12,Week 48,15,ESSDAI score,3
+ID350,A,Europe,3,Drug A,9,Week 24,5,ESSDAI score,-4
+ID350,A,Europe,3,Drug A,9,Week 48,2,ESSDAI score,-7
+ID351,A,Asia,4,Drug A,14,Week 24,13,ESSDAI score,-1
+ID351,A,Asia,4,Drug A,14,Week 48,8,ESSDAI score,-6
+ID352,B,South America,2,Drug A,13,Week 24,10,ESSDAI score,-3
+ID352,B,South America,2,Drug A,13,Week 48,10,ESSDAI score,-3
+ID353,B,Europe,3,Placebo,6,Week 24,8,ESSDAI score,2
+ID353,B,Europe,3,Placebo,6,Week 48,11,ESSDAI score,5
+ID354,B,Europe,3,Drug A,4,Week 24,3,ESSDAI score,-1
+ID354,B,Europe,3,Drug A,4,Week 48,0,ESSDAI score,-4
+ID355,A,South America,2,Drug A,11,Week 24,12,ESSDAI score,1
+ID355,A,South America,2,Drug A,11,Week 48,13,ESSDAI score,2
+ID356,A,Europe,3,Placebo,9,Week 24,7,ESSDAI score,-2
+ID356,A,Europe,3,Placebo,9,Week 48,8,ESSDAI score,-1
+ID357,B,North America,1,Drug A,6,Week 24,0,ESSDAI score,-6
+ID357,B,North America,1,Drug A,6,Week 48,0,ESSDAI score,-6
+ID358,A,Europe,3,Drug A,10,Week 24,6,ESSDAI score,-4
+ID358,A,Europe,3,Drug A,10,Week 48,7,ESSDAI score,-3
+ID359,A,Europe,3,Drug A,5,Week 24,-0,ESSDAI score,-5
+ID359,A,Europe,3,Drug A,5,Week 48,0,ESSDAI score,-5
+ID360,B,Europe,3,Placebo,11,Week 24,12,ESSDAI score,1
+ID360,B,Europe,3,Placebo,11,Week 48,13,ESSDAI score,2
+ID361,A,South America,2,Placebo,8,Week 24,8,ESSDAI score,0
+ID361,A,South America,2,Placebo,8,Week 48,NA,ESSDAI score,NA
+ID362,A,South America,2,Drug A,14,Week 24,10,ESSDAI score,-4
+ID362,A,South America,2,Drug A,14,Week 48,8,ESSDAI score,-6
+ID363,A,North America,1,Drug A,20,Week 24,17,ESSDAI score,-3
+ID363,A,North America,1,Drug A,20,Week 48,16,ESSDAI score,-4
+ID364,A,North America,1,Drug A,6,Week 24,5,ESSDAI score,-1
+ID364,A,North America,1,Drug A,6,Week 48,5,ESSDAI score,-1
+ID365,A,Europe,3,Placebo,14,Week 24,17,ESSDAI score,3
+ID365,A,Europe,3,Placebo,14,Week 48,18,ESSDAI score,4
+ID366,A,South America,2,Drug A,13,Week 24,14,ESSDAI score,1
+ID366,A,South America,2,Drug A,13,Week 48,10,ESSDAI score,-3
+ID367,A,Asia,4,Placebo,10,Week 24,9,ESSDAI score,-1
+ID367,A,Asia,4,Placebo,10,Week 48,8,ESSDAI score,-2
+ID368,A,Asia,4,Drug A,8,Week 24,4,ESSDAI score,-4
+ID368,A,Asia,4,Drug A,8,Week 48,NA,ESSDAI score,NA
+ID369,A,Europe,3,Placebo,16,Week 24,15,ESSDAI score,-1
+ID369,A,Europe,3,Placebo,16,Week 48,14,ESSDAI score,-2
+ID370,A,Europe,3,Drug A,2,Week 24,-0,ESSDAI score,-2
+ID370,A,Europe,3,Drug A,2,Week 48,-0,ESSDAI score,-2
+ID371,A,Asia,4,Drug A,7,Week 24,6,ESSDAI score,-1
+ID371,A,Asia,4,Drug A,7,Week 48,2,ESSDAI score,-5
+ID372,A,North America,1,Drug A,4,Week 24,0,ESSDAI score,-4
+ID372,A,North America,1,Drug A,4,Week 48,0,ESSDAI score,-4
+ID373,B,South America,2,Placebo,16,Week 24,18,ESSDAI score,2
+ID373,B,South America,2,Placebo,16,Week 48,19,ESSDAI score,3
+ID374,A,Europe,3,Placebo,9,Week 24,11,ESSDAI score,2
+ID374,A,Europe,3,Placebo,9,Week 48,8,ESSDAI score,-1
+ID375,B,North America,1,Drug A,8,Week 24,7,ESSDAI score,-1
+ID375,B,North America,1,Drug A,8,Week 48,4,ESSDAI score,-4
+ID376,A,Europe,3,Drug A,23,Week 24,21,ESSDAI score,-2
+ID376,A,Europe,3,Drug A,23,Week 48,18,ESSDAI score,-5
+ID377,A,South America,2,Placebo,10,Week 24,9,ESSDAI score,-1
+ID377,A,South America,2,Placebo,10,Week 48,8,ESSDAI score,-2
+ID378,A,South America,2,Drug A,8,Week 24,3,ESSDAI score,-5
+ID378,A,South America,2,Drug A,8,Week 48,1,ESSDAI score,-7
+ID379,B,Europe,3,Drug A,11,Week 24,10,ESSDAI score,-1
+ID379,B,Europe,3,Drug A,11,Week 48,6,ESSDAI score,-5
+ID380,A,North America,1,Placebo,4,Week 24,5,ESSDAI score,1
+ID380,A,North America,1,Placebo,4,Week 48,4,ESSDAI score,0
+ID381,A,North America,1,Drug A,12,Week 24,14,ESSDAI score,2
+ID381,A,North America,1,Drug A,12,Week 48,13,ESSDAI score,1
+ID382,B,Asia,4,Placebo,10,Week 24,9,ESSDAI score,-1
+ID382,B,Asia,4,Placebo,10,Week 48,10,ESSDAI score,0
+ID383,A,Europe,3,Placebo,12,Week 24,11,ESSDAI score,-1
+ID383,A,Europe,3,Placebo,12,Week 48,9,ESSDAI score,-3
+ID384,A,Asia,4,Placebo,6,Week 24,9,ESSDAI score,3
+ID384,A,Asia,4,Placebo,6,Week 48,8,ESSDAI score,2
+ID385,B,Asia,4,Placebo,6,Week 24,1,ESSDAI score,-5
+ID385,B,Asia,4,Placebo,6,Week 48,0,ESSDAI score,-6
+ID386,B,Asia,4,Placebo,7,Week 24,7,ESSDAI score,0
+ID386,B,Asia,4,Placebo,7,Week 48,5,ESSDAI score,-2
+ID387,A,Europe,3,Placebo,7,Week 24,7,ESSDAI score,0
+ID387,A,Europe,3,Placebo,7,Week 48,6,ESSDAI score,-1
+ID388,A,South America,2,Placebo,15,Week 24,13,ESSDAI score,-2
+ID388,A,South America,2,Placebo,15,Week 48,12,ESSDAI score,-3
+ID389,A,Asia,4,Placebo,16,Week 24,17,ESSDAI score,1
+ID389,A,Asia,4,Placebo,16,Week 48,16,ESSDAI score,0
+ID390,A,Europe,3,Drug A,9,Week 24,6,ESSDAI score,-3
+ID390,A,Europe,3,Drug A,9,Week 48,4,ESSDAI score,-5
+ID391,A,Europe,3,Placebo,9,Week 24,NA,ESSDAI score,NA
+ID391,A,Europe,3,Placebo,9,Week 48,8,ESSDAI score,-1
+ID392,B,Europe,3,Drug A,9,Week 24,8,ESSDAI score,-1
+ID392,B,Europe,3,Drug A,9,Week 48,5,ESSDAI score,-4
+ID393,A,North America,1,Drug A,10,Week 24,5,ESSDAI score,-5
+ID393,A,North America,1,Drug A,10,Week 48,5,ESSDAI score,-5
+ID394,A,Asia,4,Drug A,10,Week 24,5,ESSDAI score,-5
+ID394,A,Asia,4,Drug A,10,Week 48,5,ESSDAI score,-5
+ID395,B,North America,1,Drug A,11,Week 24,7,ESSDAI score,-4
+ID395,B,North America,1,Drug A,11,Week 48,4,ESSDAI score,-7
+ID396,B,Europe,3,Drug A,7,Week 24,6,ESSDAI score,-1
+ID396,B,Europe,3,Drug A,7,Week 48,NA,ESSDAI score,NA
+ID397,A,North America,1,Drug A,7,Week 24,9,ESSDAI score,2
+ID397,A,North America,1,Drug A,7,Week 48,7,ESSDAI score,0
+ID398,A,North America,1,Drug A,15,Week 24,15,ESSDAI score,0
+ID398,A,North America,1,Drug A,15,Week 48,15,ESSDAI score,0
+ID399,A,Europe,3,Placebo,8,Week 24,6,ESSDAI score,-2
+ID399,A,Europe,3,Placebo,8,Week 48,6,ESSDAI score,-2
+ID400,B,South America,2,Placebo,11,Week 24,11,ESSDAI score,0
+ID400,B,South America,2,Placebo,11,Week 48,12,ESSDAI score,1
+ID401,B,South America,2,Drug A,10,Week 24,12,ESSDAI score,2
+ID401,B,South America,2,Drug A,10,Week 48,9,ESSDAI score,-1
+ID402,A,North America,1,Drug A,6,Week 24,4,ESSDAI score,-2
+ID402,A,North America,1,Drug A,6,Week 48,4,ESSDAI score,-2
+ID403,B,South America,2,Drug A,12,Week 24,7,ESSDAI score,-5
+ID403,B,South America,2,Drug A,12,Week 48,2,ESSDAI score,-10
+ID404,A,Asia,4,Drug A,11,Week 24,8,ESSDAI score,-3
+ID404,A,Asia,4,Drug A,11,Week 48,3,ESSDAI score,-8
+ID405,A,Europe,3,Drug A,16,Week 24,16,ESSDAI score,0
+ID405,A,Europe,3,Drug A,16,Week 48,13,ESSDAI score,-3
+ID406,A,North America,1,Drug A,10,Week 24,11,ESSDAI score,1
+ID406,A,North America,1,Drug A,10,Week 48,9,ESSDAI score,-1
+ID407,B,North America,1,Placebo,9,Week 24,4,ESSDAI score,-5
+ID407,B,North America,1,Placebo,9,Week 48,6,ESSDAI score,-3
+ID408,B,North America,1,Drug A,11,Week 24,9,ESSDAI score,-2
+ID408,B,North America,1,Drug A,11,Week 48,6,ESSDAI score,-5
+ID409,B,Asia,4,Placebo,5,Week 24,4,ESSDAI score,-1
+ID409,B,Asia,4,Placebo,5,Week 48,NA,ESSDAI score,NA
+ID410,A,North America,1,Drug A,7,Week 24,9,ESSDAI score,2
+ID410,A,North America,1,Drug A,7,Week 48,7,ESSDAI score,0
+ID411,A,Asia,4,Placebo,12,Week 24,11,ESSDAI score,-1
+ID411,A,Asia,4,Placebo,12,Week 48,12,ESSDAI score,0
+ID412,A,North America,1,Placebo,9,Week 24,10,ESSDAI score,1
+ID412,A,North America,1,Placebo,9,Week 48,10,ESSDAI score,1
+ID413,B,North America,1,Placebo,10,Week 24,8,ESSDAI score,-2
+ID413,B,North America,1,Placebo,10,Week 48,9,ESSDAI score,-1
+ID414,A,South America,2,Placebo,10,Week 24,9,ESSDAI score,-1
+ID414,A,South America,2,Placebo,10,Week 48,7,ESSDAI score,-3
+ID415,A,South America,2,Placebo,7,Week 24,7,ESSDAI score,0
+ID415,A,South America,2,Placebo,7,Week 48,NA,ESSDAI score,NA
+ID416,B,South America,2,Drug A,2,Week 24,1,ESSDAI score,-1
+ID416,B,South America,2,Drug A,2,Week 48,0,ESSDAI score,-2
+ID417,A,Asia,4,Placebo,11,Week 24,11,ESSDAI score,0
+ID417,A,Asia,4,Placebo,11,Week 48,9,ESSDAI score,-2
+ID418,A,Europe,3,Drug A,13,Week 24,9,ESSDAI score,-4
+ID418,A,Europe,3,Drug A,13,Week 48,5,ESSDAI score,-8
+ID419,A,South America,2,Drug A,5,Week 24,2,ESSDAI score,-3
+ID419,A,South America,2,Drug A,5,Week 48,-0,ESSDAI score,-5
+ID420,A,Asia,4,Drug A,16,Week 24,11,ESSDAI score,-5
+ID420,A,Asia,4,Drug A,16,Week 48,NA,ESSDAI score,NA
+ID421,B,South America,2,Drug A,12,Week 24,11,ESSDAI score,-1
+ID421,B,South America,2,Drug A,12,Week 48,9,ESSDAI score,-3
+ID422,A,South America,2,Drug A,15,Week 24,11,ESSDAI score,-4
+ID422,A,South America,2,Drug A,15,Week 48,11,ESSDAI score,-4
+ID423,A,North America,1,Drug A,6,Week 24,4,ESSDAI score,-2
+ID423,A,North America,1,Drug A,6,Week 48,4,ESSDAI score,-2
+ID424,B,South America,2,Drug A,11,Week 24,10,ESSDAI score,-1
+ID424,B,South America,2,Drug A,11,Week 48,10,ESSDAI score,-1
+ID425,A,Asia,4,Drug A,10,Week 24,6,ESSDAI score,-4
+ID425,A,Asia,4,Drug A,10,Week 48,6,ESSDAI score,-4
+ID426,A,Europe,3,Drug A,13,Week 24,8,ESSDAI score,-5
+ID426,A,Europe,3,Drug A,13,Week 48,4,ESSDAI score,-9
+ID427,A,Asia,4,Placebo,8,Week 24,8,ESSDAI score,0
+ID427,A,Asia,4,Placebo,8,Week 48,8,ESSDAI score,0
+ID428,A,North America,1,Placebo,10,Week 24,11,ESSDAI score,1
+ID428,A,North America,1,Placebo,10,Week 48,12,ESSDAI score,2
+ID429,A,Europe,3,Drug A,3,Week 24,2,ESSDAI score,-1
+ID429,A,Europe,3,Drug A,3,Week 48,-0,ESSDAI score,-3
+ID430,B,Europe,3,Drug A,7,Week 24,2,ESSDAI score,-5
+ID430,B,Europe,3,Drug A,7,Week 48,0,ESSDAI score,-7
+ID431,B,Europe,3,Drug A,11,Week 24,8,ESSDAI score,-3
+ID431,B,Europe,3,Drug A,11,Week 48,NA,ESSDAI score,NA
+ID432,A,North America,1,Placebo,7,Week 24,6,ESSDAI score,-1
+ID432,A,North America,1,Placebo,7,Week 48,7,ESSDAI score,0
+ID433,B,Asia,4,Placebo,10,Week 24,9,ESSDAI score,-1
+ID433,B,Asia,4,Placebo,10,Week 48,13,ESSDAI score,3
+ID434,A,Europe,3,Drug A,8,Week 24,3,ESSDAI score,-5
+ID434,A,Europe,3,Drug A,8,Week 48,3,ESSDAI score,-5
+ID435,B,South America,2,Placebo,12,Week 24,12,ESSDAI score,0
+ID435,B,South America,2,Placebo,12,Week 48,12,ESSDAI score,0
+ID436,A,Asia,4,Drug A,15,Week 24,12,ESSDAI score,-3
+ID436,A,Asia,4,Drug A,15,Week 48,14,ESSDAI score,-1
+ID437,A,North America,1,Placebo,7,Week 24,5,ESSDAI score,-2
+ID437,A,North America,1,Placebo,7,Week 48,2,ESSDAI score,-5
+ID438,B,Europe,3,Drug A,9,Week 24,12,ESSDAI score,3
+ID438,B,Europe,3,Drug A,9,Week 48,13,ESSDAI score,4
+ID439,B,South America,2,Placebo,16,Week 24,15,ESSDAI score,-1
+ID439,B,South America,2,Placebo,16,Week 48,19,ESSDAI score,3
+ID440,A,South America,2,Drug A,1,Week 24,0,ESSDAI score,-1
+ID440,A,South America,2,Drug A,1,Week 48,0,ESSDAI score,-1
+ID441,B,Europe,3,Drug A,9,Week 24,5,ESSDAI score,-4
+ID441,B,Europe,3,Drug A,9,Week 48,-0,ESSDAI score,-9
+ID442,A,Europe,3,Drug A,18,Week 24,20,ESSDAI score,2
+ID442,A,Europe,3,Drug A,18,Week 48,15,ESSDAI score,-3
+ID443,A,Europe,3,Placebo,19,Week 24,18,ESSDAI score,-1
+ID443,A,Europe,3,Placebo,19,Week 48,18,ESSDAI score,-1
+ID444,A,North America,1,Placebo,11,Week 24,12,ESSDAI score,1
+ID444,A,North America,1,Placebo,11,Week 48,13,ESSDAI score,2
+ID445,A,North America,1,Drug A,7,Week 24,6,ESSDAI score,-1
+ID445,A,North America,1,Drug A,7,Week 48,5,ESSDAI score,-2
+ID446,A,Asia,4,Placebo,11,Week 24,13,ESSDAI score,2
+ID446,A,Asia,4,Placebo,11,Week 48,13,ESSDAI score,2
+ID447,A,Europe,3,Placebo,7,Week 24,7,ESSDAI score,0
+ID447,A,Europe,3,Placebo,7,Week 48,NA,ESSDAI score,NA
+ID448,A,Europe,3,Placebo,16,Week 24,14,ESSDAI score,-2
+ID448,A,Europe,3,Placebo,16,Week 48,14,ESSDAI score,-2
+ID449,A,North America,1,Placebo,7,Week 24,7,ESSDAI score,0
+ID449,A,North America,1,Placebo,7,Week 48,6,ESSDAI score,-1
+ID450,A,Europe,3,Placebo,11,Week 24,NA,ESSDAI score,NA
+ID450,A,Europe,3,Placebo,11,Week 48,12,ESSDAI score,1
+ID451,A,Asia,4,Placebo,12,Week 24,17,ESSDAI score,5
+ID451,A,Asia,4,Placebo,12,Week 48,15,ESSDAI score,3
+ID452,A,Asia,4,Drug A,7,Week 24,6,ESSDAI score,-1
+ID452,A,Asia,4,Drug A,7,Week 48,4,ESSDAI score,-3
+ID453,B,South America,2,Placebo,13,Week 24,12,ESSDAI score,-1
+ID453,B,South America,2,Placebo,13,Week 48,10,ESSDAI score,-3
+ID454,A,Europe,3,Placebo,7,Week 24,9,ESSDAI score,2
+ID454,A,Europe,3,Placebo,7,Week 48,12,ESSDAI score,5
+ID455,A,Asia,4,Placebo,13,Week 24,16,ESSDAI score,3
+ID455,A,Asia,4,Placebo,13,Week 48,11,ESSDAI score,-2
+ID456,B,Europe,3,Drug A,14,Week 24,14,ESSDAI score,0
+ID456,B,Europe,3,Drug A,14,Week 48,12,ESSDAI score,-2
+ID457,A,North America,1,Placebo,6,Week 24,7,ESSDAI score,1
+ID457,A,North America,1,Placebo,6,Week 48,6,ESSDAI score,0
+ID458,A,North America,1,Placebo,14,Week 24,13,ESSDAI score,-1
+ID458,A,North America,1,Placebo,14,Week 48,17,ESSDAI score,3
+ID459,A,North America,1,Drug A,8,Week 24,4,ESSDAI score,-4
+ID459,A,North America,1,Drug A,8,Week 48,NA,ESSDAI score,NA
+ID460,A,North America,1,Placebo,11,Week 24,NA,ESSDAI score,NA
+ID460,A,North America,1,Placebo,11,Week 48,13,ESSDAI score,2
+ID461,A,South America,2,Placebo,11,Week 24,11,ESSDAI score,0
+ID461,A,South America,2,Placebo,11,Week 48,12,ESSDAI score,1
+ID462,A,South America,2,Drug A,8,Week 24,1,ESSDAI score,-7
+ID462,A,South America,2,Drug A,8,Week 48,2,ESSDAI score,-6
+ID463,A,Europe,3,Placebo,11,Week 24,10,ESSDAI score,-1
+ID463,A,Europe,3,Placebo,11,Week 48,11,ESSDAI score,0
+ID464,A,Europe,3,Drug A,5,Week 24,1,ESSDAI score,-4
+ID464,A,Europe,3,Drug A,5,Week 48,0,ESSDAI score,-5
+ID465,B,South America,2,Drug A,9,Week 24,7,ESSDAI score,-2
+ID465,B,South America,2,Drug A,9,Week 48,5,ESSDAI score,-4
+ID466,A,North America,1,Placebo,13,Week 24,12,ESSDAI score,-1
+ID466,A,North America,1,Placebo,13,Week 48,12,ESSDAI score,-1
+ID467,A,Asia,4,Placebo,1,Week 24,2,ESSDAI score,1
+ID467,A,Asia,4,Placebo,1,Week 48,6,ESSDAI score,5
+ID468,A,Asia,4,Drug A,4,Week 24,4,ESSDAI score,0
+ID468,A,Asia,4,Drug A,4,Week 48,1,ESSDAI score,-3
+ID469,B,Asia,4,Placebo,5,Week 24,5,ESSDAI score,0
+ID469,B,Asia,4,Placebo,5,Week 48,6,ESSDAI score,1
+ID470,A,North America,1,Drug A,4,Week 24,2,ESSDAI score,-2
+ID470,A,North America,1,Drug A,4,Week 48,1,ESSDAI score,-3
+ID471,B,Europe,3,Drug A,12,Week 24,9,ESSDAI score,-3
+ID471,B,Europe,3,Drug A,12,Week 48,4,ESSDAI score,-8
+ID472,A,South America,2,Drug A,6,Week 24,4,ESSDAI score,-2
+ID472,A,South America,2,Drug A,6,Week 48,1,ESSDAI score,-5
+ID473,B,North America,1,Placebo,1,Week 24,1,ESSDAI score,0
+ID473,B,North America,1,Placebo,1,Week 48,0,ESSDAI score,-1
+ID474,A,Asia,4,Placebo,7,Week 24,2,ESSDAI score,-5
+ID474,A,Asia,4,Placebo,7,Week 48,2,ESSDAI score,-5
+ID475,A,North America,1,Drug A,8,Week 24,5,ESSDAI score,-3
+ID475,A,North America,1,Drug A,8,Week 48,5,ESSDAI score,-3
+ID476,A,South America,2,Drug A,13,Week 24,15,ESSDAI score,2
+ID476,A,South America,2,Drug A,13,Week 48,11,ESSDAI score,-2
+ID477,B,Europe,3,Drug A,6,Week 24,7,ESSDAI score,1
+ID477,B,Europe,3,Drug A,6,Week 48,6,ESSDAI score,0
+ID478,A,North America,1,Drug A,15,Week 24,15,ESSDAI score,0
+ID478,A,North America,1,Drug A,15,Week 48,13,ESSDAI score,-2
+ID479,A,Asia,4,Placebo,12,Week 24,13,ESSDAI score,1
+ID479,A,Asia,4,Placebo,12,Week 48,12,ESSDAI score,0
+ID480,A,South America,2,Drug A,11,Week 24,9,ESSDAI score,-2
+ID480,A,South America,2,Drug A,11,Week 48,9,ESSDAI score,-2
+ID481,A,Asia,4,Placebo,7,Week 24,5,ESSDAI score,-2
+ID481,A,Asia,4,Placebo,7,Week 48,5,ESSDAI score,-2
+ID482,B,Asia,4,Placebo,18,Week 24,16,ESSDAI score,-2
+ID482,B,Asia,4,Placebo,18,Week 48,18,ESSDAI score,0
+ID483,B,Asia,4,Placebo,9,Week 24,12,ESSDAI score,3
+ID483,B,Asia,4,Placebo,9,Week 48,11,ESSDAI score,2
+ID484,A,North America,1,Placebo,3,Week 24,5,ESSDAI score,2
+ID484,A,North America,1,Placebo,3,Week 48,5,ESSDAI score,2
+ID485,B,South America,2,Drug A,9,Week 24,9,ESSDAI score,0
+ID485,B,South America,2,Drug A,9,Week 48,6,ESSDAI score,-3
+ID486,B,Europe,3,Placebo,2,Week 24,4,ESSDAI score,2
+ID486,B,Europe,3,Placebo,2,Week 48,2,ESSDAI score,0
+ID487,A,South America,2,Placebo,9,Week 24,8,ESSDAI score,-1
+ID487,A,South America,2,Placebo,9,Week 48,NA,ESSDAI score,NA
+ID488,A,North America,1,Drug A,8,Week 24,NA,ESSDAI score,NA
+ID488,A,North America,1,Drug A,8,Week 48,3,ESSDAI score,-5
+ID489,A,Asia,4,Placebo,13,Week 24,13,ESSDAI score,0
+ID489,A,Asia,4,Placebo,13,Week 48,15,ESSDAI score,2
+ID490,A,Europe,3,Placebo,14,Week 24,12,ESSDAI score,-2
+ID490,A,Europe,3,Placebo,14,Week 48,11,ESSDAI score,-3
+ID491,A,Europe,3,Drug A,7,Week 24,5,ESSDAI score,-2
+ID491,A,Europe,3,Drug A,7,Week 48,4,ESSDAI score,-3
+ID492,A,Asia,4,Placebo,13,Week 24,13,ESSDAI score,0
+ID492,A,Asia,4,Placebo,13,Week 48,11,ESSDAI score,-2
+ID493,A,Asia,4,Drug A,16,Week 24,14,ESSDAI score,-2
+ID493,A,Asia,4,Drug A,16,Week 48,12,ESSDAI score,-4
+ID494,A,North America,1,Placebo,7,Week 24,6,ESSDAI score,-1
+ID494,A,North America,1,Placebo,7,Week 48,3,ESSDAI score,-4
+ID495,A,South America,2,Placebo,7,Week 24,5,ESSDAI score,-2
+ID495,A,South America,2,Placebo,7,Week 48,0,ESSDAI score,-7
+ID496,B,North America,1,Placebo,13,Week 24,9,ESSDAI score,-4
+ID496,B,North America,1,Placebo,13,Week 48,13,ESSDAI score,0
+ID497,A,North America,1,Placebo,11,Week 24,12,ESSDAI score,1
+ID497,A,North America,1,Placebo,11,Week 48,14,ESSDAI score,3
+ID498,A,North America,1,Drug A,12,Week 24,11,ESSDAI score,-1
+ID498,A,North America,1,Drug A,12,Week 48,12,ESSDAI score,0
+ID499,B,Europe,3,Drug A,16,Week 24,11,ESSDAI score,-5
+ID499,B,Europe,3,Drug A,16,Week 48,NA,ESSDAI score,NA
+ID500,A,Asia,4,Drug A,12,Week 24,9,ESSDAI score,-3
+ID500,A,Asia,4,Drug A,12,Week 48,7,ESSDAI score,-5

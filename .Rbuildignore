@@ -1,0 +1,10 @@
+^rbmi\.helpers\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^data-raw$
+^doc$
+^Meta$
+^.gitlab-ci.yml$
+^docs$
+^.*\.Rproj$
