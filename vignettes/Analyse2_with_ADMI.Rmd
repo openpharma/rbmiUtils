@@ -29,9 +29,9 @@ library(readr)
 library(purrr)
 library(rbmi)
 library(beeca)
-
 library(rbmiUtils)
 
+set.seed(1974)
 data("ADEFF")
 
 ## Global constants
@@ -97,8 +97,7 @@ vars <- rbmi::set_vars(
 method <- rbmi::method_bayes(
     n_samples = N_IMPUTATIONS,
     burn_in = 200,
-    burn_between = 5,
-    seed = 675442751
+    burn_between = 5
 )
 
 # Create a dataset with the necessary columns

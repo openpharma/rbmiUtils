@@ -27,8 +27,7 @@ test_that("positive test get_imputed_data (from vignettes)", {
   method <- rbmi::method_bayes(
     n_samples = N_IMPUTATIONS,
     burn_in = 200,
-    burn_between = 5,
-    seed = 675442751
+    burn_between = 5
   )
 
   # Subset relevant columns
