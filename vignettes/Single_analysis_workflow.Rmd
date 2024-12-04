@@ -26,6 +26,7 @@ This is an example of the {rbmi} only workflow. The analysis is as follows: Rubi
 This example exists to compare with the workflow which saves an ADMI data set, then uses {rbmiUtils} to complete the intended analysis. 
 
 ```{r}
+set.seed(1974)
 data("ADEFF")
 
 ## Global constants
@@ -96,12 +97,11 @@ vars <- rbmi::set_vars(
     covariates = c("BASE", "STRATA", "REGION")
 )
 
-# Define which imputation method to use (here: Bayesian multiple imputation with 150 imputed datsets)
+# Define which imputation method to use (here: Bayesian multiple imputation)
 method <- rbmi::method_bayes(
     n_samples = N_IMPUTATIONS,
     burn_in = 200,
-    burn_between = 5,
-    seed = 675442751
+    burn_between = 5
 )
 
 # Create a dataset with the necessary columns
