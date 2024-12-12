@@ -31,6 +31,15 @@ library(rbmi)
 library(beeca)
 library(rbmiUtils)
 
+# require rstan
+if (!requireNamespace("rstan", quietly = TRUE)) {
+  install.packages("rstan", repos = "https://cloud.r-project.org/")
+  message("rstan has been successfully installed.")
+} else {
+  message("rstan is already installed.")
+}
+
+
 set.seed(1974)
 data("ADEFF")
 
