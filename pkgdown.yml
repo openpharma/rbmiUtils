@@ -1,0 +1,8 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  Analyse2_with_ADMI: Analyse2_with_ADMI.html
+  delta_analyse_mi_data: delta_analyse_mi_data.html
+  Single_analysis_workflow: Single_analysis_workflow.html
+last_built: 2024-12-12T08:34Z
