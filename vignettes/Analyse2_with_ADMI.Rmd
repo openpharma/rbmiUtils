@@ -31,14 +31,13 @@ library(rbmi)
 library(beeca)
 library(rbmiUtils)
 
-# require rstan
-if (!requireNamespace("rstan", quietly = TRUE)) {
+# check if require rstan
+if (!rlang::is_installed("rstan")) {
   install.packages("rstan", repos = "https://cloud.r-project.org/")
   message("rstan has been successfully installed.")
 } else {
   message("rstan is already installed.")
 }
-
 
 set.seed(1974)
 data("ADEFF")

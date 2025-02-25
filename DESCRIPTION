@@ -20,9 +20,10 @@ Suggests:
     spelling,
     testthat (>= 3.0.0),
     tidyr,
-    readr, 
+    readr,
     ggplot2,
-    beeca
+    beeca,
+    rstan
 Config/testthat/edition: 3
 Language: en-US
 Imports: 

@@ -8,3 +8,5 @@
 ^.gitlab-ci.yml$
 ^docs$
 ^.*\.Rproj$
+^.github$
+^.nojekyll$
