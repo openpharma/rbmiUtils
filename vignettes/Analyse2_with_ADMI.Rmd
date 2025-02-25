@@ -39,18 +39,20 @@ library(rbmiUtils)
 #   message("rstan is already installed.")
 # }
 
+
+# set seed 
+set.seed(1974)
+
+
 ## Define global rbmi constants - define imputation parameters
 IMPUTATIONS <- 100
 WARMUP <- 200
 THIN <- 5
-SEED <- 1974
 
 
 # load example data
 data("ADEFF")
 
-# set seed 
-set.seed(SEED)
 
 # Prepare the data
 ADEFF$TRT <- factor(ADEFF$TRT01P, levels = c("Placebo", "Drug A"))
@@ -120,14 +122,14 @@ method <- rbmi::method_bayes(
 
 # Create a dataset with the necessary columns
 dat <- ADEFF |>
-    select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
+    dplyr::select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
 # Fit the imputation model
 draws_obj <- rbmi::draws(
     data = dat,
     vars = vars,
     method = method,
-    quiet = TRUE
+    quiet = FALSE
 )
 
 # Impute the datasets
