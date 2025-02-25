@@ -65,10 +65,12 @@ ADMI$AVISIT <- factor(ADMI$AVISIT)
 
 # Specify the imputation method (Bayesian) - need for pool step
 method <- rbmi::method_bayes(
-  n_samples = N_IMPUTATIONS,
-  burn_in = BURN_IN,
-  burn_between = BURN_BETWEEN
-)
+    n_samples = N_IMPUTATIONS,
+    control = rbmi::control_bayes(
+      warmup = BURN_IN,
+      thin = BURN_BETWEEN
+      )
+    )
 
 # Perform ANCOVA Analysis on Each Imputed Dataset
 ana_obj_ancova <- analyse_mi_data(
