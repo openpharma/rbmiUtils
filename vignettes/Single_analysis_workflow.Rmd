@@ -25,14 +25,13 @@ This is an example of the {rbmi} only workflow. The analysis is as follows: Rubi
 
 This example exists to compare with the workflow which saves an ADMI data set, then uses {rbmiUtils} to complete the intended analysis. 
 
-```{r}
+```{r params}
 ## Define global rbmi constants - define imputation parameters
-mi_parameters <- list(
-  IMPUTATIONS = 200,
-  WARMUP = 200,
-  THIN = 5,
-  SEED = 1974
-)
+IMPUTATIONS <- 200
+WARMUP <- 200
+THIN <- 5
+SEED <- 1974
+
 
 # load example data
 data("ADEFF")
@@ -107,14 +106,15 @@ vars <- rbmi::set_vars(
 
 # Define which imputation method to use 
 # (here: Bayesian multiple imputation with 200 imputed datsets)
+# Define which imputation method to use 
+# (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = mi_parameters$IMPUTATIONS,
+    n_samples = IMPUTATIONS,
     control = rbmi::control_bayes(
-      warmup = mi_parameters$WARMUP,
-      thin = mi_parameters$THIN
-      )
+    warmup = WARMUP,
+    thin = THIN
     )
-
+  )
 
 # Create a dataset with the necessary columns
 dat <- ADEFF |>

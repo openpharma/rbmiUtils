@@ -40,18 +40,17 @@ library(rbmiUtils)
 # }
 
 ## Define global rbmi constants - define imputation parameters
-mi_parameters <- list(
-  IMPUTATIONS = 200,
-  WARMUP = 200,
-  THIN = 5,
-  SEED = 1974
-)
+IMPUTATIONS <- 200
+WARMUP <- 200
+THIN <- 5
+SEED <- 1974
+
 
 # load example data
 data("ADEFF")
 
 # set seed 
-set.seed(mi_parameters$SEED)
+set.seed(SEED)
 
 # Prepare the data
 ADEFF$TRT <- factor(ADEFF$TRT01P, levels = c("Placebo", "Drug A"))
@@ -61,7 +60,7 @@ ADEFF$AVISIT <- factor(ADEFF$AVISIT)
 
 Define function to compare last visit using a responder analysis
 
-```{r}
+```{r gcomp}
 ## function to compare last visit using a responder analysis
 gcomp_responder <- function(data, ...) {
 
@@ -99,7 +98,7 @@ gcomp_responder <- function(data, ...) {
 # STEP 1: Impute missing data
 
 
-```{r}
+```{r define}
 # Define key variables for rbmi
 vars <- rbmi::set_vars(
     subjid = "USUBJID",
@@ -112,10 +111,10 @@ vars <- rbmi::set_vars(
 # Define which imputation method to use 
 # (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = mi_parameters$IMPUTATIONS,
+    n_samples = IMPUTATIONS,
     control = rbmi::control_bayes(
-    warmup = mi_parameters$WARMUP,
-    thin = mi_parameters$THIN
+    warmup = WARMUP,
+    thin = THIN
     )
   )
 
@@ -151,7 +150,7 @@ continuous version of the endpoint into binary version of the endpoint
 is a non-responder).
 
 
-```{r}
+```{r get_data}
 ADMI <- ADMI |>
     dplyr::mutate(
         CRIT1FLN = ifelse(CHG > 3, 1, 0), 

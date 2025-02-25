@@ -28,12 +28,11 @@ library(ggplot2)
 library(purrr)
 
 ## Define global rbmi constants - define imputation parameters
-mi_parameters <- list(
-  IMPUTATIONS = 200,
-  WARMUP = 200,
-  THIN = 5,
-  SEED = 1974
-)
+IMPUTATIONS <- 200
+WARMUP <- 200
+THIN <- 5
+SEED <- 1974
+
 
 # load example data
 data("ADEFF")
@@ -68,10 +67,10 @@ vars <- rbmi::set_vars(
 # Define which imputation method to use 
 # (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = mi_parameters$IMPUTATIONS,
+    n_samples = IMPUTATIONS,
     control = rbmi::control_bayes(
-    warmup = mi_parameters$WARMUP,
-    thin = mi_parameters$THIN
+    warmup = WARMUP,
+    thin = THIN
     )
   )
 
