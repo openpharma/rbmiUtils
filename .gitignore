@@ -6,6 +6,7 @@
 .quarto
 inst/doc
 /doc/
+/docs/
 /Meta/
 scratch.R
 .gitlab-ci.yml
