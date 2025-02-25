@@ -111,10 +111,10 @@ vars <- rbmi::set_vars(
 # Define which imputation method to use 
 # (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = IMPUTATIONS,
+    n_samples = 100,
     control = rbmi::control_bayes(
-    warmup = WARMUP,
-    thin = THIN
+      warmup = 200,
+      thin = 2
     )
   )
 
