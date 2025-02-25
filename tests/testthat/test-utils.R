@@ -1,10 +1,9 @@
 test_that("positive test get_imputed_data (from vignettes)", {
-
   set.seed(122)
   data("ADEFF")
 
   # Constants
-  N_IMPUTATIONS <- 100  # Set to 1000 for final analysis
+  N_IMPUTATIONS <- 100
 
   # Prepare the data
   ADEFF <- ADEFF %>%
@@ -23,11 +22,13 @@ test_that("positive test get_imputed_data (from vignettes)", {
     covariates = c("BASE", "STRATA", "REGION")
   )
 
-  # Define the imputation method (Bayesian)
+  # Specify the imputation method (Bayesian) - need for pool step
   method <- rbmi::method_bayes(
     n_samples = N_IMPUTATIONS,
-    burn_in = 200,
-    burn_between = 5
+    control = rbmi::control_bayes(
+      warmup = 100,
+      thin = 2
+    )
   )
 
   # Subset relevant columns
@@ -35,12 +36,19 @@ test_that("positive test get_imputed_data (from vignettes)", {
     select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
   # Fit the imputation model and perform imputation
-  draws_obj <- rbmi::draws(data = dat, vars = vars, method = method, quiet = TRUE)
-  impute_obj <- rbmi::impute(draws_obj, references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
+  draws_obj <- rbmi::draws(
+    data = dat,
+    vars = vars,
+    method = method,
+    quiet = TRUE
+  )
+  impute_obj <- rbmi::impute(
+    draws_obj,
+    references = c("Placebo" = "Placebo", "Drug A" = "Placebo")
+  )
 
   # Get the imputed data as a data frame
   ADMI <- get_imputed_data(impute_obj)
-
 
   # TESTS
 
@@ -77,17 +85,23 @@ test_that("positive test get_imputed_data (from vignettes)", {
   extracted_dfs <- rbmi::extract_imputed_dfs(impute_obj, idmap = TRUE)
 
   imputed_dfs2 <- extracted_dfs |>
-    purrr::map_dfr(~ .x, .id = "IMPID")
+    purrr::map_dfr(~.x, .id = "IMPID")
 
   expect_identical(
-    imputed_dfs2[, c("STRATA", "REGION", "REGIONC", "TRT", "BASE", "CHG", "AVISIT")],
+    imputed_dfs2[, c(
+      "STRATA",
+      "REGION",
+      "REGIONC",
+      "TRT",
+      "BASE",
+      "CHG",
+      "AVISIT"
+    )],
     ADMI[, c("STRATA", "REGION", "REGIONC", "TRT", "BASE", "CHG", "AVISIT")]
   )
-
 })
 
 test_that("get_imputed_data errors with incorrect inputs", {
-
   # Assert mtcars is not the required class
   expect_false(inherits(mtcars, "imputation"))
 
@@ -95,5 +109,4 @@ test_that("get_imputed_data errors with incorrect inputs", {
     get_imputed_data(mtcars),
     "impute_obj must be of an imputation object outputted from rbmi::impute"
   )
-
 })

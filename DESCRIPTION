@@ -30,7 +30,7 @@ Imports:
     assertthat,
     dplyr,
     purrr,
-    rbmi,
+    rbmi (>= 1.4),
     rlang
 VignetteBuilder: knitr
 Depends: 

@@ -31,7 +31,7 @@ library(rbmi)
 library(beeca)
 library(rbmiUtils)
 
-# check if require rstan
+# check if rstan is installed localy and install if not 
 if (!rlang::is_installed("rstan")) {
   install.packages("rstan", repos = "https://cloud.r-project.org/")
   message("rstan has been successfully installed.")
@@ -39,11 +39,19 @@ if (!rlang::is_installed("rstan")) {
   message("rstan is already installed.")
 }
 
-set.seed(1974)
+## Define global rbmi constants - define imputation parameters
+mi_parameters <- list(
+  IMPUTATIONS = 200,
+  WARMUP = 200,
+  THIN = 5,
+  SEED = 1974
+)
+
+# load example data
 data("ADEFF")
 
-## Global constants
-N_IMPUTATIONS <- 100 ## set to 1,000 for final analysis
+# set seed 
+set.seed(mi_parameters$SEED)
 
 # Prepare the data
 ADEFF$TRT <- factor(ADEFF$TRT01P, levels = c("Placebo", "Drug A"))
@@ -101,12 +109,15 @@ vars <- rbmi::set_vars(
     covariates = c("BASE", "STRATA", "REGION")
 )
 
-# Define which imputation method to use (here: Bayesian multiple imputation with 150 imputed datsets)
+# Define which imputation method to use 
+# (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = N_IMPUTATIONS,
-    burn_in = 200,
-    burn_between = 5
-)
+    n_samples = mi_parameters$IMPUTATIONS,
+    control = rbmi::control_bayes(
+    warmup = mi_parameters$WARMUP,
+    thin = mi_parameters$THIN
+    )
+  )
 
 # Create a dataset with the necessary columns
 dat <- ADEFF |>

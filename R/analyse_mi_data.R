@@ -39,11 +39,13 @@
 #'  )
 #'
 #' # Specify the imputation method (Bayesian) - need for pool step
-#' method <- rbmi::method_bayes(
-#'   n_samples = N_IMPUTATIONS,
-#'   burn_in = BURN_IN,
-#'   burn_between = BURN_BETWEEN
-#'   )
+#'  method <- rbmi::method_bayes(
+#'  n_samples = N_IMPUTATIONS,
+#'  control = rbmi::control_bayes(
+#'    warmup = BURN_IN,
+#'    thin = BURN_BETWEEN
+#'    )
+#'  )
 #'
 #' # Perform ANCOVA Analysis on Each Imputed Dataset
 #' ana_obj_ancova <- analyse_mi_data(
@@ -55,18 +57,24 @@
 #' )
 #'
 #' @export
-analyse_mi_data <- function(data = NULL, vars = NULL, method = NULL, fun = rbmi::ancova, delta = NULL, ...){
-
+analyse_mi_data <- function(
+  data = NULL,
+  vars = NULL,
+  method = NULL,
+  fun = rbmi::ancova,
+  delta = NULL,
+  ...
+) {
   # Check for missing inputs
-  if (is.null(data))
-    stop("`data` cannot be NULL.")
+  if (is.null(data)) stop("`data` cannot be NULL.")
 
   # check IMPID is in data
   if (!"IMPID" %in% names(data))
-    stop("`data` must contain a variable `IMPID` to identify distinct imputation iterations.")
+    stop(
+      "`data` must contain a variable `IMPID` to identify distinct imputation iterations."
+    )
 
-  if (is.null(vars))
-    stop("`vars` cannot be NULL. Specify key variables.")
+  if (is.null(vars)) stop("`vars` cannot be NULL. Specify key variables.")
 
   ## asset function
   assertthat::assert_that(
@@ -98,17 +106,21 @@ analyse_mi_data <- function(data = NULL, vars = NULL, method = NULL, fun = rbmi:
     ## apply delta to data set adding to outcome
     data <- data |>
       dplyr::left_join(delta, by = c(vars$subjid, vars$visit, vars$group)) |>
-      dplyr::mutate(!!rlang::sym(vars$outcome) := .data[[vars$outcome]] + .data$delta)
+      dplyr::mutate(
+        !!rlang::sym(vars$outcome) := .data[[vars$outcome]] + .data$delta
+      )
   }
 
   # Loop through distinct imputation data sets based on IMPID in a single data frame
   results <- data |>
     dplyr::group_split(IMPID) |>
-    lapply(function(dat_subset, ...) {
-      # Perform analysis on the subset of data corresponding to each imputation
-      fun(dat_subset, vars, ...)
-    }, ...)
-
+    lapply(
+      function(dat_subset, ...) {
+        # Perform analysis on the subset of data corresponding to each imputation
+        fun(dat_subset, vars, ...)
+      },
+      ...
+    )
 
   fun_name <- deparse(substitute(fun))
 
@@ -146,17 +158,23 @@ analyse_mi_data <- function(data = NULL, vars = NULL, method = NULL, fun = rbmi:
 #' @param fun_name The name of the analysis function (used for printing).
 #'
 #' @return An object of class `analysis` with the results and associated metadata.
-as_analysis2 <- function(results, method, delta = NULL, fun = NULL, fun_name = NULL) {
-
-  next_class <- switch(class(method)[[2]],
-                       bayes = "rubin",
-                       approxbayes = "rubin",
-                       condmean = ifelse(
-                         method$type == "jackknife",
-                         "jackknife",
-                         "bootstrap"
-                       ),
-                       bmlmi = "bmlmi"
+as_analysis2 <- function(
+  results,
+  method,
+  delta = NULL,
+  fun = NULL,
+  fun_name = NULL
+) {
+  next_class <- switch(
+    class(method)[[2]],
+    bayes = "rubin",
+    approxbayes = "rubin",
+    condmean = ifelse(
+      method$type == "jackknife",
+      "jackknife",
+      "bootstrap"
+    ),
+    bmlmi = "bmlmi"
   )
 
   assertthat::assert_that(

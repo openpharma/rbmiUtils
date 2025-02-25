@@ -41,9 +41,11 @@
 #' # Specify the imputation method (Bayesian) - need for pool step
 #' method <- rbmi::method_bayes(
 #'   n_samples = N_IMPUTATIONS,
-#'   burn_in = BURN_IN,
-#'   burn_between = BURN_BETWEEN
-#' )
+#'   control = rbmi::control_bayes(
+#'     warmup = BURN_IN,
+#'     thin = BURN_BETWEEN
+#'     )
+#'   )
 #'
 #' # Perform ANCOVA Analysis on Each Imputed Dataset
 #' ana_obj_ancova <- analyse_mi_data(
@@ -62,7 +64,6 @@
 #'
 #' @export
 tidy_pool_obj <- function(pool_obj) {
-
   # Check object is of class 'pool'
   if (!inherits(pool_obj, "pool")) {
     stop("Input object must be of class 'pool'")
@@ -70,7 +71,6 @@ tidy_pool_obj <- function(pool_obj) {
 
   # Convert pool_obj to tibble
   df <- dplyr::as_tibble(pool_obj)
-
 
   # Process the 'parameter' column by separating it
   df <- df |>
@@ -91,25 +91,55 @@ tidy_pool_obj <- function(pool_obj) {
         parameter_type == 'trt' & !is.na(lsm_type) ~ lsm_type, # Include visit, which will be in lsm_type for trt comparisons
         TRUE ~ NA_character_
       ),
-      lsm_type = dplyr::if_else(parameter_type == 'lsm', lsm_type, NA_character_),
-      lsm_type = dplyr::if_else(parameter_type == 'trt', NA_character_, lsm_type)
+      lsm_type = dplyr::if_else(
+        parameter_type == 'lsm',
+        lsm_type,
+        NA_character_
+      ),
+      lsm_type = dplyr::if_else(
+        parameter_type == 'trt',
+        NA_character_,
+        lsm_type
+      )
     )
 
   # Create informative descriptions for parameters
   df <- df |>
     dplyr::mutate(
       description = dplyr::case_when(
-        parameter_type == 'trt' & !is.na(lsm_type) ~ paste('Treatment Comparison at', visit),
+        parameter_type == 'trt' & !is.na(lsm_type) ~
+          paste('Treatment Comparison at', visit),
         parameter_type == 'trt' ~ 'Treatment Comparison',
-        parameter_type == 'lsm' & !is.na(visit) ~ paste('Least Squares Mean for', ifelse(lsm_type == 'ref', 'Reference', 'Alternative'), 'at', visit),
-        parameter_type == 'lsm' ~ paste('Least Squares Mean for', ifelse(lsm_type == 'ref', 'Reference', 'Alternative')),
+        parameter_type == 'lsm' & !is.na(visit) ~
+          paste(
+            'Least Squares Mean for',
+            ifelse(lsm_type == 'ref', 'Reference', 'Alternative'),
+            'at',
+            visit
+          ),
+        parameter_type == 'lsm' ~
+          paste(
+            'Least Squares Mean for',
+            ifelse(lsm_type == 'ref', 'Reference', 'Alternative')
+          ),
         TRUE ~ parameter
       )
     )
 
   # Select and arrange the columns for the publication-ready table
   df <- df |>
-    dplyr::select(parameter, description, visit, parameter_type, lsm_type, est, se, lci, uci, pval)
+    dplyr::select(
+      parameter,
+      description,
+      visit,
+      parameter_type,
+      lsm_type,
+      est,
+      se,
+      lci,
+      uci,
+      pval
+    )
 
   return(df)
 }
