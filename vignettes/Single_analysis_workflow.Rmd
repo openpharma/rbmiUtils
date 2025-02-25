@@ -27,7 +27,7 @@ This example exists to compare with the workflow which saves an ADMI data set, t
 
 ```{r params}
 ## Define global rbmi constants - define imputation parameters
-IMPUTATIONS <- 200
+IMPUTATIONS <- 100
 WARMUP <- 200
 THIN <- 5
 SEED <- 1974
@@ -37,7 +37,7 @@ SEED <- 1974
 data("ADEFF")
 
 # set seed 
-set.seed(mi_parameters$SEED)
+set.seed(SEED)
 
 # Prepare the data
 ADEFF$TRT <- factor(ADEFF$TRT01P, levels = c("Placebo", "Drug A"))

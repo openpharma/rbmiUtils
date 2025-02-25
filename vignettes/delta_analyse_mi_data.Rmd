@@ -38,7 +38,7 @@ SEED <- 1974
 data("ADEFF")
 
 # set seed 
-set.seed(mi_parameters$SEED)
+set.seed(SEED)
 
 
 # Prepare the data

@@ -40,7 +40,7 @@ library(rbmiUtils)
 # }
 
 ## Define global rbmi constants - define imputation parameters
-IMPUTATIONS <- 200
+IMPUTATIONS <- 100
 WARMUP <- 200
 THIN <- 5
 SEED <- 1974
