@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rbmiUtils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.9000</span>
       </span>
     </div>
 
@@ -132,10 +132,12 @@
 <span></span>
 <span><span class="co"># Specify the imputation method (Bayesian) - need for pool step</span></span>
 <span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span>
-<span>  n_samples <span class="op">=</span> <span class="va">N_IMPUTATIONS</span>,</span>
-<span>  burn_in <span class="op">=</span> <span class="va">BURN_IN</span>,</span>
-<span>  burn_between <span class="op">=</span> <span class="va">BURN_BETWEEN</span></span>
-<span><span class="op">)</span></span>
+<span>    n_samples <span class="op">=</span> <span class="va">N_IMPUTATIONS</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span></span>
+<span>      warmup <span class="op">=</span> <span class="va">BURN_IN</span>,</span>
+<span>      thin <span class="op">=</span> <span class="va">BURN_BETWEEN</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Perform ANCOVA Analysis on Each Imputed Dataset</span></span>
 <span><span class="va">ana_obj_ancova</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/analyse_mi_data.html">analyse_mi_data</a></span><span class="op">(</span></span>
