@@ -18,11 +18,9 @@
 #' # Example usage with an ANCOVA function
 #' library(dplyr)
 #' library(rbmi)
-#'
+#' library(rbmiUtils)
+#' set.seed(123)
 #' data("ADMI")
-#' N_IMPUTATIONS <- 100
-#' BURN_IN <- 200
-#' BURN_BETWEEN <- 5
 #'
 #' # Convert key columns to factors
 #' ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
@@ -40,10 +38,10 @@
 #'
 #' # Specify the imputation method (Bayesian) - need for pool step
 #'  method <- rbmi::method_bayes(
-#'  n_samples = N_IMPUTATIONS,
+#'  n_samples = 100,
 #'  control = rbmi::control_bayes(
-#'    warmup = BURN_IN,
-#'    thin = BURN_BETWEEN
+#'    warmup = 200,
+#'    thin = 2
 #'    )
 #'  )
 #'
