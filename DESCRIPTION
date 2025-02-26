@@ -1,6 +1,6 @@
 Package: rbmiUtils
 Title: Utility functions to work with and extend the rbmi package 
-Version: 0.0.1
+Version: 0.0.1.9000
 Authors@R: c( 
     person("Mark", "Baillie", email = "mark.baillie@novartis.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5618-0667")),
@@ -20,18 +20,19 @@ Suggests:
     spelling,
     testthat (>= 3.0.0),
     tidyr,
-    readr, 
+    readr,
     ggplot2,
-    beeca
+    beeca,
+    rstan
 Config/testthat/edition: 3
 Language: en-US
 Imports: 
     assertthat,
     dplyr,
     purrr,
-    rbmi,
+    rbmi (>= 1.4),
     rlang
 VignetteBuilder: knitr
 Depends: 
-    R (>= 2.10)
+    R (>= 4.1)
 LazyData: true

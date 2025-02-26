@@ -39,11 +39,9 @@ The function loops through distinct imputation datasets (identified by \code{IMP
 # Example usage with an ANCOVA function
 library(dplyr)
 library(rbmi)
-
+library(rbmiUtils)
+set.seed(123)
 data("ADMI")
-N_IMPUTATIONS <- 100
-BURN_IN <- 200
-BURN_BETWEEN <- 5
 
 # Convert key columns to factors
 ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
@@ -60,11 +58,13 @@ ADMI$AVISIT <- factor(ADMI$AVISIT)
  )
 
 # Specify the imputation method (Bayesian) - need for pool step
-method <- rbmi::method_bayes(
-  n_samples = N_IMPUTATIONS,
-  burn_in = BURN_IN,
-  burn_between = BURN_BETWEEN
-  )
+ method <- rbmi::method_bayes(
+ n_samples = 100,
+ control = rbmi::control_bayes(
+   warmup = 200,
+   thin = 2
+   )
+ )
 
 # Perform ANCOVA Analysis on Each Imputed Dataset
 ana_obj_ancova <- analyse_mi_data(

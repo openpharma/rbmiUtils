@@ -27,11 +27,19 @@ library(rbmiUtils)
 library(ggplot2)
 library(purrr)
 
-set.seed(122)
+## Define global rbmi constants - define imputation parameters
+IMPUTATIONS <- 200
+WARMUP <- 200
+THIN <- 5
+SEED <- 1974
+
+
+# load example data
 data("ADEFF")
 
-# Constants
-N_IMPUTATIONS <- 100  # Set to 1000 for final analysis
+# set seed 
+set.seed(SEED)
+
 
 # Prepare the data
 ADEFF <- ADEFF %>%
@@ -56,12 +64,16 @@ vars <- rbmi::set_vars(
     covariates = c("BASE", "STRATA", "REGION")
 )
 
-# Define the imputation method (Bayesian)
+# Define which imputation method to use 
+# (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = N_IMPUTATIONS,
-    burn_in = 200,
-    burn_between = 5
-)
+    n_samples = IMPUTATIONS,
+    control = rbmi::control_bayes(
+    warmup = WARMUP,
+    thin = THIN
+    )
+  )
+
 
 # Subset relevant columns
 dat <- ADEFF %>%

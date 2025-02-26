@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rbmiUtils</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.1.9000</span>
       </span>
     </div>
 
@@ -107,10 +107,19 @@ beeca outputs using Rubin’s Rules.</p>
 <p>This example exists to compare with the workflow which saves an ADMI
 data set, then uses {rbmiUtils} to complete the intended analysis.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ADEFF"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co">## Define global rbmi constants - define imputation parameters</span></span>
+<span><span class="va">mi_parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>  IMPUTATIONS <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  WARMUP <span class="op">=</span> <span class="fl">200</span>,</span>
+<span>  THIN <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  SEED <span class="op">=</span> <span class="fl">1974</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Global constants</span></span>
-<span><span class="va">N_IMPUTATIONS</span> <span class="op">&lt;-</span> <span class="fl">100</span> </span>
+<span><span class="co"># load example data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ADEFF"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># set seed </span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="va">mi_parameters</span><span class="op">$</span><span class="va">SEED</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Prepare the data</span></span>
 <span><span class="va">ADEFF</span><span class="op">$</span><span class="va">TRT</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ADEFF</span><span class="op">$</span><span class="va">TRT01P</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span>, <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span></span>
@@ -169,13 +178,16 @@ data set, then uses {rbmiUtils} to complete the intended analysis.</p>
 <span>    covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BASE"</span>, <span class="st">"STRATA"</span>, <span class="st">"REGION"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Define which imputation method to use (here: Bayesian multiple imputation with 150 imputed datsets)</span></span>
+<span><span class="co"># Define which imputation method to use </span></span>
+<span><span class="co"># (here: Bayesian multiple imputation with 200 imputed datsets)</span></span>
 <span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span>
-<span>    n_samples <span class="op">=</span> <span class="va">N_IMPUTATIONS</span>,</span>
-<span>    burn_in <span class="op">=</span> <span class="fl">200</span>,</span>
-<span>    burn_between <span class="op">=</span> <span class="fl">5</span>,</span>
-<span>    seed <span class="op">=</span> <span class="fl">675442751</span></span>
-<span><span class="op">)</span></span>
+<span>    n_samples <span class="op">=</span> <span class="va">mi_parameters</span><span class="op">$</span><span class="va">IMPUTATIONS</span>,</span>
+<span>    control <span class="op">=</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span></span>
+<span>      warmup <span class="op">=</span> <span class="va">mi_parameters</span><span class="op">$</span><span class="va">WARMUP</span>,</span>
+<span>      thin <span class="op">=</span> <span class="va">mi_parameters</span><span class="op">$</span><span class="va">THIN</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
 <span></span>
 <span><span class="co"># Create a dataset with the necessary columns</span></span>
 <span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">ADEFF</span> <span class="op">|&gt;</span></span>
@@ -220,7 +232,7 @@ data set, then uses {rbmiUtils} to complete the intended analysis.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Pool Object</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt; Number of Results Combined: 100</span></span>
+<span><span class="co">#&gt; Number of Results Combined: 200</span></span>
 <span><span class="co">#&gt; Method: rubin</span></span>
 <span><span class="co">#&gt; Confidence Level: 0.95</span></span>
 <span><span class="co">#&gt; Alternative: two.sided</span></span>
@@ -230,12 +242,12 @@ data set, then uses {rbmiUtils} to complete the intended analysis.</p>
 <span><span class="co">#&gt;   ========================================================</span></span>
 <span><span class="co">#&gt;       parameter      est     se     lci     uci     pval  </span></span>
 <span><span class="co">#&gt;   --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;      trt_Week 24    -2.169  0.182  -2.528  -1.811  &lt;0.001 </span></span>
-<span><span class="co">#&gt;    lsm_ref_Week 24  0.075   0.131  -0.181  0.332   0.564  </span></span>
-<span><span class="co">#&gt;    lsm_alt_Week 24  -2.094  0.126  -2.342  -1.847  &lt;0.001 </span></span>
-<span><span class="co">#&gt;      trt_Week 48    -3.81   0.257  -4.315  -3.305  &lt;0.001 </span></span>
-<span><span class="co">#&gt;    lsm_ref_Week 48  0.041   0.186  -0.324  0.406   0.827  </span></span>
-<span><span class="co">#&gt;    lsm_alt_Week 48  -3.769  0.176  -4.115  -3.423  &lt;0.001 </span></span>
+<span><span class="co">#&gt;      trt_Week 24    -2.174  0.182  -2.531  -1.816  &lt;0.001 </span></span>
+<span><span class="co">#&gt;    lsm_ref_Week 24  0.077   0.131  -0.179  0.334   0.554  </span></span>
+<span><span class="co">#&gt;    lsm_alt_Week 24  -2.096  0.126  -2.343  -1.849  &lt;0.001 </span></span>
+<span><span class="co">#&gt;      trt_Week 48    -3.81   0.256  -4.314  -3.307  &lt;0.001 </span></span>
+<span><span class="co">#&gt;    lsm_ref_Week 48  0.043   0.185  -0.321  0.407   0.815  </span></span>
+<span><span class="co">#&gt;    lsm_alt_Week 48  -3.767  0.176  -4.113  -3.421  &lt;0.001 </span></span>
 <span><span class="co">#&gt;   --------------------------------------------------------</span></span></code></pre></div>
 </div>
 <div class="section level4">
@@ -262,7 +274,7 @@ data set, then uses {rbmiUtils} to complete the intended analysis.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Pool Object</span></span>
 <span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt; Number of Results Combined: 100</span></span>
+<span><span class="co">#&gt; Number of Results Combined: 200</span></span>
 <span><span class="co">#&gt; Method: rubin</span></span>
 <span><span class="co">#&gt; Confidence Level: 0.95</span></span>
 <span><span class="co">#&gt; Alternative: two.sided</span></span>

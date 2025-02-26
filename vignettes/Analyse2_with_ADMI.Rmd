@@ -31,20 +31,28 @@ library(rbmi)
 library(beeca)
 library(rbmiUtils)
 
-# require rstan
-if (!requireNamespace("rstan", quietly = TRUE)) {
-  install.packages("rstan", repos = "https://cloud.r-project.org/")
-  message("rstan has been successfully installed.")
-} else {
-  message("rstan is already installed.")
+# check if rstan is installed localy and install if not 
+if (!rlang::is_installed("rstan")) {
+   install.packages("rstan", repos = "https://cloud.r-project.org/")
+   message("rstan has been successfully installed.")
+ } else {
+   message("rstan is already installed.")
 }
 
 
+# set seed 
 set.seed(1974)
+
+
+## Define global rbmi constants - define imputation parameters
+IMPUTATIONS <- 100
+WARMUP <- 200
+THIN <- 5
+
+
+# load example data
 data("ADEFF")
 
-## Global constants
-N_IMPUTATIONS <- 100 ## set to 1,000 for final analysis
 
 # Prepare the data
 ADEFF$TRT <- factor(ADEFF$TRT01P, levels = c("Placebo", "Drug A"))
@@ -54,7 +62,7 @@ ADEFF$AVISIT <- factor(ADEFF$AVISIT)
 
 Define function to compare last visit using a responder analysis
 
-```{r}
+```{r gcomp}
 ## function to compare last visit using a responder analysis
 gcomp_responder <- function(data, ...) {
 
@@ -92,7 +100,7 @@ gcomp_responder <- function(data, ...) {
 # STEP 1: Impute missing data
 
 
-```{r}
+```{r define}
 # Define key variables for rbmi
 vars <- rbmi::set_vars(
     subjid = "USUBJID",
@@ -102,23 +110,26 @@ vars <- rbmi::set_vars(
     covariates = c("BASE", "STRATA", "REGION")
 )
 
-# Define which imputation method to use (here: Bayesian multiple imputation with 150 imputed datsets)
+# Define which imputation method to use 
+# (here: Bayesian multiple imputation with 200 imputed datsets)
 method <- rbmi::method_bayes(
-    n_samples = N_IMPUTATIONS,
-    burn_in = 200,
-    burn_between = 5
-)
+    n_samples = 100,
+    control = rbmi::control_bayes(
+      warmup = 200,
+      thin = 2
+    )
+  )
 
 # Create a dataset with the necessary columns
 dat <- ADEFF |>
-    select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
+    dplyr::select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
 # Fit the imputation model
 draws_obj <- rbmi::draws(
     data = dat,
     vars = vars,
     method = method,
-    quiet = TRUE
+    quiet = FALSE
 )
 
 # Impute the datasets
@@ -141,7 +152,7 @@ continuous version of the endpoint into binary version of the endpoint
 is a non-responder).
 
 
-```{r}
+```{r get_data}
 ADMI <- ADMI |>
     dplyr::mutate(
         CRIT1FLN = ifelse(CHG > 3, 1, 0), 
