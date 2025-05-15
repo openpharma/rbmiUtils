@@ -1,4 +1,5 @@
 ^rbmi\.helpers\.Rproj$
+^rbmiUtils\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.Rmd$
@@ -10,3 +11,4 @@
 ^.*\.Rproj$
 ^.github$
 ^.nojekyll$
+^vignettes/delta_analyse_mi_data\.Rmd$
