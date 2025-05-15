@@ -46,8 +46,8 @@ library(rbmiUtils)
 
 data("ADMI")
 N_IMPUTATIONS <- 100
-BURN_IN <- 200
-BURN_BETWEEN <- 5
+WARMUP <- 200
+THIN <- 5
 
 # Convert key columns to factors
 ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
@@ -67,8 +67,8 @@ ADMI$AVISIT <- factor(ADMI$AVISIT)
 method <- rbmi::method_bayes(
     n_samples = N_IMPUTATIONS,
     control = rbmi::control_bayes(
-      warmup = BURN_IN,
-      thin = BURN_BETWEEN
+      warmup = WARMUP,
+      thin = THIN
       )
     )
 
