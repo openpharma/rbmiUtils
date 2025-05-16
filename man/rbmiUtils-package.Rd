@@ -4,14 +4,14 @@
 \name{rbmiUtils-package}
 \alias{rbmiUtils}
 \alias{rbmiUtils-package}
-\title{rbmiUtils: Utility Functions to Support and Extend the rbmi Package}
+\title{rbmiUtils: Utility Functions to Support and Extend the Rbmi Package}
 \description{
 Provides utility functions that extend the capabilities of the rbmi package to support clinical trial analysis workflows. Includes tools for manipulating imputed data, applying analysis methods across imputations, and generating output compatible with clinical data standards.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://openpharma.github.io/rbmiUtils/}
+  \item \url{https://github.com/openpharma/rbmiUtils}
   \item Report bugs at \url{https://github.com/openpharma/rbmiUtils/issues}
 }
 

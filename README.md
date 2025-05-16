@@ -6,12 +6,12 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
 <!-- badges: end -->
 
 `rbmiUtils` extends the functionality of
-[`*rbmi*`](https://github.com/insightsengineering/rbmi) to support more
+[`rbmi`](https://github.com/insightsengineering/rbmi) to support more
 streamlined workflows for multiple imputation in clinical trials. It is
 designed to simplify key tasks such as analysis execution, pooling,
 result tidying, and imputed data handling.
@@ -46,14 +46,6 @@ datasets using Bayesian multiple imputation:
 
 ``` r
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 library(rbmi)
 library(rbmiUtils)
 
