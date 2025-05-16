@@ -1,14 +1,18 @@
 ---
-title: "Storing and then analysing with rbmiUtils"
-output: rmarkdown::html_vignette
+title: "Storing and Analyzing Imputed Data with rbmiUtils"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: true
 vignette: >
-  %\VignetteIndexEntry{analyse2}
+  %\VignetteIndexEntry{Storing and Analyzing with rbmiUtils}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -17,24 +21,28 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This vignette demonstrates how to perform multiple imputation followed by two types of analyses:
+This vignette demonstrates how to:
 
-- A standard ANCOVA on a continuous endpoint (CHG).
-- A `responder` analysis on a binary endpoint (CRIT1FLN).
-- We use the {rbmiUtils} package, which extends the capabilities of {rbmi} by providing convenient helpers such as get_imputed_data() and analyse_mi_data(), to store, modify the imputed data, and then analyse later. 
+* Perform multiple imputation using the `{rbmi}` package.
+* Store and modify the imputed data using `{rbmiUtils}`.
+* Analyze the imputed data using:
 
+  * A standard ANCOVA on a continuous endpoint (`CHG`)
+  * A binary responder analysis on `CRIT1FLN` using `{beeca}`
 
-## The statistical analysis plan
+This pattern enables reproducible workflows where imputation and analysis can be separated and revisited independently.
 
-Rubin’s Rules after standardization. 
+# Statistical Context
 
-Following multiple imputation, we would fit 1000 logistic regression models and for each, obtain the marginal estimates using beeca. We would then pool these 1000 beeca outputs using Rubin’s Rules.
+This approach applies **Rubin’s Rules** for inference after multiple imputation:
 
-## Implementing the analysis
+> We fit a model to each imputed dataset, dervive a response variable on the CHG score, extract marginal effects or other statistics of interest, and combine the results into a single inference using Rubin’s combining rules.
 
-```{r setup}
+---
 
-# Load libraries
+# Step 1: Setup and Data Preparation
+
+```{r libraries}
 library(dplyr)
 library(tidyr)
 library(readr)
@@ -42,199 +50,147 @@ library(purrr)
 library(rbmi)
 library(beeca)
 library(rbmiUtils)
+```
 
-# set seed 
+```{r seed}
 set.seed(1974)
+```
 
-
-## Define global rbmi constants - define imputation parameters
-IMPUTATIONS <- 100
-WARMUP <- 200
-THIN <- 5
-
-
-# load example data
+```{r load-data}
 data("ADEFF")
 
-
-# Prepare the data
-ADEFF$TRT <- factor(ADEFF$TRT01P, levels = c("Placebo", "Drug A"))
-ADEFF$USUBJID <- factor(ADEFF$USUBJID)
-ADEFF$AVISIT <- factor(ADEFF$AVISIT)
-```
-
-Define function to compare last visit using a responder analysis
-
-```{r gcomp}
-## function to compare last visit using a responder analysis
-gcomp_responder <- function(data, ...) {
-
-    ## fit the GLM model
-    model <- glm(CRIT1FLN ~ TRT + BASE + STRATA + REGION, data = data, family = binomial)
-
-    ## Calculate the marginal treatment effect estimate and associated variance
-    ## for a difference contrast using the Ge et al. method
-    ## with robust HC0 sandwich variance
-    marginal_fit <- beeca::get_marginal_effect(model,
-                                        trt = "TRT",
-                                        method = "Ge",
-                                        type = "HC0",
-                                        contrast = "diff",
-                                        reference = "Placebo")
-
-    ## Extract results
-    marginal_results <- marginal_fit$marginal_results
-    diff_est <- marginal_results[marginal_results$STAT == "diff", "STATVAL"][[1]]
-    diff_se <- marginal_results[marginal_results$STAT == "diff_se", "STATVAL"][[1]]
-
-    # Return a named list with the estimate and standard error
-    res <- list(
-        trt = list(
-            est = diff_est,
-            se = diff_se,
-            df = NA
-        )
-    )
-    return(res)
-}
-
-```
-
-# STEP 1: Impute missing data
-
-
-```{r define}
-# Define key variables for rbmi
-vars <- rbmi::set_vars(
-    subjid = "USUBJID",
-    visit = "AVISIT",
-    group = "TRT",
-    outcome = "CHG",
-    covariates = c("BASE", "STRATA", "REGION")
-)
-
-# Define which imputation method to use 
-# (here: Bayesian multiple imputation with 200 imputed datsets)
-method <- rbmi::method_bayes(
-    n_samples = 100,
-    control = rbmi::control_bayes(
-      warmup = 200,
-      thin = 2
-    )
+ADEFF <- ADEFF %>%
+  mutate(
+    TRT = factor(TRT01P, levels = c("Placebo", "Drug A")),
+    USUBJID = factor(USUBJID),
+    AVISIT = factor(AVISIT)
   )
+```
 
-# Create a dataset with the necessary columns
-dat <- ADEFF |>
-    dplyr::select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
-# Fit the imputation model
-draws_obj <- rbmi::draws(
-    data = dat,
-    vars = vars,
-    method = method,
-    quiet = FALSE
+# Step 2: Define Imputation Model
+
+```{r define-vars}
+vars <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CHG",
+  covariates = c("BASE", "STRATA", "REGION")
 )
+```
 
-# Impute the datasets
-impute_obj <- rbmi::impute(
-    draws_obj,
-    references = c("Placebo" = "Placebo", "Drug A" = "Placebo")
+```{r define-method}
+method <- method_bayes(
+  n_samples = 100,
+  control = control_bayes(warmup = 200, thin = 2)
 )
+```
 
+```{r impute}
+dat <- ADEFF %>%
+  select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
-## get the imputed datq as a data frame
+draws_obj <- draws(data = dat, vars = vars, method = method)
+
+impute_obj <- impute(draws_obj, references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
+
 ADMI <- get_imputed_data(impute_obj)
 ```
 
 
-Transform the imputed data to include additional derived variables. 
+# Step 3: Add Responder Variables
 
-For example, add responder criteria based on the outcome: We convert the 
-continuous version of the endpoint into binary version of the endpoint 
-(e.g. if the endpoint>3, then it is a responder; if it is <=3, then it 
-is a non-responder).
-
-
-```{r get_data}
-ADMI <- ADMI |>
-    dplyr::mutate(
-        CRIT1FLN = ifelse(CHG > 3, 1, 0), 
-        CRIT1FL = ifelse(CRIT1FLN == 1, "Y", "N"),
-        CRIT = "CHG > 3"
-    )
-
-# save the imputed data
-#write_csv(ADMI, "ADMI.csv")
-
+```{r derive-responder}
+ADMI <- ADMI %>%
+  mutate(
+    CRIT1FLN = ifelse(CHG > 3, 1, 0),
+    CRIT1FL = ifelse(CRIT1FLN == 1, "Y", "N"),
+    CRIT = "CHG > 3"
+  )
 ```
 
 
+# Step 4: Continuous Endpoint Analysis (CHG)
 
-# STEP 2: Analyze each imputed dataset
-
-## ANCOVA analysis
-
-```{r}
-ana_obj_ancova <- analyse_mi_data(data = ADMI,
-                         vars = vars,
-                         method = method,
-                         fun = ancova,
-                         delta = NULL)
-```
-
-
-### STEP 3: Pool analyzes and apply Rubin's Rules
-
-```{r}
-pool_obj_ancova <- pool(ana_obj_ancova)
-```
-
-### STEP 4: Report analysis
-
-```{r}
-pool_obj_ancova
-```
-
-
-## Responder analysis 
-
-Note the vars may change from imputation to analysis
-
-Here we focus on the new derived variable CRIT1, CRIT1FL, CRIT1FLN 
-
-```{r}
-
-## note the vars may change from imputation to analysis
-vars <- set_vars(
-    subjid = "USUBJID",
-    visit = "AVISIT",
-    group = "TRT",
-    outcome = "CRIT1FLN",
-    covariates = c("BASE", "STRATA", "REGION")
+```{r analyse-chg}
+ana_obj_ancova <- analyse_mi_data(
+  data = ADMI,
+  vars = vars,
+  method = method,
+  fun = ancova
 )
 ```
 
-### Analyse the imputed datasets
+```{r pool-chg}
+pool_obj_ancova <- pool(ana_obj_ancova)
+print(pool_obj_ancova)
+```
 
-Need to do the data transform in the fun
-
-```{r}
-ana_obj_prop2 <- analyse_mi_data(data = ADMI,
-                         vars = vars,
-                         method = method,
-                         fun = gcomp_responder,
-                         delta = NULL)
+```{r tidy-chg}
+tidy_pool_obj(pool_obj_ancova)
 ```
 
 
-### STEP 3: Pool analyzes and apply Rubin's Rules
+# Step 5: Responder Endpoint Analysis (CRIT1FLN)
 
-```{r}
-pool_obj_prop <- pool(ana_obj_prop2)
+## Define Analysis Function
+
+```{r gcomp-fun}
+gcomp_responder <- function(data, ...) {
+  model <- glm(CRIT1FLN ~ TRT + BASE + STRATA + REGION, data = data, family = binomial)
+
+  marginal_fit <- get_marginal_effect(
+    model,
+    trt = "TRT",
+    method = "Ge",
+    type = "HC0",
+    contrast = "diff",
+    reference = "Placebo"
+  )
+
+  res <- marginal_fit$marginal_results
+  list(
+    trt = list(
+      est = res[res$STAT == "diff", "STATVAL"][[1]],
+      se = res[res$STAT == "diff_se", "STATVAL"][[1]],
+      df = NA
+    )
+  )
+}
 ```
 
-### STEP 4: Report analysis
+## Define Variables and Run Analysis
 
-```{r}
-pool_obj_prop
+```{r vars-binary}
+vars_binary <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CRIT1FLN",
+  covariates = c("BASE", "STRATA", "REGION")
+)
 ```
+
+```{r analyse-binary}
+ana_obj_prop <- analyse_mi_data(
+  data = ADMI,
+  vars = vars_binary,
+  method = method,
+  fun = gcomp_responder
+)
+```
+
+```{r pool-binary}
+pool_obj_prop <- pool(ana_obj_prop)
+print(pool_obj_prop)
+```
+
+
+# Final Notes
+
+* The `ADMI` object can be saved for later reuse.
+* Analyses can be modularly applied using custom functions.
+* The tidy output from `tidy_pool_obj()` is helpful for reporting and review.
+
+
