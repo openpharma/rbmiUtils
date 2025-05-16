@@ -22,14 +22,6 @@ Rubin’s Rules after standardization: Following multiple imputation, we would f
 
 
 ```{r setup}
-# Load libraries
-library(dplyr)
-library(tidyr)
-library(readr)
-library(purrr)
-library(rbmi)
-library(beeca)
-library(rbmiUtils)
 
 # check if rstan is installed localy and install if not 
 if (!rlang::is_installed("rstan")) {
@@ -39,6 +31,15 @@ if (!rlang::is_installed("rstan")) {
    message("rstan is already installed.")
 }
 
+
+# Load libraries
+library(dplyr)
+library(tidyr)
+library(readr)
+library(purrr)
+library(rbmi)
+library(beeca)
+library(rbmiUtils)
 
 # set seed 
 set.seed(1974)
@@ -72,7 +73,7 @@ gcomp_responder <- function(data, ...) {
     ## Calculate the marginal treatment effect estimate and associated variance
     ## for a difference contrast using the Ge et al. method
     ## with robust HC0 sandwich variance
-    marginal_fit <- get_marginal_effect(model,
+    marginal_fit <- beeca::get_marginal_effect(model,
                                         trt = "TRT",
                                         method = "Ge",
                                         type = "HC0",

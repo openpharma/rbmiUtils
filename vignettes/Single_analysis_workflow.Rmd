@@ -15,6 +15,16 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+
+# check if rstan is installed localy and install if not 
+if (!rlang::is_installed("rstan")) {
+   install.packages("rstan", repos = "https://cloud.r-project.org/")
+   message("rstan has been successfully installed.")
+ } else {
+   message("rstan is already installed.")
+}
+
+
 library(dplyr)
 library(rbmi)
 library(rbmiUtils)
