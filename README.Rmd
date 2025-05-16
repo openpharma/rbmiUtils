@@ -13,79 +13,116 @@ knitr::opts_chunk$set(
 )
 ```
 
-# rbmiUtils
+# rbmiUtils <a href="https://openpharma.github.io/rbmiUtils/"> <img src="man/figures/rbmiUtils.png" align="right" width="140px" alt="rbmiUtils website" /> </a>
+
+
 
 <!-- badges: start -->
 
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental) 
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
 <!-- badges: end -->
 
-The goal of rbmiUtils is to provide additional functionality to {rbmi} for clinical trial analysis and reporting. This package is currently under development and is not yet available on CRAN.
+`rbmiUtils` extends the functionality of [`rbmi`](https://github.com/insightsengineering/rbmi) to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.
 
-## Local installation (for beta-testing only)
+This package is under development and is not yet available on CRAN.
 
-You can install the latest version of **rbmiUtils** from GitHub:
+## Table of Contents
 
-``` r
-if (!require("remotes")) {
-  install.packages("remotes")
-}
+* [Installation](#installation)
+* [Example](#example)
+* [Dataset](#dataset)
+* [Utilities](#utilities)
+* [Development Status](#development-status)
+
+## Installation
+
+You can install the development version of `rbmiUtils` from GitHub:
+
+```r
+# install.packages("remotes")
 remotes::install_github("openpharma/rbmiUtils")
 ```
 
-After the official release, the package installation will differ.
+This package requires the [`rbmi`](https://github.com/insightsengineering/rbmi) package to be installed.
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This example shows how to run a covariate-adjusted ANCOVA on imputed datasets using Bayesian multiple imputation:
 
 ```{r example}
-# Example usage:
 library(dplyr)
 library(rbmi)
 library(rbmiUtils)
 
 data("ADMI")
+
+# Setup
 N_IMPUTATIONS <- 100
 WARMUP <- 200
 THIN <- 5
 
-# Convert key columns to factors
-ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
-ADMI$USUBJID <- factor(ADMI$USUBJID)
-ADMI$AVISIT <- factor(ADMI$AVISIT)
+# Preprocessing
+ADMI <- ADMI %>%
+  mutate(
+    TRT = factor(TRT, levels = c("Placebo", "Drug A")),
+    USUBJID = factor(USUBJID),
+    AVISIT = factor(AVISIT)
+  )
 
-# Define key variables for ANCOVA analysis
- vars <- set_vars(
+# Define analysis variables
+vars <- set_vars(
   subjid = "USUBJID",
   visit = "AVISIT",
   group = "TRT",
   outcome = "CHG",
-  covariates = c("BASE", "STRATA", "REGION")  # Covariates for adjustment
- )
+  covariates = c("BASE", "STRATA", "REGION")
+)
 
-# Specify the imputation method (i.e Bayesian) - needed for pool step
+# Specify imputation method
 method <- rbmi::method_bayes(
-    n_samples = N_IMPUTATIONS,
-    control = rbmi::control_bayes(
-      warmup = WARMUP,
-      thin = THIN
-      )
-    )
+  n_samples = N_IMPUTATIONS,
+  control = rbmi::control_bayes(
+    warmup = WARMUP,
+    thin = THIN
+  )
+)
 
-# Perform ANCOVA Analysis on Each Imputed Dataset
-ana_obj_ancova <- analyse_mi_data(
+# Run analysis
+ana_obj <- analyse_mi_data(
   data = ADMI,
   vars = vars,
   method = method,
-  fun = ancova,  # Apply ANCOVA
-  delta = NULL   # No sensitivity analysis adjustment
+  fun = ancova
 )
 
-pool_obj_ancova <- pool(ana_obj_ancova)
-tidy_df <- tidy_pool_obj(pool_obj_ancova)
+# Pool results and tidy
+pool_obj <- pool(ana_obj)
+tidy_df <- tidy_pool_obj(pool_obj)
 
-# Print tidy data frames
+# View results
 print(tidy_df)
-
 ```
+
+## Dataset
+
+The package includes two example datasets for demonstrating imputation and analysis:
+
+* `ADMI`: A large synthetic dataset with 100,000 rows and multiple visits, treatment arms, and stratification variables.
+* `ADEFF`: A smaller efficacy dataset for exploratory testing.
+
+Use `?ADMI` or `?ADEFF` to view full documentation.
+
+## Utilities
+
+Key exported functions include:
+
+* `analyse_mi_data()`: Applies an analysis function (e.g., ANCOVA) to all imputed datasets.
+* `tidy_pool_obj()`: Tidies and annotates pooled results for reporting.
+* `get_imputed_data()`: Extracts long-format imputed datasets with original subject IDs mapped.
+
+These utilities wrap standard `rbmi` workflows for improved reproducibility and interpretability.
+
+## Development Status
+
+This package is experimental and under active development. Feedback and contributions are welcome via [GitHub issues](https://github.com/openpharma/rbmiUtils/issues) or pull requests.

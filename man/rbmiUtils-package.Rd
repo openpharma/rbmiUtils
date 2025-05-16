@@ -4,21 +4,29 @@
 \name{rbmiUtils-package}
 \alias{rbmiUtils}
 \alias{rbmiUtils-package}
-\title{rbmiUtils: Utility functions to work with and extend the rbmi package}
+\title{rbmiUtils: Utility Functions to Support and Extend the rbmi Package}
 \description{
-This package provides additional functionality for rbmi to enable trial analysis and reporting aligned with CDISC ADaM.
+Provides utility functions that extend the capabilities of the rbmi package to support clinical trial analysis workflows. Includes tools for manipulating imputed data, applying analysis methods across imputations, and generating output compatible with clinical data standards.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://openpharma.github.io/rbmiUtils/}
+  \item Report bugs at \url{https://github.com/openpharma/rbmiUtils/issues}
+}
+
 }
 \author{
-\strong{Maintainer}: Mark Baillie \email{mark.baillie@novartis.com} (\href{https://orcid.org/0000-0002-5618-0667}{ORCID})
+\strong{Maintainer}: Mark Baillie \email{bailliem@gmail.com} (\href{https://orcid.org/0000-0002-5618-0667}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
   \item Tobias Mütze \email{tobias.muetze@novartis.com} (\href{https://orcid.org/0000-0002-4111-1941}{ORCID})
+  \item Jack Talboys \email{jack.talboys@novartis.com}
 }
 
 Other contributors:
 \itemize{
-  \item Jack Talboys \email{jack.talboys@novartis.com} [contributor]
   \item Lukas A. Widmer (\href{https://orcid.org/0000-0003-1471-3493}{ORCID}) [contributor]
 }
 
