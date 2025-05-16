@@ -13,3 +13,4 @@
 ^.nojekyll$
 ^cran-comments\.md$
 ^_pkgdown.yml$
+^CRAN-SUBMISSION$

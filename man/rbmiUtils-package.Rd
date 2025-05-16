@@ -11,7 +11,7 @@ Provides utility functions that extend the capabilities of the rbmi package to s
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://openpharma.github.io/rbmiUtils/}
+  \item \url{https://github.com/openpharma/rbmiUtils}
   \item Report bugs at \url{https://github.com/openpharma/rbmiUtils/issues}
 }
 
