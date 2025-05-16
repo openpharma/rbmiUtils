@@ -1,2 +1,5 @@
 *.html
 *.R
+delta_analyse_mi_data.Rmd
+Single_analysis_workflow.Rmd
+Analyse2_with_ADMI.Rmd
