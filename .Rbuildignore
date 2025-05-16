@@ -11,3 +11,4 @@
 ^.*\.Rproj$
 ^.github$
 ^.nojekyll$
+^cran-comments\.md$
