@@ -42,3 +42,101 @@ get_imputed_data <- function(impute_obj) {
 
   return(result)
 }
+
+
+
+#' WIP: Utility function for Generalized G-computation for Binary Outcomes
+#'
+#' Wrapper function for targeting a marginal treatment effect
+#' using g-computation using the beeca package. Intended for binary endpoints.
+#'
+#' @param data A data.frame containing the analysis dataset.
+#' @param outcome Name of the binary outcome variable (as string).
+#' @param treatment Name of the treatment variable (as string).
+#' @param covariates Character vector of covariate names to adjust for.
+#' @param reference Reference level for the treatment variable (default: "Placebo").
+#' @param contrast Type of contrast to compute (default: "diff").
+#' @param method Marginal estimation method for variance (default: "Ge").
+#' @param type Variance estimator type (default: "HC0").
+#' @param ... Additional arguments passed to `beeca::get_marginal_effect()`.
+#'
+#' @return A named list with treatment effect estimate, standard error, and degrees of freedom (if applicable).
+#'
+#' @section Lifecycle:
+#' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+#'
+#' @export
+#'
+#' @examples
+#' # Load required packages
+#' library(rbmiUtils)  # assuming gcomp_binary is defined in this package
+#' library(beeca)      # for get_marginal_effect()
+#' library(dplyr)
+#' # Load example data
+#' data("ADMI")
+#' # Ensure correct factor levels
+#' ADMI <- ADMI %>%
+#'   mutate(
+#'     TRT = factor(TRT, levels = c("Placebo", "Drug A")),
+#'     STRATA = factor(STRATA),
+#'     REGION = factor(REGION)
+#'   )
+#' # Apply g-computation for binary responder
+#' result <- gcomp_binary(
+#'   data = ADMI,
+#'   outcome = "CRIT1FLN",
+#'   treatment = "TRT",
+#'   covariates = c("BASE", "STRATA", "REGION"),
+#'   reference = "Placebo",
+#'   contrast = "diff",
+#'   method = "Ge",    # from beeca: GEE robust sandwich estimator
+#'   type = "HC0"      # from beeca: heteroskedasticity-consistent SE
+#' )
+#'
+#' # Print results
+#' print(result)
+#'
+gcomp_binary <- function(data,
+                         outcome = "CRIT1FLN",
+                         treatment = "TRT",
+                         covariates = c("BASE", "STRATA", "REGION"),
+                         reference = "Placebo",
+                         contrast = "diff",
+                         method = "Ge",
+                         type = "HC0",
+                         ...) {
+  # Construct formula
+  form <- stats::as.formula(
+    paste0(outcome, " ~ ", paste(c(treatment, covariates), collapse = " + "))
+  )
+
+  # Fit logistic regression
+  model <- stats::glm(form, data = data, family = binomial)
+
+  # Compute marginal treatment effect
+  marginal_fit <- beeca::get_marginal_effect(
+    model,
+    trt = treatment,
+    method = method,
+    type = type,
+    contrast = contrast,
+    reference = reference,
+    ...
+  )
+
+  res <- marginal_fit$marginal_results
+
+  out <- list(
+    trt = list(
+      est = res[res$STAT == paste0(contrast), "STATVAL"][[1]],
+      se = res[res$STAT == paste0(contrast, "_se"), "STATVAL"][[1]],
+      df = NA
+    )
+  )
+
+  return(out)
+}
+
+
+
+

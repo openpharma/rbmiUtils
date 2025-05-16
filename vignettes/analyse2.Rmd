@@ -179,6 +179,7 @@ ana_obj_prop <- analyse_mi_data(
   method = method,
   fun = gcomp_responder
 )
+
 ```
 
 ```{r pool-binary}

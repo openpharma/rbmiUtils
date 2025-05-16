@@ -13,7 +13,8 @@ utils::globalVariables(
     "pval",
     "se",
     "uci",
-    "visit"
+    "visit",
+    "binomial"
   )
 )
 
