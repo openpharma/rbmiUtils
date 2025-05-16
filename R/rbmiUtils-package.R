@@ -13,9 +13,13 @@ utils::globalVariables(
     "pval",
     "se",
     "uci",
-    "visit"
+    "visit",
+    "binomial",
+    "STAT",
+    "TRTVAL"
   )
 )
+
 
 #' @keywords internal
 "_PACKAGE"
