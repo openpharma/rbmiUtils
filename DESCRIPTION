@@ -23,8 +23,7 @@ Suggests:
     readr,
     ggplot2,
     beeca,
-    rstan,
-    RcppEigen
+    rstan
 Config/testthat/edition: 3
 Language: en-US
 Imports: 

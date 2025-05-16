@@ -11,4 +11,3 @@
 ^.*\.Rproj$
 ^.github$
 ^.nojekyll$
-^vignettes/delta_analyse_mi_data\.Rmd$

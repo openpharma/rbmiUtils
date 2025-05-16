@@ -32,16 +32,6 @@ dummy_analysis_fun <- function(data, vars, ...) {
 
 # Set of Unit Tests
 
-
-test_that("RcppEigen is installed", {
-  skip_if_not_installed("rlang")  # skip the test if 'lang' package is not installed
-
-  expect_true(
-    rlang::is_installed("RcppEigen"),
-    info = "The package 'RcppEigen' must be installed for this workflow to function."
-  )
-})
-
 test_that("Error when data is NULL", {
   expect_error(
     analyse_mi_data(data = NULL, vars = vars),
