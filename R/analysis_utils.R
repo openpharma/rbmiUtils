@@ -15,13 +15,14 @@
 #' @section Lifecycle:
 #' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 #'
-gcomp_responder <- function(data,
-                            vars,
-                            reference_levels = NULL,
-                            var_method = "Ge",
-                            type = "HC0",
-                            contrast = "diff") {
-
+gcomp_responder <- function(
+  data,
+  vars,
+  reference_levels = NULL,
+  var_method = "Ge",
+  type = "HC0",
+  contrast = "diff"
+) {
   outcome <- vars$outcome
   group <- vars$group
   covariates <- vars$covariates
@@ -53,30 +54,34 @@ gcomp_responder <- function(data,
   lsm <- res |>
     dplyr::filter(STAT %in% c("risk", "risk_se")) |>
     dplyr::group_by(TRTVAL) |>
-    dplyr::group_map(~ {
-      list_name <- paste0("lsm_", .y$TRTVAL)
-      named_list <- list(
-        est = .x$STATVAL[.x$STAT == "risk"],
-        se = .x$STATVAL[.x$STAT == "risk_se"],
-        df = NA
-      )
-      setNames(list(named_list), list_name)
-    }) |>
+    dplyr::group_map(
+      ~ {
+        list_name <- paste0("lsm_", .y$TRTVAL)
+        named_list <- list(
+          est = .x$STATVAL[.x$STAT == "risk"],
+          se = .x$STATVAL[.x$STAT == "risk_se"],
+          df = NA
+        )
+        setNames(list(named_list), list_name)
+      }
+    ) |>
     purrr::flatten()
 
   trt <- res |>
     dplyr::filter(STAT %in% c("diff", "diff_se")) |>
     dplyr::group_by(TRTVAL) |>
-    dplyr::group_map(~ {
-      trtval <- sub("diff: ", "", .y$TRTVAL)
-      list_name <- paste0("trt_", trtval)
-      named_list <- list(
-        est = .x$STATVAL[.x$STAT == "diff"],
-        se = .x$STATVAL[.x$STAT == "diff_se"],
-        df = NA
-      )
-      setNames(list(named_list), list_name)
-    }) |>
+    dplyr::group_map(
+      ~ {
+        trtval <- sub("diff: ", "", .y$TRTVAL)
+        list_name <- paste0("trt_", trtval)
+        named_list <- list(
+          est = .x$STATVAL[.x$STAT == "diff"],
+          se = .x$STATVAL[.x$STAT == "diff_se"],
+          df = NA
+        )
+        setNames(list(named_list), list_name)
+      }
+    ) |>
     purrr::flatten()
 
   return(c(trt, lsm))
@@ -99,6 +104,7 @@ gcomp_responder <- function(data,
 #' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 #'
 #' @examples
+#' \dontrun{
 #' library(dplyr)
 #' library(rbmi)
 #' data("ADMI")
@@ -134,12 +140,8 @@ gcomp_responder <- function(data,
 #'   type = "HC0"
 #' )
 #' pool(ana_obj_prop)
-#'
-gcomp_responder_multi <- function(data,
-                                  vars,
-                                  reference_levels = NULL,
-                                  ...) {
-
+#'}
+gcomp_responder_multi <- function(data, vars, reference_levels = NULL, ...) {
   visit_var <- vars$visit
   visits <- unique(data[[visit_var]])
 

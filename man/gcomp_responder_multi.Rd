@@ -27,6 +27,7 @@ Applies \code{gcomp_responder()} separately for each unique visit in the data.
 }
 
 \examples{
+\dontrun{
 library(dplyr)
 library(rbmi)
 data("ADMI")
@@ -62,5 +63,5 @@ ana_obj_prop <- analyse_mi_data(
   type = "HC0"
 )
 pool(ana_obj_prop)
-
+}
 }
