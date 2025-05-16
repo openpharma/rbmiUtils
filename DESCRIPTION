@@ -2,7 +2,7 @@ Package: rbmiUtils
 Title: Utility Functions to Support and Extend the rbmi Package 
 Version: 0.1.0
 Authors@R: c( 
-    person("Mark", "Baillie", email = "mark.baillie@novartis.com", role = c("aut", "cre", "cph"),
+    person("Mark", "Baillie", email = "bailliem@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5618-0667")),
     person("Tobias", "Mütze", email = "tobias.muetze@novartis.com", role = c("aut"),
            comment = c(ORCID = "0000-0002-4111-1941")),
