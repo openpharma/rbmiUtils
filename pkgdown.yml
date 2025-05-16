@@ -3,7 +3,7 @@ pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   analyse2: analyse2.html
-last_built: 2025-05-16T18:44Z
+last_built: 2025-05-16T19:26Z
 urls:
   reference: https://openpharma.github.io/rbmiUtils/reference
   article: https://openpharma.github.io/rbmiUtils/articles

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
 <li><p>Perform multiple imputation using the <a href="https://insightsengineering.github.io/rbmi/" class="external-link">rbmi</a>
 package.</p></li>
 <li><p>Store and modify the imputed data using
-<a href="https://openpharma.github.io/rbmiUtils/">rbmiUtils</a>.</p></li>
+<a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a>.</p></li>
 <li>
 <p>Analyze the imputed data using:</p>
 <ul>
@@ -124,7 +124,7 @@ combining rules.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     expand</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/beeca/" class="external-link">beeca</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/rbmiUtils/">rbmiUtils</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1974</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -161,8 +161,8 @@ combining rules.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'rbmi_mmrm' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000512 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 5.12 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000499 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.99 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -179,9 +179,9 @@ combining rules.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.689 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.528 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                1.217 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.676 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.52 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                1.196 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span>
 <span><span class="co">#&gt; Warning in fit_mcmc(designmat = model_df_scaled[, -1, drop = FALSE], outcome = model_df_scaled[, : The largest R-hat is 1.07, indicating chains have not mixed.</span></span>
 <span><span class="co">#&gt; Running the chains for more iterations may help. See</span></span>
