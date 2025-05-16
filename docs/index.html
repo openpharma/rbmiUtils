@@ -53,13 +53,13 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rbmiutils---">rbmiUtils <a href="https://openpharma.github.io/rbmiUtils/"> <img src="reference/figures/rbmiUtils.png" align="right" width="100px" alt="rbmiUtils website"></a>
+<div class="page-header"><h1 id="rbmiutils---">rbmiUtils <a href="https://openpharma.github.io/rbmiUtils/"> <img src="reference/figures/rbmiUtils.png" align="right" width="140px" alt="rbmiUtils website"></a>
 <a class="anchor" aria-label="anchor" href="#rbmiutils---"></a>
 </h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p><code>rbmiUtils</code> extends the functionality of <a href="https://github.com/openpharma/rbmi" class="external-link"><code>rbmi</code></a> to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.</p>
+<p><code>rbmiUtils</code> extends the functionality of <a href="https://github.com/insightsengineering/rbmi" class="external-link"><code>rbmi</code></a> to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.</p>
 <p>This package is under development and is not yet available on CRAN.</p>
 <div class="section level2">
 <h2 id="table-of-contents">Table of Contents<a class="anchor" aria-label="anchor" href="#table-of-contents"></a>
@@ -87,16 +87,8 @@
 <p>This example shows how to run a covariate-adjusted ANCOVA on imputed datasets using Bayesian multiple imputation:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     filter, lag</span></span>
-<span><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://insightsengineering.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/rbmiUtils/">rbmiUtils</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ADMI"</span><span class="op">)</span></span>
 <span></span>

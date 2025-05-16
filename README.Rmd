@@ -50,7 +50,7 @@ This package requires the [`rbmi`](https://github.com/insightsengineering/rbmi) 
 
 This example shows how to run a covariate-adjusted ANCOVA on imputed datasets using Bayesian multiple imputation:
 
-```{r example}
+```{r example, message = FALSE, warning = FALSE}
 library(dplyr)
 library(rbmi)
 library(rbmiUtils)
