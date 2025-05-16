@@ -2,18 +2,19 @@
 % Please edit documentation in R/analysis_utils.R
 \name{as_simple_formula2}
 \alias{as_simple_formula2}
-\title{Creates a simple formula object from a string}
+\title{Convert character variable list to formula}
 \usage{
 as_simple_formula2(outcome, covars)
 }
 \arguments{
-\item{outcome}{character (length 1 vector). Name of the outcome variable}
+\item{outcome}{Character string, the outcome variable.}
 
-\item{covars}{character (vector). Name of covariates}
+\item{covars}{Character vector of covariates.}
 }
 \value{
-A formula
+A formula object.
 }
 \description{
-Converts a string list of variables into a formula object
+Convert character variable list to formula
 }
+\keyword{internal}

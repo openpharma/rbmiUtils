@@ -2,17 +2,18 @@
 % Please edit documentation in R/analysis_utils.R
 \name{extract_covariates2}
 \alias{extract_covariates2}
-\title{Extract Variables from string vector}
+\title{Extract variable names from model terms}
 \usage{
 extract_covariates2(x)
 }
 \arguments{
-\item{x}{string of variable names potentially including interaction terms}
+\item{x}{A character vector of model terms.}
+}
+\value{
+A character vector of unique variable names.
 }
 \description{
-Takes a string including potentially model terms like \code{*} and \code{:} and
-extracts out the individual variables
+Takes a character vector including potentially model terms like \code{*} and \code{:} and
+extracts out the individual variables.
 }
-\details{
-i.e.  \code{c("v1", "v2", "v2*v3", "v1:v2")} becomes \code{c("v1", "v2", "v3")}
-}
+\keyword{internal}

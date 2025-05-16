@@ -2,12 +2,12 @@
 % Please edit documentation in R/analysis_utils.R
 \name{gcomp_responder_multi}
 \alias{gcomp_responder_multi}
-\title{Utility function for G-computation of a binary oucome at Multiple Visits}
+\title{G-computation for a Binary Outcome at Multiple Visits}
 \usage{
 gcomp_responder_multi(data, vars, reference_levels = NULL, ...)
 }
 \arguments{
-\item{data}{A data.frame containing all visits.}
+\item{data}{A data.frame containing multiple visits.}
 
 \item{vars}{A list specifying analysis variables.}
 
@@ -21,13 +21,18 @@ A named list of estimates for each visit and treatment group.
 \description{
 Applies \code{gcomp_responder()} separately for each unique visit in the data.
 }
-\examples{
-library(rbmi)
+\section{Lifecycle}{
 
+\href{https://lifecycle.r-lib.org/articles/stages.html}{\if{html}{\figure{https://img.shields.io/badge/lifecycle-experimental-orange.svg}}}
+}
+
+\examples{
+library(dplyr)
+library(rbmi)
 data("ADMI")
 
 ADMI <- ADMI |>
-  mutate(
+  dplyr::mutate(
     TRT = factor(TRT, levels = c("Placebo", "Drug A")),
     STRATA = factor(STRATA),
     REGION = factor(REGION)
@@ -36,6 +41,14 @@ ADMI <- ADMI |>
 method <- method_bayes(
   n_samples = 100,
   control = control_bayes(warmup = 200, thin = 2)
+)
+
+vars_binary <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CRIT1FLN",
+  covariates = c("BASE", "STRATA", "REGION")
 )
 
 ana_obj_prop <- analyse_mi_data(
@@ -48,8 +61,6 @@ ana_obj_prop <- analyse_mi_data(
   var_method = "Ge",
   type = "HC0"
 )
-
-print(ana_obj_prop)
 pool(ana_obj_prop)
 
 }
