@@ -10,6 +10,11 @@
 <url><loc>/reference/ADMI.html</loc></url>
 <url><loc>/reference/analyse_mi_data.html</loc></url>
 <url><loc>/reference/as_analysis2.html</loc></url>
+<url><loc>/reference/as_simple_formula2.html</loc></url>
+<url><loc>/reference/extract_covariates2.html</loc></url>
+<url><loc>/reference/gcomp_binary.html</loc></url>
+<url><loc>/reference/gcomp_responder.html</loc></url>
+<url><loc>/reference/gcomp_responder_multi.html</loc></url>
 <url><loc>/reference/get_imputed_data.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/rbmiUtils-package.html</loc></url>
