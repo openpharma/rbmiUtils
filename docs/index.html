@@ -53,29 +53,40 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="rbmiutils">rbmiUtils<a class="anchor" aria-label="anchor" href="#rbmiutils"></a>
+<div class="page-header"><h1 id="rbmiutils---">rbmiUtils <a href="https://openpharma.github.io/rbmiUtils/"> <img src="reference/figures/rbmiUtils.png" align="right" width="100px" alt="rbmiUtils website"></a>
+<a class="anchor" aria-label="anchor" href="#rbmiutils---"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>The goal of rbmiUtils is to provide additional functionality to {rbmi} for clinical trial analysis and reporting. This package is currently under development and is not yet available on CRAN.</p>
+<!-- badges: end -->
+<p><code>rbmiUtils</code> extends the functionality of <a href="https://github.com/openpharma/rbmi" class="external-link"><code>rbmi</code></a> to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.</p>
+<p>This package is under development and is not yet available on CRAN.</p>
 <div class="section level2">
-<h2 id="local-installation-for-beta-testing-only">Local installation (for beta-testing only)<a class="anchor" aria-label="anchor" href="#local-installation-for-beta-testing-only"></a>
+<h2 id="table-of-contents">Table of Contents<a class="anchor" aria-label="anchor" href="#table-of-contents"></a>
 </h2>
-<p>You can install the latest version of <strong>rbmiUtils</strong> from GitHub:</p>
+<ul>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#example">Example</a></li>
+<li><a href="#dataset">Dataset</a></li>
+<li><a href="#utilities">Utilities</a></li>
+<li><a href="#development-status">Development Status</a></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>You can install the development version of <code>rbmiUtils</code> from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://remotes.r-lib.org" class="external-link">"remotes"</a></span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
+<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"openpharma/rbmiUtils"</span><span class="op">)</span></span></code></pre></div>
-<p>After the official release, the package installation will differ.</p>
+<p>This package requires the <a href="https://github.com/insightsengineering/rbmi" class="external-link"><code>rbmi</code></a> package to be installed.</p>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
+<p>This example shows how to run a covariate-adjusted ANCOVA on imputed datasets using Bayesian multiple imputation:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Example usage:</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
 <span><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
@@ -88,46 +99,51 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/rbmiUtils/">rbmiUtils</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ADMI"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Setup</span></span>
 <span><span class="va">N_IMPUTATIONS</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="va">WARMUP</span> <span class="op">&lt;-</span> <span class="fl">200</span></span>
 <span><span class="va">THIN</span> <span class="op">&lt;-</span> <span class="fl">5</span></span>
 <span></span>
-<span><span class="co"># Convert key columns to factors</span></span>
-<span><span class="va">ADMI</span><span class="op">$</span><span class="va">TRT</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ADMI</span><span class="op">$</span><span class="va">TRT</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span>, <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">ADMI</span><span class="op">$</span><span class="va">USUBJID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ADMI</span><span class="op">$</span><span class="va">USUBJID</span><span class="op">)</span></span>
-<span><span class="va">ADMI</span><span class="op">$</span><span class="va">AVISIT</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ADMI</span><span class="op">$</span><span class="va">AVISIT</span><span class="op">)</span></span>
+<span><span class="co"># Preprocessing</span></span>
+<span><span class="va">ADMI</span> <span class="op">&lt;-</span> <span class="va">ADMI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    TRT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">TRT</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span>, <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    USUBJID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">USUBJID</span><span class="op">)</span>,</span>
+<span>    AVISIT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">AVISIT</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Define key variables for ANCOVA analysis</span></span>
-<span> <span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
+<span><span class="co"># Define analysis variables</span></span>
+<span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
 <span>  subjid <span class="op">=</span> <span class="st">"USUBJID"</span>,</span>
 <span>  visit <span class="op">=</span> <span class="st">"AVISIT"</span>,</span>
 <span>  group <span class="op">=</span> <span class="st">"TRT"</span>,</span>
 <span>  outcome <span class="op">=</span> <span class="st">"CHG"</span>,</span>
-<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BASE"</span>, <span class="st">"STRATA"</span>, <span class="st">"REGION"</span><span class="op">)</span>  <span class="co"># Covariates for adjustment</span></span>
-<span> <span class="op">)</span></span>
+<span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BASE"</span>, <span class="st">"STRATA"</span>, <span class="st">"REGION"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Specify the imputation method (i.e Bayesian) - needed for pool step</span></span>
+<span><span class="co"># Specify imputation method</span></span>
 <span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span>
-<span>    n_samples <span class="op">=</span> <span class="va">N_IMPUTATIONS</span>,</span>
-<span>    control <span class="op">=</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span></span>
-<span>      warmup <span class="op">=</span> <span class="va">WARMUP</span>,</span>
-<span>      thin <span class="op">=</span> <span class="va">THIN</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
+<span>  n_samples <span class="op">=</span> <span class="va">N_IMPUTATIONS</span>,</span>
+<span>  control <span class="op">=</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span></span>
+<span>    warmup <span class="op">=</span> <span class="va">WARMUP</span>,</span>
+<span>    thin <span class="op">=</span> <span class="va">THIN</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Perform ANCOVA Analysis on Each Imputed Dataset</span></span>
-<span><span class="va">ana_obj_ancova</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/analyse_mi_data.html">analyse_mi_data</a></span><span class="op">(</span></span>
+<span><span class="co"># Run analysis</span></span>
+<span><span class="va">ana_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/analyse_mi_data.html">analyse_mi_data</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ADMI</span>,</span>
 <span>  vars <span class="op">=</span> <span class="va">vars</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">method</span>,</span>
-<span>  fun <span class="op">=</span> <span class="va">ancova</span>,  <span class="co"># Apply ANCOVA</span></span>
-<span>  delta <span class="op">=</span> <span class="cn">NULL</span>   <span class="co"># No sensitivity analysis adjustment</span></span>
+<span>  fun <span class="op">=</span> <span class="va">ancova</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">pool_obj_ancova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_ancova</span><span class="op">)</span></span>
-<span><span class="va">tidy_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tidy_pool_obj.html">tidy_pool_obj</a></span><span class="op">(</span><span class="va">pool_obj_ancova</span><span class="op">)</span></span>
+<span><span class="co"># Pool results and tidy</span></span>
+<span><span class="va">pool_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj</span><span class="op">)</span></span>
+<span><span class="va">tidy_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tidy_pool_obj.html">tidy_pool_obj</a></span><span class="op">(</span><span class="va">pool_obj</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Print tidy data frames</span></span>
+<span><span class="co"># View results</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tidy_df</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 6 × 10</span></span>
 <span><span class="co">#&gt;   parameter       description visit parameter_type lsm_type     est    se    lci</span></span>
@@ -139,6 +155,37 @@
 <span><span class="co">#&gt; 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0481 0.185 -0.316</span></span>
 <span><span class="co">#&gt; 6 lsm_alt_Week 48 Least Squa… Week… lsm            alt      -3.76   0.176 -4.11 </span></span>
 <span><span class="co">#&gt; # ℹ 2 more variables: uci &lt;dbl&gt;, pval &lt;dbl&gt;</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="dataset">Dataset<a class="anchor" aria-label="anchor" href="#dataset"></a>
+</h2>
+<p>The package includes two example datasets for demonstrating imputation and analysis:</p>
+<ul>
+<li>
+<code>ADMI</code>: A large synthetic dataset with 100,000 rows and multiple visits, treatment arms, and stratification variables.</li>
+<li>
+<code>ADEFF</code>: A smaller efficacy dataset for exploratory testing.</li>
+</ul>
+<p>Use <code><a href="reference/ADMI.html">?ADMI</a></code> or <code><a href="reference/ADEFF.html">?ADEFF</a></code> to view full documentation.</p>
+</div>
+<div class="section level2">
+<h2 id="utilities">Utilities<a class="anchor" aria-label="anchor" href="#utilities"></a>
+</h2>
+<p>Key exported functions include:</p>
+<ul>
+<li>
+<code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code>: Applies an analysis function (e.g., ANCOVA) to all imputed datasets.</li>
+<li>
+<code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code>: Tidies and annotates pooled results for reporting.</li>
+<li>
+<code><a href="reference/get_imputed_data.html">get_imputed_data()</a></code>: Extracts long-format imputed datasets with original subject IDs mapped.</li>
+</ul>
+<p>These utilities wrap standard <code>rbmi</code> workflows for improved reproducibility and interpretability.</p>
+</div>
+<div class="section level2">
+<h2 id="development-status">Development Status<a class="anchor" aria-label="anchor" href="#development-status"></a>
+</h2>
+<p>This package is experimental and under active development. Feedback and contributions are welcome via <a href="https://github.com/openpharma/rbmiUtils/issues" class="external-link">GitHub issues</a> or pull requests.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
