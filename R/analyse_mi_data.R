@@ -96,7 +96,7 @@ analyse_mi_data <- function(
     assertthat::assert_that(
       all(expected_vars %in% names(delta)),
       msg = sprintf(
-        "The following variables must exist witin `delta`: `%s`",
+        "The following variables must exist within `delta`: `%s`",
         paste0(expected_vars, collapse = "`, `")
       )
     )

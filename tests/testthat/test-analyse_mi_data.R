@@ -72,7 +72,7 @@ test_that("Error when delta does not contain required variables", {
   delta_invalid <- data.frame(subjid = ADMI$USUBJID, delta = rnorm(nrow(ADMI)))
   expect_error(
     analyse_mi_data(data = ADMI, vars = vars, delta = delta_invalid),
-    "The following variables must exist witin `delta`: `USUBJID`, `AVISIT`, `delta`"
+    "The following variables must exist within `delta`: `USUBJID`, `AVISIT`, `delta`"
   )
 })
 

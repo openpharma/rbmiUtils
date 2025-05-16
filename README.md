@@ -63,7 +63,7 @@ ADMI$AVISIT <- factor(ADMI$AVISIT)
   covariates = c("BASE", "STRATA", "REGION")  # Covariates for adjustment
  )
 
-# Specify the imputation method (Bayesian) - need for pool step
+# Specify the imputation method (i.e Bayesian) - needed for pool step
 method <- rbmi::method_bayes(
     n_samples = N_IMPUTATIONS,
     control = rbmi::control_bayes(
