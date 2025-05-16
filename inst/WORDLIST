@@ -1,7 +1,5 @@
 ADMI
-ADaM
 ANCOVA
-CDISC
 CRIT
 FLN
 HC
@@ -13,9 +11,8 @@ WIP
 beeca
 dervive
 modularly
-oucome
+pkgdown
 randomisation
 rbmi
 responder
-tbc
 tibble

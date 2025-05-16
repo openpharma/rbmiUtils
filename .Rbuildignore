@@ -12,3 +12,4 @@
 ^.github$
 ^.nojekyll$
 ^cran-comments\.md$
+^_pkgdown.yml$

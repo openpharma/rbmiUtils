@@ -6,7 +6,7 @@
 \alias{rbmiUtils-package}
 \title{rbmiUtils: Utility Functions to Support and Extend the rbmi Package}
 \description{
-Provides utility functions that extend the capabilities of the rbmi package to support clinical trial analysis workflows. Includes tools for manipulating imputed data, applying analysis methods across imputations, and generating output compatible with CDISC ADaM standards.
+Provides utility functions that extend the capabilities of the rbmi package to support clinical trial analysis workflows. Includes tools for manipulating imputed data, applying analysis methods across imputations, and generating output compatible with clinical data standards.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Mark Baillie \email{mark.baillie@novartis.com} (\href{https://orcid.org/0000-0002-5618-0667}{ORCID})
+\strong{Maintainer}: Mark Baillie \email{bailliem@gmail.com} (\href{https://orcid.org/0000-0002-5618-0667}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{

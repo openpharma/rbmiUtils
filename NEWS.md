@@ -1,7 +1,8 @@
 # rbmiUtils (development version)
 
-* Initial CRAN submission.
+# rbmiUtils 0.1.0
 
-# rbmiUtils 0.0.1
-
-* tbc
+* Preparation for CRAN submission
+* Initial draft package
+* Added a `NEWS.md` file to track changes to the package.
+* Added documentation via pkgdown.
