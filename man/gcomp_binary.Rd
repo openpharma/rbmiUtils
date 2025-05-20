@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{gcomp_binary}
 \alias{gcomp_binary}
-\title{WIP: Utility function for Generalized G-computation for Binary Outcomes}
+\title{Utility function for Generalized G-computation for Binary Outcomes}
 \usage{
 gcomp_binary(
   data,
@@ -44,12 +44,12 @@ using g-computation using the beeca package. Intended for binary endpoints.
 }
 \section{Lifecycle}{
 
-\href{https://lifecycle.r-lib.org/articles/stages.html}{\if{html}{\figure{https://img.shields.io/badge/lifecycle-experimental-orange.svg}}}
+[\figure{https://lifecycle.r-lib.org/articles/stages.html#experimental}
 }
 
 \examples{
 # Load required packages
-library(rbmiUtils)  # assuming gcomp_binary is defined in this package
+library(rbmiUtils)
 library(beeca)      # for get_marginal_effect()
 library(dplyr)
 # Load example data

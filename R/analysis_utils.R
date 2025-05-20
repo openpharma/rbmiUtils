@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @section Lifecycle:
-#' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+#' [![Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 #'
 gcomp_responder <- function(
   data,
@@ -101,24 +101,27 @@ gcomp_responder <- function(
 #' @export
 #'
 #' @section Lifecycle:
-#' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+#' [![Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' library(dplyr)
 #' library(rbmi)
+#' library(rbmiUtils)
+#'
 #' data("ADMI")
 #'
 #' ADMI <- ADMI |>
-#'   dplyr::mutate(
+#'   mutate(
 #'     TRT = factor(TRT, levels = c("Placebo", "Drug A")),
 #'     STRATA = factor(STRATA),
 #'     REGION = factor(REGION)
 #'   )
 #'
+#' # Note: method must match the original used for imputation
 #' method <- method_bayes(
 #'   n_samples = 100,
-#'   control = control_bayes(warmup = 200, thin = 2)
+#'   control = control_bayes(warmup = 20, thin = 2)
 #' )
 #'
 #' vars_binary <- set_vars(
@@ -139,8 +142,9 @@ gcomp_responder <- function(
 #'   var_method = "Ge",
 #'   type = "HC0"
 #' )
+#'
 #' pool(ana_obj_prop)
-#'}
+#' }
 gcomp_responder_multi <- function(data, vars, reference_levels = NULL, ...) {
   visit_var <- vars$visit
   visits <- unique(data[[visit_var]])

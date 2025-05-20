@@ -34,6 +34,6 @@ Performs logistic regression and estimates marginal effects for binary outcomes.
 }
 \section{Lifecycle}{
 
-\href{https://lifecycle.r-lib.org/articles/stages.html}{\if{html}{\figure{https://img.shields.io/badge/lifecycle-experimental-orange.svg}}}
+[\figure{https://lifecycle.r-lib.org/articles/stages.html#experimental}
 }
 
