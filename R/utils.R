@@ -100,9 +100,6 @@ get_imputed_data <- function(impute_obj) {
 #'
 #' @return A named list with treatment effect estimate, standard error, and degrees of freedom (if applicable).
 #'
-#' @section Lifecycle:
-#' [![Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-#'
 #' @export
 #'
 #' @examples

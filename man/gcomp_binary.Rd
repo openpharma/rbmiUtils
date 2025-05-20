@@ -42,11 +42,6 @@ A named list with treatment effect estimate, standard error, and degrees of free
 Wrapper function for targeting a marginal treatment effect
 using g-computation using the beeca package. Intended for binary endpoints.
 }
-\section{Lifecycle}{
-
-[\figure{https://lifecycle.r-lib.org/articles/stages.html#experimental}
-}
-
 \examples{
 # Load required packages
 library(rbmiUtils)
