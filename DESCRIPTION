@@ -1,5 +1,5 @@
 Package: rbmiUtils
-Title: Utility Functions to Support and Extend the Rbmi Package 
+Title: Utility Functions to Support and Extend the 'rbmi' Package 
 Version: 0.1.2
 Authors@R: c( 
     person("Mark", "Baillie", email = "bailliem@gmail.com", role = c("aut", "cre", "cph"),
@@ -9,11 +9,11 @@ Authors@R: c(
     person("Jack", "Talboys", email = "jack.talboys@novartis.com", role = c("aut")),
     person("Lukas A.", "Widmer", role = "ctb", comment = c(ORCID = "0000-0003-1471-3493"))
     )
-Description: Provides utility functions that extend the capabilities of the rbmi
-             package to support clinical trial analysis workflows. 
-             Includes tools for manipulating imputed data, applying analysis 
-             methods across imputations, and generating output compatible with 
-             clinical data standards.
+Description: Provides utility functions that extend the capabilities of the 
+    reference-based multiple imputation package 'rbmi'. It supports clinical 
+    trial analysis workflows with functions for managing imputed datasets, 
+    applying analysis methods across imputations, and tidying results for 
+    reporting.
 Maintainer: Mark Baillie <bailliem@gmail.com>
 License: GPL (>= 3)
 Encoding: UTF-8
