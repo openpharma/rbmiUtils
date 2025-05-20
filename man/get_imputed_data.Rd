@@ -17,6 +17,7 @@ This function takes an imputed dataset and a mapping variable to return a datase
 with the original IDs mapped back and renamed appropriately.
 }
 \examples{
+\donttest{
 library(dplyr)
 library(rbmi)
 library(rbmiUtils)
@@ -44,8 +45,8 @@ vars <- set_vars(
 
 # Define Bayesian imputation method
 method <- method_bayes(
-  n_samples = 50,
-  control = control_bayes(warmup = 10, thin = 2)
+  n_samples = 100,
+  control = control_bayes(warmup = 200, thin = 2)
 )
 
 # Generate draws and perform imputation
@@ -54,6 +55,7 @@ impute_obj <- impute(draws_obj,
   references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
 
 # Extract imputed data with original subject IDs
-get_imputed_data(impute_obj)
-
+admi <- get_imputed_data(impute_obj)
+head(admi)
+}
 }

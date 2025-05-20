@@ -12,9 +12,6 @@
 #' @return A named list containing estimates and standard errors for treatment comparisons and within-arm means.
 #' @export
 #'
-#' @section Lifecycle:
-#' [![Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-#'
 gcomp_responder <- function(
   data,
   vars,
@@ -99,9 +96,6 @@ gcomp_responder <- function(
 #'
 #' @return A named list of estimates for each visit and treatment group.
 #' @export
-#'
-#' @section Lifecycle:
-#' [![Lifecycle: experimental](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 #'
 #' @examples
 #' \donttest{

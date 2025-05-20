@@ -32,8 +32,3 @@ A named list containing estimates and standard errors for treatment comparisons 
 \description{
 Performs logistic regression and estimates marginal effects for binary outcomes.
 }
-\section{Lifecycle}{
-
-[\figure{https://lifecycle.r-lib.org/articles/stages.html#experimental}
-}
-

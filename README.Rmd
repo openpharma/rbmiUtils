@@ -108,10 +108,10 @@ print(tidy_df)
 
 The package includes two example datasets for demonstrating imputation and analysis:
 
-* `ADMI`: A large synthetic dataset with 100,000 rows and multiple visits, treatment arms, and stratification variables.
-* `ADEFF`: A smaller efficacy dataset for exploratory testing.
+* `ADEFF`: An example efficacy dataset for with missing data.
+* `ADMI`: A large multiple imputation dataset with 100,000 rows and multiple visits, treatment arms, and stratification variables.
 
-Use `?ADMI` or `?ADEFF` to view full documentation.
+Use `?ADEFF` and `?ADMI` to view full dataset documentation.
 
 ## Utilities
 

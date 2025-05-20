@@ -21,11 +21,6 @@ A named list of estimates for each visit and treatment group.
 \description{
 Applies \code{gcomp_responder()} separately for each unique visit in the data.
 }
-\section{Lifecycle}{
-
-[\figure{https://lifecycle.r-lib.org/articles/stages.html#experimental}
-}
-
 \examples{
 \donttest{
 library(dplyr)

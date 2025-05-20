@@ -8,6 +8,7 @@
 #' @return A data frame with the original subject IDs mapped and renamed.
 #' @export
 #' @examples
+#' \donttest{
 #' library(dplyr)
 #' library(rbmi)
 #' library(rbmiUtils)
@@ -35,8 +36,8 @@
 #'
 #' # Define Bayesian imputation method
 #' method <- method_bayes(
-#'   n_samples = 50,
-#'   control = control_bayes(warmup = 10, thin = 2)
+#'   n_samples = 100,
+#'   control = control_bayes(warmup = 200, thin = 2)
 #' )
 #'
 #' # Generate draws and perform imputation
@@ -45,8 +46,9 @@
 #'   references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
 #'
 #' # Extract imputed data with original subject IDs
-#' get_imputed_data(impute_obj)
-#'
+#' admi <- get_imputed_data(impute_obj)
+#' head(admi)
+#'}
 get_imputed_data <- function(impute_obj) {
   # Check class of impute_obj
   if (!inherits(impute_obj, "imputation")) {
