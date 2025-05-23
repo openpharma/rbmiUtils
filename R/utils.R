@@ -8,14 +8,53 @@
 #' @return A data frame with the original subject IDs mapped and renamed.
 #' @export
 #' @examples
-#' # Example usage:
-#' # result <- get_imputed_data(impute_obj)
+#' \donttest{
+#' library(dplyr)
+#' library(rbmi)
+#' library(rbmiUtils)
 #'
+#' set.seed(1974)
+#' # Load example dataset
+#' data("ADEFF")
+#'
+#' # Prepare data
+#' ADEFF <- ADEFF |>
+#'   mutate(
+#'     TRT = factor(TRT01P, levels = c("Placebo", "Drug A")),
+#'     USUBJID = factor(USUBJID),
+#'     AVISIT = factor(AVISIT)
+#'   )
+#'
+#' # Define variables for imputation
+#' vars <- set_vars(
+#'   subjid = "USUBJID",
+#'   visit = "AVISIT",
+#'   group = "TRT",
+#'   outcome = "CHG",
+#'   covariates = c("BASE", "STRATA", "REGION")
+#' )
+#'
+#' # Define Bayesian imputation method
+#' method <- method_bayes(
+#'   n_samples = 100,
+#'   control = control_bayes(warmup = 200, thin = 2)
+#' )
+#'
+#' # Generate draws and perform imputation
+#' draws_obj <- draws(data = ADEFF, vars = vars, method = method)
+#' impute_obj <- impute(draws_obj,
+#'   references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
+#'
+#' # Extract imputed data with original subject IDs
+#' admi <- get_imputed_data(impute_obj)
+#' head(admi)
+#'}
 get_imputed_data <- function(impute_obj) {
-
   # Check class of impute_obj
   if (!inherits(impute_obj, "imputation")) {
-    stop("impute_obj must be of an imputation object outputted from rbmi::impute")
+    stop(
+      "impute_obj must be of an imputation object outputted from rbmi::impute"
+    )
   }
 
   # Extract the `subjid` variable from the `vars` list
@@ -30,7 +69,7 @@ get_imputed_data <- function(impute_obj) {
 
   # Convert the imputed data list into a data frame, adding an IMPID variable
   imputed_dfs2 <- imputed_dfs |>
-    purrr::map_dfr(~ .x, .id = "IMPID")
+    purrr::map_dfr(~.x, .id = "IMPID")
 
   # Map original IDs back to the data
   imputed_dfs2$original_id <- idmap[match(imputed_dfs2[[uid]], names(idmap))]
@@ -44,8 +83,7 @@ get_imputed_data <- function(impute_obj) {
 }
 
 
-
-#' WIP: Utility function for Generalized G-computation for Binary Outcomes
+#' Utility function for Generalized G-computation for Binary Outcomes
 #'
 #' Wrapper function for targeting a marginal treatment effect
 #' using g-computation using the beeca package. Intended for binary endpoints.
@@ -62,14 +100,11 @@ get_imputed_data <- function(impute_obj) {
 #'
 #' @return A named list with treatment effect estimate, standard error, and degrees of freedom (if applicable).
 #'
-#' @section Lifecycle:
-#' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-#'
 #' @export
 #'
 #' @examples
 #' # Load required packages
-#' library(rbmiUtils)  # assuming gcomp_binary is defined in this package
+#' library(rbmiUtils)
 #' library(beeca)      # for get_marginal_effect()
 #' library(dplyr)
 #' # Load example data
@@ -96,15 +131,17 @@ get_imputed_data <- function(impute_obj) {
 #' # Print results
 #' print(result)
 #'
-gcomp_binary <- function(data,
-                         outcome = "CRIT1FLN",
-                         treatment = "TRT",
-                         covariates = c("BASE", "STRATA", "REGION"),
-                         reference = "Placebo",
-                         contrast = "diff",
-                         method = "Ge",
-                         type = "HC0",
-                         ...) {
+gcomp_binary <- function(
+  data,
+  outcome = "CRIT1FLN",
+  treatment = "TRT",
+  covariates = c("BASE", "STRATA", "REGION"),
+  reference = "Placebo",
+  contrast = "diff",
+  method = "Ge",
+  type = "HC0",
+  ...
+) {
   # Construct formula
   form <- stats::as.formula(
     paste0(outcome, " ~ ", paste(c(treatment, covariates), collapse = " + "))
@@ -136,7 +173,3 @@ gcomp_binary <- function(data,
 
   return(out)
 }
-
-
-
-

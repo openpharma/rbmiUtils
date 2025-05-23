@@ -12,16 +12,14 @@
 #' @return A named list containing estimates and standard errors for treatment comparisons and within-arm means.
 #' @export
 #'
-#' @section Lifecycle:
-#' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-#'
-gcomp_responder <- function(data,
-                            vars,
-                            reference_levels = NULL,
-                            var_method = "Ge",
-                            type = "HC0",
-                            contrast = "diff") {
-
+gcomp_responder <- function(
+  data,
+  vars,
+  reference_levels = NULL,
+  var_method = "Ge",
+  type = "HC0",
+  contrast = "diff"
+) {
   outcome <- vars$outcome
   group <- vars$group
   covariates <- vars$covariates
@@ -53,30 +51,34 @@ gcomp_responder <- function(data,
   lsm <- res |>
     dplyr::filter(STAT %in% c("risk", "risk_se")) |>
     dplyr::group_by(TRTVAL) |>
-    dplyr::group_map(~ {
-      list_name <- paste0("lsm_", .y$TRTVAL)
-      named_list <- list(
-        est = .x$STATVAL[.x$STAT == "risk"],
-        se = .x$STATVAL[.x$STAT == "risk_se"],
-        df = NA
-      )
-      setNames(list(named_list), list_name)
-    }) |>
+    dplyr::group_map(
+      ~ {
+        list_name <- paste0("lsm_", .y$TRTVAL)
+        named_list <- list(
+          est = .x$STATVAL[.x$STAT == "risk"],
+          se = .x$STATVAL[.x$STAT == "risk_se"],
+          df = NA
+        )
+        setNames(list(named_list), list_name)
+      }
+    ) |>
     purrr::flatten()
 
   trt <- res |>
     dplyr::filter(STAT %in% c("diff", "diff_se")) |>
     dplyr::group_by(TRTVAL) |>
-    dplyr::group_map(~ {
-      trtval <- sub("diff: ", "", .y$TRTVAL)
-      list_name <- paste0("trt_", trtval)
-      named_list <- list(
-        est = .x$STATVAL[.x$STAT == "diff"],
-        se = .x$STATVAL[.x$STAT == "diff_se"],
-        df = NA
-      )
-      setNames(list(named_list), list_name)
-    }) |>
+    dplyr::group_map(
+      ~ {
+        trtval <- sub("diff: ", "", .y$TRTVAL)
+        list_name <- paste0("trt_", trtval)
+        named_list <- list(
+          est = .x$STATVAL[.x$STAT == "diff"],
+          se = .x$STATVAL[.x$STAT == "diff_se"],
+          df = NA
+        )
+        setNames(list(named_list), list_name)
+      }
+    ) |>
     purrr::flatten()
 
   return(c(trt, lsm))
@@ -95,24 +97,25 @@ gcomp_responder <- function(data,
 #' @return A named list of estimates for each visit and treatment group.
 #' @export
 #'
-#' @section Lifecycle:
-#' [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
-#'
 #' @examples
+#' \donttest{
 #' library(dplyr)
 #' library(rbmi)
+#' library(rbmiUtils)
+#'
 #' data("ADMI")
 #'
 #' ADMI <- ADMI |>
-#'   dplyr::mutate(
+#'   mutate(
 #'     TRT = factor(TRT, levels = c("Placebo", "Drug A")),
 #'     STRATA = factor(STRATA),
 #'     REGION = factor(REGION)
 #'   )
 #'
+#' # Note: method must match the original used for imputation
 #' method <- method_bayes(
 #'   n_samples = 100,
-#'   control = control_bayes(warmup = 200, thin = 2)
+#'   control = control_bayes(warmup = 20, thin = 2)
 #' )
 #'
 #' vars_binary <- set_vars(
@@ -133,13 +136,10 @@ gcomp_responder <- function(data,
 #'   var_method = "Ge",
 #'   type = "HC0"
 #' )
-#' pool(ana_obj_prop)
 #'
-gcomp_responder_multi <- function(data,
-                                  vars,
-                                  reference_levels = NULL,
-                                  ...) {
-
+#' pool(ana_obj_prop)
+#' }
+gcomp_responder_multi <- function(data, vars, reference_levels = NULL, ...) {
   visit_var <- vars$visit
   visits <- unique(data[[visit_var]])
 

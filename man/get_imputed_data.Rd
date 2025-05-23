@@ -17,7 +17,45 @@ This function takes an imputed dataset and a mapping variable to return a datase
 with the original IDs mapped back and renamed appropriately.
 }
 \examples{
-# Example usage:
-# result <- get_imputed_data(impute_obj)
+\donttest{
+library(dplyr)
+library(rbmi)
+library(rbmiUtils)
 
+set.seed(1974)
+# Load example dataset
+data("ADEFF")
+
+# Prepare data
+ADEFF <- ADEFF |>
+  mutate(
+    TRT = factor(TRT01P, levels = c("Placebo", "Drug A")),
+    USUBJID = factor(USUBJID),
+    AVISIT = factor(AVISIT)
+  )
+
+# Define variables for imputation
+vars <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CHG",
+  covariates = c("BASE", "STRATA", "REGION")
+)
+
+# Define Bayesian imputation method
+method <- method_bayes(
+  n_samples = 100,
+  control = control_bayes(warmup = 200, thin = 2)
+)
+
+# Generate draws and perform imputation
+draws_obj <- draws(data = ADEFF, vars = vars, method = method)
+impute_obj <- impute(draws_obj,
+  references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
+
+# Extract imputed data with original subject IDs
+admi <- get_imputed_data(impute_obj)
+head(admi)
+}
 }

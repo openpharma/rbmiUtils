@@ -4,9 +4,9 @@
 \name{rbmiUtils-package}
 \alias{rbmiUtils}
 \alias{rbmiUtils-package}
-\title{rbmiUtils: Utility Functions to Support and Extend the Rbmi Package}
+\title{rbmiUtils: Utility Functions to Support and Extend the 'rbmi' Package}
 \description{
-Provides utility functions that extend the capabilities of the rbmi package to support clinical trial analysis workflows. Includes tools for manipulating imputed data, applying analysis methods across imputations, and generating output compatible with clinical data standards.
+Provides utility functions that extend the capabilities of the reference-based multiple imputation package 'rbmi'. It supports clinical trial analysis workflows with functions for managing imputed datasets, applying analysis methods across imputations, and tidying results for reporting.
 }
 \seealso{
 Useful links:

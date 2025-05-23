@@ -38,10 +38,10 @@
 #'
 #' # Specify the imputation method (Bayesian) - need for pool step
 #'  method <- rbmi::method_bayes(
-#'  n_samples = 100,
+#'  n_samples = 20,
 #'  control = rbmi::control_bayes(
-#'    warmup = 200,
-#'    thin = 2
+#'    warmup = 20,
+#'    thin = 1
 #'    )
 #'  )
 #'

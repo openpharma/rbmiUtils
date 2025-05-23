@@ -21,26 +21,25 @@ A named list of estimates for each visit and treatment group.
 \description{
 Applies \code{gcomp_responder()} separately for each unique visit in the data.
 }
-\section{Lifecycle}{
-
-\href{https://lifecycle.r-lib.org/articles/stages.html}{\if{html}{\figure{https://img.shields.io/badge/lifecycle-experimental-orange.svg}}}
-}
-
 \examples{
+\donttest{
 library(dplyr)
 library(rbmi)
+library(rbmiUtils)
+
 data("ADMI")
 
 ADMI <- ADMI |>
-  dplyr::mutate(
+  mutate(
     TRT = factor(TRT, levels = c("Placebo", "Drug A")),
     STRATA = factor(STRATA),
     REGION = factor(REGION)
   )
 
+# Note: method must match the original used for imputation
 method <- method_bayes(
   n_samples = 100,
-  control = control_bayes(warmup = 200, thin = 2)
+  control = control_bayes(warmup = 20, thin = 2)
 )
 
 vars_binary <- set_vars(
@@ -61,6 +60,7 @@ ana_obj_prop <- analyse_mi_data(
   var_method = "Ge",
   type = "HC0"
 )
-pool(ana_obj_prop)
 
+pool(ana_obj_prop)
+}
 }

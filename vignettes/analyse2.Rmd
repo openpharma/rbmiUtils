@@ -42,7 +42,7 @@ This approach applies **Rubin’s Rules** for inference after multiple imputatio
 
 # Step 1: Setup and Data Preparation
 
-```{r libraries}
+```{r libraries, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
 library(readr)
