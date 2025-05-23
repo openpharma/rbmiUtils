@@ -1,8 +1,6 @@
 # rbmiUtils (development version)
 
-# rbmiUtils (development)
-
-# rbmiUtils 0.1.3
+# rbmiUtils 0.1.4
 
 * First release 
 * Preparation for CRAN submission.
