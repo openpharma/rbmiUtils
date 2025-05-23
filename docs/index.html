@@ -58,9 +58,7 @@
 </h1></div>
 <!-- badges: start -->
 
-<!-- badges: end -->
 <p><code>rbmiUtils</code> extends the functionality of <a href="https://github.com/insightsengineering/rbmi" class="external-link"><code>rbmi</code></a> to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.</p>
-<p>This package is under development and is not yet available on CRAN.</p>
 <div class="section level2">
 <h2 id="table-of-contents">Table of Contents<a class="anchor" aria-label="anchor" href="#table-of-contents"></a>
 </h2>
@@ -75,17 +73,37 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>rbmiUtils</code> from GitHub:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"openpharma/rbmiUtils"</span><span class="op">)</span></span></code></pre></div>
-<p>This package requires the <a href="https://github.com/insightsengineering/rbmi" class="external-link"><code>rbmi</code></a> package to be installed.</p>
+<p>You can install the development version of <code>rbmiUtils</code> from cran or GitHub:</p>
+<table class="table">
+<colgroup>
+<col width="18%">
+<col width="11%">
+<col width="70%">
+</colgroup>
+<thead><tr>
+<th>Type</th>
+<th>Source</th>
+<th>Command</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Release</td>
+<td>CRAN</td>
+<td><code>install.packages("rbmiUtils")</code></td>
+</tr>
+<tr>
+<td>Development</td>
+<td>GitHub</td>
+<td><code>remotes::install_github("openpharma/rbmiUtils")</code></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>This example shows how to run a covariate-adjusted ANCOVA on imputed datasets using Bayesian multiple imputation:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://insightsengineering.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a></span><span class="op">)</span></span>
@@ -149,7 +167,7 @@
 <span><span class="co">#&gt; # ℹ 2 more variables: uci &lt;dbl&gt;, pval &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="dataset">Dataset<a class="anchor" aria-label="anchor" href="#dataset"></a>
+<h2 id="datasets">Datasets<a class="anchor" aria-label="anchor" href="#datasets"></a>
 </h2>
 <p>The package includes two example datasets for demonstrating imputation and analysis:</p>
 <ul>
@@ -183,6 +201,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=rbmiUtils" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/openpharma/rbmiUtils/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/openpharma/rbmiUtils/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -218,6 +237,8 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml" class="external-link"><img src="https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml/badge.svg" alt="test-coverage"></a></li>
 </ul>
 </div>
 

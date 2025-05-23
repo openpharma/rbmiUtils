@@ -7,7 +7,9 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-
+![CRAN status](https://www.r-pkg.org/badges/version/rbmiUtils)
+[![R-CMD-check](https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 `rbmiUtils` extends the functionality of
@@ -15,8 +17,6 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 streamlined workflows for multiple imputation in clinical trials. It is
 designed to simplify key tasks such as analysis execution, pooling,
 result tidying, and imputed data handling.
-
-This package is under development and is not yet available on CRAN.
 
 ## Table of Contents
 
@@ -28,16 +28,13 @@ This package is under development and is not yet available on CRAN.
 
 ## Installation
 
-You can install the development version of `rbmiUtils` from GitHub:
+You can install the development version of `rbmiUtils` from cran or
+GitHub:
 
-``` r
-# install.packages("remotes")
-remotes::install_github("openpharma/rbmiUtils")
-```
-
-This package requires the
-[`rbmi`](https://github.com/insightsengineering/rbmi) package to be
-installed.
+| Type        | Source | Command                                           |
+|-------------|--------|---------------------------------------------------|
+| Release     | CRAN   | `install.packages("rbmiUtils")`                   |
+| Development | GitHub | `remotes::install_github("openpharma/rbmiUtils")` |
 
 ## Example
 
@@ -108,7 +105,7 @@ print(tidy_df)
 #> # ℹ 2 more variables: uci <dbl>, pval <dbl>
 ```
 
-## Dataset
+## Datasets
 
 The package includes two example datasets for demonstrating imputation
 and analysis:

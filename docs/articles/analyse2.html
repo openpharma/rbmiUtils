@@ -58,7 +58,7 @@
 
       <h1>Storing and Analyzing Imputed Data with rbmiUtils</h1>
             
-            <h4 data-toc-skip class="date">2025-05-20</h4>
+            <h4 data-toc-skip class="date">2025-05-23</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/openpharma/rbmiUtils/blob/HEAD/vignettes/analyse2.Rmd" class="external-link"><code>vignettes/analyse2.Rmd</code></a></small>
       <div class="d-none name"><code>analyse2.Rmd</code></div>
@@ -148,8 +148,8 @@ combining rules.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'rbmi_mmrm' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000234 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.34 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000243 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.43 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -166,9 +166,9 @@ combining rules.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.317 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.242 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.559 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.313 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.238 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.551 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span>
 <span></span>
 <span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>, references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span>
