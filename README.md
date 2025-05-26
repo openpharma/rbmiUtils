@@ -7,7 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-![CRAN status](https://www.r-pkg.org/badges/version/rbmiUtils)
+[![CRAN status](https://www.r-pkg.org/badges/version/rbmiUtils)](https://CRAN.R-project.org/package=rbmiUtils)
 [![R-CMD-check](https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
