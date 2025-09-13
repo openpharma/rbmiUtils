@@ -1,5 +1,9 @@
 # rbmiUtils (development version)
 
+# rbmiUtils 0.1.5
+
+* Added additional tests for all utility functions. 
+
 # rbmiUtils 0.1.4
 
 * First release 
