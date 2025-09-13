@@ -1,4 +1,4 @@
-# rbmiUtils (development version)
+# rbmiUtils 0.1.6
 
 # rbmiUtils 0.1.5
 
