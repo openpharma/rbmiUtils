@@ -7,7 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/rbmiUtils)](https://CRAN.R-project.org/package=rbmiUtils)
+![CRAN status](https://www.r-pkg.org/badges/version/rbmiUtils)
 [![R-CMD-check](https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
@@ -28,8 +28,8 @@ result tidying, and imputed data handling.
 
 ## Installation
 
-You can install the development version of `rbmiUtils` from cran or
-GitHub:
+You can install the package from cran or the development version of
+`rbmiUtils` from GitHub:
 
 | Type        | Source | Command                                           |
 |-------------|--------|---------------------------------------------------|
