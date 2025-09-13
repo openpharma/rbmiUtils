@@ -1,7 +1,5 @@
 # rbmiUtils 0.1.6
 
-# rbmiUtils 0.1.5
-
 * Added additional tests for all utility functions. 
 
 # rbmiUtils 0.1.4
