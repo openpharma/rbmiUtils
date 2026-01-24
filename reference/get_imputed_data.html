@@ -9,7 +9,7 @@ with the original IDs mapped back and renamed appropriately."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.6.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.7</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,7 +66,7 @@ with the original IDs mapped back and renamed appropriately.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://insightsengineering.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1974</span><span class="op">)</span></span></span>
@@ -82,7 +82,7 @@ with the original IDs mapped back and renamed appropriately.</p>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Define variables for imputation</span></span></span>
-<span class="r-in"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  subjid <span class="op">=</span> <span class="st">"USUBJID"</span>,</span></span>
 <span class="r-in"><span>  visit <span class="op">=</span> <span class="st">"AVISIT"</span>,</span></span>
 <span class="r-in"><span>  group <span class="op">=</span> <span class="st">"TRT"</span>,</span></span>
@@ -91,18 +91,18 @@ with the original IDs mapped back and renamed appropriately.</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Define Bayesian imputation method</span></span></span>
-<span class="r-in"><span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  n_samples <span class="op">=</span> <span class="fl">100</span>,</span></span>
-<span class="r-in"><span>  control <span class="op">=</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span>warmup <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  control <span class="op">=</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span>warmup <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Generate draws and perform imputation</span></span></span>
-<span class="r-in"><span><span class="va">draws_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/draws.html" class="external-link">draws</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ADEFF</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">draws_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">draws</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ADEFF</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'rbmi_mmrm' NOW (CHAIN 1).</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 0.000459 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.59 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 0.000463 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.63 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
@@ -119,14 +119,11 @@ with the original IDs mapped back and renamed appropriately.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.678 seconds (Warm-up)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.523 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                1.201 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.651 seconds (Warm-up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.536 seconds (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                1.187 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>The largest R-hat is 1.07, indicating chains have not mixed.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> Running the chains for more iterations may help. See</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> https://mc-stan.org/misc/warnings.html#r-hat</span>
-<span class="r-in"><span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>,</span></span>
+<span class="r-in"><span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>,</span></span>
 <span class="r-in"><span>  references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Extract imputed data with original subject IDs</span></span></span>
@@ -158,7 +155,7 @@ with the original IDs mapped back and renamed appropriately.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
