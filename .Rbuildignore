@@ -14,3 +14,4 @@
 ^cran-comments\.md$
 ^_pkgdown.yml$
 ^CRAN-SUBMISSION$
+^\.claude$

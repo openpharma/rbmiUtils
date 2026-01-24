@@ -1,4 +1,8 @@
-# rbmiUtils (development version)
+# rbmiUtils 0.1.7
+
+* Moved `tidyr` from Suggests to Imports (used in `tidy_pool_obj()`).
+* Added examples to `gcomp_responder()` documentation.
+* Standardized examples to use native pipe operator `|>`.
 
 # rbmiUtils 0.1.6
 
