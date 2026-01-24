@@ -1,8 +1,16 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Mark Baillie <bailliem@gmail.com>'
 
 New submission
+Package was archived on CRAN
+
+CRAN repository db overrides:
+  X-CRAN-Comment: Archived on 2025-11-19 as requires archived package
+    'rbmi'
 
 Package was archived on CRAN due to 'rbmi' archived. 
 * This version is a minor update and re-release after rbmi is now available on cran. 
