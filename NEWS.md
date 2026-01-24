@@ -1,3 +1,5 @@
+# rbmiUtils 0.1.8
+
 # rbmiUtils 0.1.7
 
 * Moved `tidyr` from Suggests to Imports (used in `tidy_pool_obj()`).
