@@ -32,3 +32,39 @@ A named list containing estimates and standard errors for treatment comparisons 
 \description{
 Performs logistic regression and estimates marginal effects for binary outcomes.
 }
+\examples{
+\donttest{
+library(dplyr)
+library(rbmi)
+library(rbmiUtils)
+
+data("ADMI")
+
+# Prepare data for a single visit
+ADMI <- ADMI |>
+  mutate(
+    TRT = factor(TRT, levels = c("Placebo", "Drug A")),
+    STRATA = factor(STRATA),
+    REGION = factor(REGION)
+  )
+
+dat_single <- ADMI |>
+  filter(AVISIT == "Week 24")
+
+vars <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CRIT1FLN",
+  covariates = c("BASE", "STRATA", "REGION")
+)
+
+result <- gcomp_responder(
+  data = dat_single,
+  vars = vars,
+  reference_levels = "Placebo"
+)
+
+print(result)
+}
+}
