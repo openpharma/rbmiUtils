@@ -64,7 +64,6 @@ get_imputed_data <- function(impute_obj) {
   imputed_dfs <- rbmi::extract_imputed_dfs(impute_obj, idmap = TRUE)
 
   # Extract the ID map from the attributes of the first imputed dataset
-  # example code from issue https://github.com/insightsengineering/rbmi/issues/382
   idmap <- attributes(imputed_dfs[[1]])$idmap
 
   # Convert the imputed data list into a data frame, adding an IMPID variable

@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 [![test-coverage](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
-`rbmiUtils` extends the functionality of [`rbmi`](https://github.com/insightsengineering/rbmi) to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.
+`rbmiUtils` extends the functionality of [`rbmi`](https://github.com/openpharma/rbmi) to support more streamlined workflows for multiple imputation in clinical trials. It is designed to simplify key tasks such as analysis execution, pooling, result tidying, and imputed data handling.
 
 
 ## Table of Contents
