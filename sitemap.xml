@@ -2,8 +2,11 @@
 <url><loc>https://openpharma.github.io/rbmiUtils/404.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/LICENSE.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/articles/analyse2.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/articles/data-preparation.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/articles/efficient-storage.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/articles/index.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/authors.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/claude.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/index.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/news/index.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/ADEFF.html</loc></url>
@@ -11,13 +14,18 @@
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/analyse_mi_data.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/as_analysis2.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/as_simple_formula2.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/extract_covariates2.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/gcomp_binary.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/gcomp_responder.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/gcomp_responder_multi.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/index.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/rbmiUtils-package.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/reference/reduce_imputed_data.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.html</loc></url>
 <url><loc>https://openpharma.github.io/rbmiUtils/reference/tidy_pool_obj.html</loc></url>
+<url><loc>https://openpharma.github.io/rbmiUtils/reference/validate_data.html</loc></url>
 </urlset>
 
