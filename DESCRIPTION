@@ -1,6 +1,6 @@
 Package: rbmiUtils
 Title: Utility Functions to Support and Extend the 'rbmi' Package 
-Version: 0.1.8
+Version: 0.1.8.9000
 Authors@R: c( 
     person("Mark", "Baillie", email = "bailliem@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5618-0667")),
