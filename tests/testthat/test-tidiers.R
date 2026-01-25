@@ -122,3 +122,217 @@ test_that("tidy_pool_obj requires a pool object", {
     "Input object must be of class 'pool'"
   )
 })
+
+
+# =============================================================================
+# Additional comprehensive tests for tidy_pool_obj
+# =============================================================================
+
+test_that("tidy_pool_obj handles single visit data", {
+  data("ADMI")
+  set.seed(234)
+
+  # Filter to single visit
+  ADMI_single <- ADMI[ADMI$AVISIT == "Week 24", ]
+  ADMI_single$TRT <- factor(ADMI_single$TRT, levels = c("Placebo", "Drug A"))
+  ADMI_single$USUBJID <- factor(ADMI_single$USUBJID)
+  ADMI_single$AVISIT <- factor(ADMI_single$AVISIT)
+
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID",
+    visit = "AVISIT",
+    group = "TRT",
+    outcome = "CHG",
+    covariates = c("BASE", "STRATA", "REGION")
+  )
+
+  method <- rbmi::method_bayes(
+    n_samples = 50,
+    control = rbmi::control_bayes(warmup = 100, thin = 2)
+  )
+
+  ana_obj <- analyse_mi_data(
+    data = ADMI_single,
+    vars = vars,
+    method = method,
+    fun = rbmi::ancova
+  )
+
+  pool_obj <- rbmi::pool(ana_obj)
+  tidy_df <- tidy_pool_obj(pool_obj)
+
+  expect_s3_class(tidy_df, "tbl_df")
+  expect_true(all(tidy_df$visit == "Week 24" | is.na(tidy_df$visit)))
+})
+
+
+test_that("tidy_pool_obj preserves numeric precision", {
+  data("ADMI")
+  set.seed(345)
+
+  ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
+  ADMI$USUBJID <- factor(ADMI$USUBJID)
+  ADMI$AVISIT <- factor(ADMI$AVISIT)
+
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID",
+    visit = "AVISIT",
+    group = "TRT",
+    outcome = "CHG",
+    covariates = c("BASE", "STRATA", "REGION")
+  )
+
+  method <- rbmi::method_bayes(
+    n_samples = 50,
+    control = rbmi::control_bayes(warmup = 100, thin = 2)
+  )
+
+  ana_obj <- analyse_mi_data(
+    data = ADMI,
+    vars = vars,
+    method = method,
+    fun = rbmi::ancova
+  )
+
+  pool_obj <- rbmi::pool(ana_obj)
+  tidy_df <- tidy_pool_obj(pool_obj)
+
+  # Check numeric columns are numeric
+  expect_type(tidy_df$est, "double")
+  expect_type(tidy_df$se, "double")
+  expect_type(tidy_df$lci, "double")
+  expect_type(tidy_df$uci, "double")
+  expect_type(tidy_df$pval, "double")
+})
+
+
+test_that("tidy_pool_obj correctly identifies lsm_ref parameters", {
+  data("ADMI")
+  set.seed(456)
+
+  ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
+  ADMI$USUBJID <- factor(ADMI$USUBJID)
+  ADMI$AVISIT <- factor(ADMI$AVISIT)
+
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID",
+    visit = "AVISIT",
+    group = "TRT",
+    outcome = "CHG",
+    covariates = c("BASE", "STRATA", "REGION")
+  )
+
+  method <- rbmi::method_bayes(
+    n_samples = 50,
+    control = rbmi::control_bayes(warmup = 100, thin = 2)
+  )
+
+  ana_obj <- analyse_mi_data(
+    data = ADMI,
+    vars = vars,
+    method = method,
+    fun = rbmi::ancova
+  )
+
+  pool_obj <- rbmi::pool(ana_obj)
+  tidy_df <- tidy_pool_obj(pool_obj)
+
+  # Check that ref and alt are correctly identified
+  ref_rows <- tidy_df[tidy_df$lsm_type == "ref" & !is.na(tidy_df$lsm_type), ]
+  alt_rows <- tidy_df[tidy_df$lsm_type == "alt" & !is.na(tidy_df$lsm_type), ]
+
+  expect_true(nrow(ref_rows) > 0)
+  expect_true(nrow(alt_rows) > 0)
+  expect_true(all(grepl("Reference", ref_rows$description)))
+  expect_true(all(grepl("Alternative", alt_rows$description)))
+})
+
+
+test_that("tidy_pool_obj correctly identifies treatment comparison parameters", {
+  data("ADMI")
+  set.seed(567)
+
+  ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
+  ADMI$USUBJID <- factor(ADMI$USUBJID)
+  ADMI$AVISIT <- factor(ADMI$AVISIT)
+
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID",
+    visit = "AVISIT",
+    group = "TRT",
+    outcome = "CHG",
+    covariates = c("BASE", "STRATA", "REGION")
+  )
+
+  method <- rbmi::method_bayes(
+    n_samples = 50,
+    control = rbmi::control_bayes(warmup = 100, thin = 2)
+  )
+
+  ana_obj <- analyse_mi_data(
+    data = ADMI,
+    vars = vars,
+    method = method,
+    fun = rbmi::ancova
+  )
+
+  pool_obj <- rbmi::pool(ana_obj)
+  tidy_df <- tidy_pool_obj(pool_obj)
+
+  # Check treatment comparison rows
+  trt_rows <- tidy_df[tidy_df$parameter_type == "trt", ]
+
+  expect_true(nrow(trt_rows) > 0)
+  expect_true(all(grepl("Treatment Comparison", trt_rows$description)))
+  expect_true(all(is.na(trt_rows$lsm_type)))
+})
+
+
+test_that("tidy_pool_obj output can be filtered by visit", {
+  data("ADMI")
+  set.seed(678)
+
+  ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
+  ADMI$USUBJID <- factor(ADMI$USUBJID)
+  ADMI$AVISIT <- factor(ADMI$AVISIT)
+
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID",
+    visit = "AVISIT",
+    group = "TRT",
+    outcome = "CHG",
+    covariates = c("BASE", "STRATA", "REGION")
+  )
+
+  method <- rbmi::method_bayes(
+    n_samples = 50,
+    control = rbmi::control_bayes(warmup = 100, thin = 2)
+  )
+
+  ana_obj <- analyse_mi_data(
+    data = ADMI,
+    vars = vars,
+    method = method,
+    fun = rbmi::ancova
+  )
+
+  pool_obj <- rbmi::pool(ana_obj)
+  tidy_df <- tidy_pool_obj(pool_obj)
+
+  # Filter by visit should work
+  week24_df <- tidy_df[tidy_df$visit == "Week 24", ]
+  week48_df <- tidy_df[tidy_df$visit == "Week 48", ]
+
+  expect_true(nrow(week24_df) > 0)
+  expect_true(nrow(week48_df) > 0)
+})
+
+
+test_that("tidy_pool_obj errors with NULL input", {
+  expect_error(tidy_pool_obj(NULL), "must be of class 'pool'")
+})
+
+
+test_that("tidy_pool_obj errors with list input", {
+  expect_error(tidy_pool_obj(list(a = 1, b = 2)), "must be of class 'pool'")
+})

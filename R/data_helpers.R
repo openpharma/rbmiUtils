@@ -8,7 +8,7 @@
 #' @param vars A `vars` object as created by [rbmi::set_vars()].
 #' @param data_ice An optional data.frame of intercurrent events. If provided,
 #'   must contain columns corresponding to `vars$subjid`, `vars$visit`, and
-#'   `vars$strategy`.
+#'   `vars$strategy`. Can be created using [prepare_data_ice()].
 #'
 #' @return Invisibly returns `TRUE` if all checks pass. Throws an error with
 #'   collected messages if any issues are found.
@@ -25,6 +25,17 @@
 #'   \item If `data_ice` is provided: correct columns, valid subjects, valid
 #'     visits, recognised strategies, and at most one row per subject
 #' }
+#'
+#' **Recommended Workflow:**
+#' 1. Call `validate_data()` to check your data
+#' 2. Use [prepare_data_ice()] to create ICE data if needed
+#' 3. Review missingness with [summarise_missingness()]
+#' 4. Proceed with [rbmi::draws()] for imputation
+#'
+#' @seealso
+#' * [prepare_data_ice()] to create intercurrent event data from flags
+#' * [summarise_missingness()] to understand missing data patterns
+#' * [rbmi::draws()] to perform imputation after validation
 #'
 #' @examples
 #' library(rbmi)
@@ -272,6 +283,10 @@ prepare_data_ice <- function(data, vars, ice_col, strategy) {
     msg = "`data` must be a data.frame"
   )
   assertthat::assert_that(
+    is.list(vars),
+    msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
+  )
+  assertthat::assert_that(
     is.character(ice_col) && length(ice_col) == 1,
     msg = "`ice_col` must be a single character string"
   )
@@ -279,6 +294,33 @@ prepare_data_ice <- function(data, vars, ice_col, strategy) {
     ice_col %in% names(data),
     msg = sprintf("Column `%s` not found in `data`", ice_col)
   )
+
+  # Validate required vars fields
+  required_vars <- c("subjid", "visit")
+  missing_vars <- setdiff(required_vars, names(vars))
+  if (length(missing_vars) > 0) {
+    stop(sprintf(
+      "`vars` must contain: %s. Use `rbmi::set_vars()` to create a valid vars object.",
+      paste0("`", missing_vars, "`", collapse = ", ")
+    ), call. = FALSE)
+  }
+
+  # Validate vars$strategy is defined (or will use default "strategy")
+  if (is.null(vars$strategy) || !nzchar(vars$strategy)) {
+    vars$strategy <- "strategy"
+  }
+
+  # Validate subjid and visit columns exist in data
+  if (!vars$subjid %in% names(data)) {
+    stop(sprintf(
+      "Column `%s` (subjid) not found in `data`", vars$subjid
+    ), call. = FALSE)
+  }
+  if (!vars$visit %in% names(data)) {
+    stop(sprintf(
+      "Column `%s` (visit) not found in `data`", vars$visit
+    ), call. = FALSE)
+  }
 
   valid_strategies <- c("MAR", "CR", "JR", "CIR", "LMCF")
   assertthat::assert_that(

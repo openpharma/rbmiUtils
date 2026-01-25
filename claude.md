@@ -14,17 +14,30 @@
 
 ```
 rbmiUtils/
-├── R/                          # Source code (8 files, ~2,000 lines)
-│   ├── analyse_mi_data.R       # Core analysis functions
+├── R/                          # Source code (9 files)
+│   ├── analyse_mi_data.R       # Core analysis + S3 methods
 │   ├── tidiers.R               # Result tidying (tidy_pool_obj)
 │   ├── imputation_storage.R    # reduce/expand imputed data
 │   ├── data_helpers.R          # validate_data, prepare_data_ice, summarise_missingness
 │   ├── analysis_utils.R        # Binary outcome g-computation
+│   ├── result_helpers.R        # NEW: create_impid, combine_results, format_results
 │   ├── utils.R                 # Data extraction (get_imputed_data)
 │   ├── ADMI.R & ADEFF.R        # Dataset documentation
 │   └── rbmiUtils-package.R     # Package-level documentation
-├── tests/testthat/             # Test suite (6 files, 84 tests, ~1,100 lines)
-├── vignettes/                  # User guides (3 vignettes)
+├── tests/testthat/             # Test suite (8 files)
+│   ├── test-analyse_mi_data.R  # Core analysis tests (expanded)
+│   ├── test-tidiers.R          # tidy_pool_obj tests (expanded)
+│   ├── test-imputation_storage.R
+│   ├── test-data_helpers.R
+│   ├── test-analysis_utils.R   # g-computation tests (expanded)
+│   ├── test-utils.R
+│   ├── test-result_helpers.R   # NEW: helper function tests
+│   └── test-integration.R      # NEW: end-to-end workflow tests
+├── vignettes/                  # User guides (4 vignettes)
+│   ├── data-preparation.Rmd
+│   ├── efficient-storage.Rmd
+│   ├── analyse2.Rmd
+│   └── analysis-comparison.Rmd # NEW: ANCOVA vs g-computation guide
 ├── man/                        # Roxygen-generated documentation
 ├── data/                       # Example datasets (ADMI, ADEFF)
 └── .github/workflows/          # CI/CD (R-CMD-check, test-coverage, pkgdown)
@@ -36,6 +49,14 @@ rbmiUtils/
 - `analyse_mi_data()` - Apply analysis function to each imputed dataset
 - `tidy_pool_obj()` - Convert pooled results to publication-ready tibble
 - `get_imputed_data()` - Extract imputed datasets from rbmi objects
+- `print.analysis()` / `summary.analysis()` - S3 methods for analysis objects
+
+**Result Helpers (NEW):**
+- `create_impid()` - Create IMPID column from list of imputed datasets
+- `combine_results()` - Combine tidy results from multiple analyses
+- `format_results()` - Format results for publication-ready tables
+- `extract_trt_effects()` - Extract treatment comparison rows
+- `extract_lsm()` - Extract least squares mean rows
 
 **G-Computation (Binary Endpoints):**
 - `gcomp_responder()` - G-computation for binary outcomes at single visit
@@ -93,70 +114,70 @@ pkgdown::build_site()
 - Use assertthat for input validation
 - Export functions via `@export` tag in roxygen
 
-## Planned Improvements
+## Completed Improvements
 
-### High Priority
+### High Priority (DONE)
 
-1. **Expand Test Coverage for Core Functions**
-   - `analyse_mi_data()` currently has minimal tests (7 tests)
-   - `tidy_pool_obj()` only has 2 basic tests
-   - `gcomp_responder_multi()` has only 1 test
-   - Add edge case testing (empty data, single group, many imputations)
-   - Target: 90%+ code coverage for exported functions
+1. **Expanded Test Coverage for Core Functions**
+   - `analyse_mi_data()` - Added 10+ new tests for edge cases, delta adjustment, methods
+   - `tidy_pool_obj()` - Added 7 new tests for single visit, numeric precision, filtering
+   - `gcomp_responder_multi()` - Added 6 new tests for multiple visits, covariates
 
-2. **Add Integration Tests**
-   - Create end-to-end workflow tests
-   - Test complete pipeline: data prep → imputation → analysis → pooling
-   - Test with ADMI/ADEFF example datasets
+2. **Added Integration Tests**
+   - New `test-integration.R` with end-to-end workflow tests
+   - Tests complete pipelines: data prep → analysis → pooling → tidy
+   - Tests storage workflow: reduce → expand roundtrip
 
-3. **Improve Input Validation**
-   - `prepare_data_ice()`: Validate `vars` has `strategy` defined upfront
-   - `analyse_mi_data()`: Handle empty groups gracefully
-   - Add more informative error messages with actionable guidance
+3. **Improved Input Validation**
+   - `prepare_data_ice()` - Now validates vars fields upfront
+   - `analyse_mi_data()` - Better error messages, validates method, handles edge cases
+   - Clear error messages with actionable guidance
 
 4. **Workflow Documentation**
-   - Add cross-function references in roxygen docs
-   - Create "Getting Started" guide showing function dependencies
-   - Document which functions to call in what order
+   - Added `@seealso` cross-references in all major functions
+   - Documented recommended workflow in function details
+   - Clear indication of function dependencies
 
-### Medium Priority
+### Medium Priority (DONE)
 
-5. **Add Helper Functions**
-   - `create_impid()` - Helper to create imputation ID column
-   - `combine_results()` - Combine results across visits/endpoints
-   - `format_results()` - Format results for reporting tables
+5. **Added Helper Functions**
+   - `create_impid()` - Creates IMPID from list of data.frames
+   - `combine_results()` - Combines multiple tidy results
+   - `format_results()` - Publication-ready formatting
+   - `extract_trt_effects()` / `extract_lsm()` - Convenience filters
 
-6. **Add S3 Methods for Results**
-   - `print()` method for analysis results
-   - `summary()` method with key statistics
-   - `plot()` method for visualizing treatment effects
+6. **Added S3 Methods for Results**
+   - `print.analysis()` - Shows summary of analysis object
+   - `summary.analysis()` - Detailed summary with next steps
 
-7. **Extend Analysis Capabilities**
-   - Support for multiple outcome variables
-   - More statistical models (mixed models, etc.)
-   - Built-in sensitivity analysis utilities
+7. **Added Comparison/Decision Guide**
+   - New vignette: "Comparing Analysis Methods: ANCOVA vs G-computation"
+   - Documents when to use each approach
+   - Includes example code for both methods
 
-8. **Comparison/Decision Guide**
-   - When to use ANCOVA vs g-computation
-   - Trade-offs between different analysis approaches
-   - Document statistical assumptions
+## Remaining Improvements
 
 ### Low Priority
 
-9. **Performance Optimization**
+1. **Performance Optimization**
    - Optimize storage functions for very large datasets
    - Consider parallel processing support for `analyse_mi_data()`
    - Memory profiling and optimization
 
-10. **Enhanced Diagnostics**
-    - Imputation model fit diagnostics
-    - Convergence checks for Bayesian methods
-    - Visual diagnostics for missing data patterns
+2. **Enhanced Diagnostics**
+   - Imputation model fit diagnostics
+   - Convergence checks for Bayesian methods
+   - Visual diagnostics for missing data patterns
 
-11. **User Experience**
-    - Add progress indicators for long-running operations
-    - Interactive diagnostics (Shiny app for exploration)
-    - Better handling of warnings/messages
+3. **User Experience**
+   - Add progress indicators for long-running operations
+   - `plot()` method for visualizing treatment effects
+   - Interactive diagnostics (Shiny app for exploration)
+
+4. **Extend Analysis Capabilities**
+   - Support for multiple outcome variables
+   - More statistical models (mixed models, etc.)
+   - Built-in sensitivity analysis utilities
 
 ## Testing Guidelines
 
@@ -164,12 +185,14 @@ pkgdown::build_site()
 
 ```
 tests/testthat/
-├── test-analyse_mi_data.R      # Core analysis tests
-├── test-tidiers.R              # tidy_pool_obj tests
-├── test-imputation_storage.R   # reduce/expand tests (good coverage)
-├── test-data_helpers.R         # validate_data, prepare_data_ice, summarise_missingness
-├── test-analysis_utils.R       # g-computation tests
-└── test-utils.R                # get_imputed_data tests
+├── test-analyse_mi_data.R      # Core analysis tests (comprehensive)
+├── test-tidiers.R              # tidy_pool_obj tests (comprehensive)
+├── test-imputation_storage.R   # reduce/expand tests (comprehensive)
+├── test-data_helpers.R         # validation/ICE tests (comprehensive)
+├── test-analysis_utils.R       # g-computation tests (comprehensive)
+├── test-utils.R                # get_imputed_data tests
+├── test-result_helpers.R       # Helper function tests (comprehensive)
+└── test-integration.R          # End-to-end workflow tests
 ```
 
 ### Writing Tests
@@ -182,25 +205,27 @@ test_that("function handles edge case", {
   # Act - call the function
   result <- my_function(test_data)
 
-
   # Assert - check expectations
-
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), expected_rows)
 })
 ```
 
-### Test Coverage Targets
+### Test Coverage Status
 
-| Function | Current | Target |
-|----------|---------|--------|
-| `analyse_mi_data()` | Basic | Comprehensive |
-| `tidy_pool_obj()` | Basic | Comprehensive |
-| `validate_data()` | Good | Comprehensive |
-| `prepare_data_ice()` | Good | Comprehensive |
-| `reduce_imputed_data()` | Comprehensive | Maintain |
-| `expand_imputed_data()` | Comprehensive | Maintain |
-| `gcomp_responder()` | Good | Comprehensive |
+| Function | Coverage Status |
+|----------|-----------------|
+| `analyse_mi_data()` | Comprehensive |
+| `tidy_pool_obj()` | Comprehensive |
+| `validate_data()` | Comprehensive |
+| `prepare_data_ice()` | Comprehensive |
+| `reduce_imputed_data()` | Comprehensive |
+| `expand_imputed_data()` | Comprehensive |
+| `gcomp_responder()` | Comprehensive |
+| `gcomp_responder_multi()` | Comprehensive |
+| `create_impid()` | Comprehensive |
+| `combine_results()` | Comprehensive |
+| `format_results()` | Comprehensive |
 
 ## Common Tasks
 
@@ -208,9 +233,10 @@ test_that("function handles edge case", {
 
 1. Create function in appropriate R file
 2. Add roxygen documentation with `@export`
-3. Run `devtools::document()` to update NAMESPACE
-4. Add tests in corresponding test file
-5. Update NEWS.md with the addition
+3. Add `@seealso` references to related functions
+4. Run `devtools::document()` to update NAMESPACE
+5. Add tests in corresponding test file
+6. Update NEWS.md with the addition
 
 ### Fixing a Bug
 
@@ -237,3 +263,4 @@ test_that("function handles edge case", {
 - The package is experimental - breaking changes are acceptable with documentation
 - Focus on clinical trial workflows and rbmi integration
 - Validate inputs early and provide helpful error messages
+- Use `@seealso` to cross-reference related functions
