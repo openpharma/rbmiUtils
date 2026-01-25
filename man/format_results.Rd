@@ -19,7 +19,7 @@ format_results(
 Default is 2.}
 
 \item{ci_format}{Character string specifying CI format. Options are:
-"parens" for "(LCI, UCI)", "brackets" for "\link{LCI, UCI}", or "dash" for
+"parens" for "(LCI, UCI)", "brackets" for "\[LCI, UCI\]", or "dash" for
 "LCI - UCI". Default is "parens".}
 
 \item{pval_digits}{Integer specifying decimal places for p-values. Default is 3.}

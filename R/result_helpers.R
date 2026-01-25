@@ -161,7 +161,7 @@ combine_results <- function(..., results_list = NULL, id_col = "analysis") {
 #' @param digits Integer specifying the number of decimal places for estimates.
 #'   Default is 2.
 #' @param ci_format Character string specifying CI format. Options are:
-#'   "parens" for "(LCI, UCI)", "brackets" for "[LCI, UCI]", or "dash" for
+#'   "parens" for "(LCI, UCI)", "brackets" for "\\[LCI, UCI\\]", or "dash" for
 #'   "LCI - UCI". Default is "parens".
 #' @param pval_digits Integer specifying decimal places for p-values. Default is 3.
 #' @param include_se Logical indicating whether to include standard error column.
