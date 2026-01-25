@@ -49,6 +49,11 @@
 - Added
   [`summarise_missingness()`](https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.md)
   to tabulate missing data patterns.
+- Added formatting utilities for publication-ready output:
+  - `format_pvalue()` for p-value formatting with configurable
+    thresholds
+  - `format_estimate()` for estimate with confidence interval formatting
+  - `format_results_table()` to add formatted columns to tidy results
 
 ## rbmiUtils 0.1.8
 
