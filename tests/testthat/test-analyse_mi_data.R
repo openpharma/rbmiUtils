@@ -71,7 +71,7 @@ test_that("Error when delta is not NULL or a data.frame", {
 test_that("Error when delta does not contain required variables", {
   delta_invalid <- data.frame(subjid = ADMI$USUBJID, delta = rnorm(nrow(ADMI)))
   expect_error(
-    analyse_mi_data(data = ADMI, vars = vars, delta = delta_invalid),
+    analyse_mi_data(data = ADMI, vars = vars, method = method, delta = delta_invalid),
     "The following variables must exist within `delta`: `USUBJID`, `AVISIT`, `delta`"
   )
 })

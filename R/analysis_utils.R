@@ -180,6 +180,10 @@ gcomp_responder_multi <- function(data, vars, reference_levels = NULL, ...) {
 
   results <- lapply(visits, function(v) {
     dat <- data[data[[visit_var]] == v, ]
+
+    # Drop unused factor levels after subsetting
+    dat <- droplevels(dat)
+
     res <- gcomp_responder(
       data = dat,
       vars = vars,

@@ -69,7 +69,8 @@ invalid_idx <- which(x < 0 | x > 1)
   }
 
   lt_symbol <- if (html) "&lt;" else "<"
-  threshold_fmt <- format(threshold, nsmall = digits, scientific = FALSE)
+  threshold_fmt <- sub("0+$", "", format(threshold, nsmall = digits, scientific = FALSE))
+  threshold_fmt <- sub("\\.$", ".0", threshold_fmt)
 
   vapply(x, function(p) {
     if (is.na(p)) {

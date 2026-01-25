@@ -134,6 +134,17 @@ reduce_imputed_data <- function(imputed_data, original_data, vars) {
   keep_rows <- imputed_key_str %in% missing_key_str
   reduced <- imputed_data[keep_rows, , drop = FALSE]
 
+  # Preserve column attributes from imputed_data
+  for (col_name in names(reduced)) {
+    col_attrs <- attributes(imputed_data[[col_name]])
+    if (!is.null(col_attrs)) {
+      attrs_to_restore <- setdiff(names(col_attrs), c("names", "dim", "dimnames"))
+      for (attr_name in attrs_to_restore) {
+        attr(reduced[[col_name]], attr_name) <- col_attrs[[attr_name]]
+      }
+    }
+  }
+
   reduced
 }
 
@@ -274,10 +285,21 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
         sep = "|||"
       )
 
+      # Preserve attributes before modifying
+      outcome_attrs <- attributes(dat[[outcome]])
+
       # Replace missing values with imputed (vectorized)
       match_idx <- match(imp_keys, orig_keys)
       valid <- !is.na(match_idx)
       dat[[outcome]][match_idx[valid]] <- imp_vals[[outcome]][valid]
+
+      # Restore attributes (except 'names' which we want to keep as modified)
+      if (!is.null(outcome_attrs)) {
+        attrs_to_restore <- setdiff(names(outcome_attrs), "names")
+        for (attr_name in attrs_to_restore) {
+          attr(dat[[outcome]], attr_name) <- outcome_attrs[[attr_name]]
+        }
+      }
     }
 
     dat
@@ -287,6 +309,19 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
 
   # Reorder columns to put IMPID first (matching get_imputed_data output)
   result <- result[, c("IMPID", setdiff(names(result), "IMPID")), drop = FALSE]
+
+  # Restore column attributes from original_data
+  for (col_name in names(original_data)) {
+    if (col_name %in% names(result)) {
+      col_attrs <- attributes(original_data[[col_name]])
+      if (!is.null(col_attrs)) {
+        attrs_to_restore <- setdiff(names(col_attrs), c("names", "dim", "dimnames"))
+        for (attr_name in attrs_to_restore) {
+          attr(result[[col_name]], attr_name) <- col_attrs[[attr_name]]
+        }
+      }
+    }
+  }
 
   result
 }

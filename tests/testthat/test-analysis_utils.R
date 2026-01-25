@@ -307,11 +307,11 @@ testthat::test_that("gcomp_responder_multi passes additional arguments to gcomp_
   dat <- data.frame(
     Y = rbinom(100, 1, 0.5),
     TRT = factor(
-      rep(c("Placebo", "Drug"), 50),
+      rep(rep(c("Placebo", "Drug"), each = 25), 2),
       levels = c("Placebo", "Drug")
     ),
     BASE = rnorm(100),
-    AVISIT = factor(rep(c("W4", "W8"), 50))
+    AVISIT = factor(rep(c("W4", "W8"), each = 50))
   )
   vars <- list(
     outcome = "Y",
@@ -341,13 +341,13 @@ testthat::test_that("gcomp_responder_multi works with multiple covariates", {
   dat <- data.frame(
     Y = rbinom(120, 1, 0.45),
     TRT = factor(
-      rep(c("Placebo", "Drug"), 60),
+      rep(rep(c("Placebo", "Drug"), each = 30), 2),
       levels = c("Placebo", "Drug")
     ),
     BASE = rnorm(120),
     AGE = rnorm(120, 50, 10),
     SEX = factor(sample(c("M", "F"), 120, replace = TRUE)),
-    AVISIT = factor(rep(c("W4", "W8"), 60))
+    AVISIT = factor(rep(c("W4", "W8"), each = 60))
   )
   vars <- list(
     outcome = "Y",
@@ -372,11 +372,11 @@ testthat::test_that("gcomp_responder_multi returns consistent estimate types", {
   dat <- data.frame(
     Y = rbinom(100, 1, 0.5),
     TRT = factor(
-      rep(c("Placebo", "Drug"), 50),
+      rep(rep(c("Placebo", "Drug"), each = 25), 2),
       levels = c("Placebo", "Drug")
     ),
     BASE = rnorm(100),
-    AVISIT = factor(rep(c("W4", "W8"), 50))
+    AVISIT = factor(rep(c("W4", "W8"), each = 50))
   )
   vars <- list(
     outcome = "Y",

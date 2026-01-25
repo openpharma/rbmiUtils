@@ -106,6 +106,18 @@ analyse_mi_data <- function(
     msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
   )
 
+  ## asset function
+  assertthat::assert_that(
+    is.function(fun),
+    msg = "`fun` must be a function"
+  )
+
+  ## check on delta
+  assertthat::assert_that(
+    is.null(delta) | is.data.frame(delta),
+    msg = "`delta` must be NULL or a data.frame"
+  )
+
   # Validate required vars fields
   required_vars <- c("subjid", "visit", "group", "outcome")
   missing_vars <- required_vars[!required_vars %in% names(vars) | sapply(vars[required_vars], is.null)]
@@ -121,18 +133,6 @@ analyse_mi_data <- function(
     stop("`method` cannot be NULL. Specify a method using `rbmi::method_bayes()` or similar.", call. = FALSE)
   }
 
-  ## asset function
-  assertthat::assert_that(
-    is.function(fun),
-    msg = "`fun` must be a function"
-  )
-
-  ## check on delta
-  assertthat::assert_that(
-    is.null(delta) | is.data.frame(delta),
-    msg = "`delta` must be NULL or a data.frame"
-  )
-
   # Check for empty data
   if (nrow(data) == 0) {
     stop("`data` has no rows.", call. = FALSE)
@@ -142,6 +142,53 @@ analyse_mi_data <- function(
   n_imps <- length(unique(data$IMPID))
   if (n_imps == 0) {
     stop("`data` has no valid IMPID values.", call. = FALSE)
+  }
+
+  # Extract expected number of samples from method
+  n_expected <- switch(
+    class(method)[[2]],
+    bayes = method$n_samples,
+    approxbayes = method$n_samples,
+    condmean = method$n_samples,
+    bmlmi = method$n_samples,
+    NULL
+  )
+
+  # Check and filter IMPID values to match expected sample size
+  unique_impids <- sort(unique(data$IMPID))
+  n_impids <- length(unique_impids)
+
+  if (!is.null(n_expected) && n_impids != n_expected) {
+    if (n_impids > n_expected) {
+      # Filter to first n_expected imputations
+      warning(
+        sprintf(
+          "Data contains %d imputations but method expects %d. Using first %d imputations.",
+          n_impids, n_expected, n_expected
+        ),
+        call. = FALSE
+      )
+      # Filter data to only include the first n_expected IMPID values
+      keep_impids <- unique_impids[seq_len(n_expected)]
+      data <- data[data$IMPID %in% keep_impids, ]
+
+      # Verify filtering worked
+      n_after <- length(unique(data$IMPID))
+      if (n_after != n_expected) {
+        stop(
+          sprintf("Internal error: filtering failed. Expected %d imputations, got %d", n_expected, n_after),
+          call. = FALSE
+        )
+      }
+    } else {
+      stop(
+        sprintf(
+          "Data contains %d imputations but method expects %d. Need more imputations.",
+          n_impids, n_expected
+        ),
+        call. = FALSE
+      )
+    }
   }
 
   ## check delta has correct variables and then apply
@@ -180,7 +227,7 @@ analyse_mi_data <- function(
 
   fun_name <- deparse(substitute(fun))
 
-  if (length(fun_name) > 1) {
+  if (length(fun_name) > 1 || grepl("^function\\(", fun_name[1])) {
     fun_name <- "<Anonymous Function>"
   } else if (is.null(fun_name)) {
     fun_name <- "<NULL>"
