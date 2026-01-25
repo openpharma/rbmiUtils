@@ -237,3 +237,196 @@ testthat::test_that("gcomp_responder_multi applies per-visit and suffixes names"
   any_nm <- names(out)[1]
   expect_true(all(c("est", "se", "df") %in% names(out[[any_nm]])))
 })
+
+
+# =============================================================================
+# Additional comprehensive tests for gcomp_responder_multi
+# =============================================================================
+
+testthat::test_that("gcomp_responder_multi handles three visits correctly", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(101)
+
+  dat <- data.frame(
+    Y = rbinom(150, 1, 0.45),
+    TRT = factor(
+      rep(c("Placebo", "Drug"), 75),
+      levels = c("Placebo", "Drug")
+    ),
+    BASE = rnorm(150),
+    AVISIT = factor(rep(c("W4", "W8", "W12"), 50))
+  )
+  vars <- list(
+    outcome = "Y",
+    group = "TRT",
+    covariates = "BASE",
+    visit = "AVISIT"
+  )
+
+  out <- gcomp_responder_multi(dat, vars, reference_levels = "Placebo")
+
+  # Should have results for all 3 visits
+  expect_true(any(grepl("_W4$", names(out))))
+  expect_true(any(grepl("_W8$", names(out))))
+  expect_true(any(grepl("_W12$", names(out))))
+})
+
+
+testthat::test_that("gcomp_responder_multi handles single visit gracefully", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(102)
+
+  dat <- data.frame(
+    Y = rbinom(80, 1, 0.5),
+    TRT = factor(
+      rep(c("Placebo", "Drug"), 40),
+      levels = c("Placebo", "Drug")
+    ),
+    BASE = rnorm(80),
+    AVISIT = factor(rep("W24", 80))
+  )
+  vars <- list(
+    outcome = "Y",
+    group = "TRT",
+    covariates = "BASE",
+    visit = "AVISIT"
+  )
+
+  out <- gcomp_responder_multi(dat, vars, reference_levels = "Placebo")
+
+  # Should still work with suffixed names
+  expect_true(any(grepl("_W24$", names(out))))
+  expect_true(length(out) >= 2)  # At least trt and lsm
+})
+
+
+testthat::test_that("gcomp_responder_multi passes additional arguments to gcomp_responder", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(103)
+
+  dat <- data.frame(
+    Y = rbinom(100, 1, 0.5),
+    TRT = factor(
+      rep(c("Placebo", "Drug"), 50),
+      levels = c("Placebo", "Drug")
+    ),
+    BASE = rnorm(100),
+    AVISIT = factor(rep(c("W4", "W8"), 50))
+  )
+  vars <- list(
+    outcome = "Y",
+    group = "TRT",
+    covariates = "BASE",
+    visit = "AVISIT"
+  )
+
+  # Test with different var_method and type
+  out <- gcomp_responder_multi(
+    dat, vars,
+    reference_levels = "Placebo",
+    var_method = "Ge",
+    type = "HC0",
+    contrast = "diff"
+  )
+
+  expect_true(length(out) > 0)
+  expect_true(all(vapply(out, function(x) "est" %in% names(x), logical(1))))
+})
+
+
+testthat::test_that("gcomp_responder_multi works with multiple covariates", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(104)
+
+  dat <- data.frame(
+    Y = rbinom(120, 1, 0.45),
+    TRT = factor(
+      rep(c("Placebo", "Drug"), 60),
+      levels = c("Placebo", "Drug")
+    ),
+    BASE = rnorm(120),
+    AGE = rnorm(120, 50, 10),
+    SEX = factor(sample(c("M", "F"), 120, replace = TRUE)),
+    AVISIT = factor(rep(c("W4", "W8"), 60))
+  )
+  vars <- list(
+    outcome = "Y",
+    group = "TRT",
+    covariates = c("BASE", "AGE", "SEX"),
+    visit = "AVISIT"
+  )
+
+  out <- gcomp_responder_multi(dat, vars, reference_levels = "Placebo")
+
+  expect_true(length(out) > 0)
+  for (nm in names(out)) {
+    expect_true(all(c("est", "se", "df") %in% names(out[[nm]])))
+  }
+})
+
+
+testthat::test_that("gcomp_responder_multi returns consistent estimate types", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(105)
+
+  dat <- data.frame(
+    Y = rbinom(100, 1, 0.5),
+    TRT = factor(
+      rep(c("Placebo", "Drug"), 50),
+      levels = c("Placebo", "Drug")
+    ),
+    BASE = rnorm(100),
+    AVISIT = factor(rep(c("W4", "W8"), 50))
+  )
+  vars <- list(
+    outcome = "Y",
+    group = "TRT",
+    covariates = "BASE",
+    visit = "AVISIT"
+  )
+
+  out <- gcomp_responder_multi(dat, vars, reference_levels = "Placebo")
+
+  # All estimates should be numeric
+  for (nm in names(out)) {
+    expect_type(out[[nm]]$est, "double")
+    expect_type(out[[nm]]$se, "double")
+    # Standard error should be positive
+    expect_true(out[[nm]]$se > 0)
+  }
+})
+
+
+testthat::test_that("gcomp_responder_multi handles unbalanced data across visits", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(106)
+
+  # Create unbalanced data - more observations at W8
+  dat <- rbind(
+    data.frame(
+      Y = rbinom(40, 1, 0.5),
+      TRT = factor(rep(c("Placebo", "Drug"), 20), levels = c("Placebo", "Drug")),
+      BASE = rnorm(40),
+      AVISIT = factor(rep("W4", 40))
+    ),
+    data.frame(
+      Y = rbinom(80, 1, 0.5),
+      TRT = factor(rep(c("Placebo", "Drug"), 40), levels = c("Placebo", "Drug")),
+      BASE = rnorm(80),
+      AVISIT = factor(rep("W8", 80))
+    )
+  )
+  dat$AVISIT <- factor(dat$AVISIT, levels = c("W4", "W8"))
+
+  vars <- list(
+    outcome = "Y",
+    group = "TRT",
+    covariates = "BASE",
+    visit = "AVISIT"
+  )
+
+  out <- gcomp_responder_multi(dat, vars, reference_levels = "Placebo")
+
+  expect_true(any(grepl("_W4$", names(out))))
+  expect_true(any(grepl("_W8$", names(out))))
+})
