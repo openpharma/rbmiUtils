@@ -2,6 +2,9 @@
 
 export(analyse_mi_data)
 export(expand_imputed_data)
+export(format_estimate)
+export(format_pvalue)
+export(format_results_table)
 export(gcomp_binary)
 export(gcomp_responder)
 export(gcomp_responder_multi)
