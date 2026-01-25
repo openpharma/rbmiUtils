@@ -4,7 +4,7 @@
 
 **rbmiUtils** is an experimental R package that extends the [rbmi](https://insightsengineering.github.io/rbmi/) package to provide utilities for multiple imputation workflows in clinical trials. The package simplifies analysis execution, result pooling, data validation, and efficient storage of imputed datasets.
 
-**Package Version:** 0.1.8.9000 (development)
+**Package Version:** 0.1.8.9001 (development)
 **License:** GPL (>= 3)
 **Status:** Experimental
 
@@ -33,11 +33,10 @@ rbmiUtils/
 │   ├── test-utils.R
 │   ├── test-result_helpers.R   # NEW: helper function tests
 │   └── test-integration.R      # NEW: end-to-end workflow tests
-├── vignettes/                  # User guides (4 vignettes)
+├── vignettes/                  # User guides (3 vignettes)
 │   ├── data-preparation.Rmd
 │   ├── efficient-storage.Rmd
-│   ├── analyse2.Rmd
-│   └── analysis-comparison.Rmd # NEW: ANCOVA vs g-computation guide
+│   └── analyse2.Rmd
 ├── man/                        # Roxygen-generated documentation
 ├── data/                       # Example datasets (ADMI, ADEFF)
 └── .github/workflows/          # CI/CD (R-CMD-check, test-coverage, pkgdown)
@@ -149,11 +148,6 @@ pkgdown::build_site()
 6. **Added S3 Methods for Results**
    - `print.analysis()` - Shows summary of analysis object
    - `summary.analysis()` - Detailed summary with next steps
-
-7. **Added Comparison/Decision Guide**
-   - New vignette: "Comparing Analysis Methods: ANCOVA vs G-computation"
-   - Documents when to use each approach
-   - Includes example code for both methods
 
 ## Remaining Improvements
 
