@@ -147,6 +147,13 @@ validate_data <- function(data, vars, data_ice = NULL) {
 
   # --- data_ice validation ---
   if (!is.null(data_ice) && is.data.frame(data_ice)) {
+    # Validate that vars$strategy is defined
+    if (is.null(vars$strategy) || !nzchar(vars$strategy)) {
+      issues <- c(issues,
+        "`vars$strategy` must be defined when `data_ice` is provided (use `rbmi::set_vars(strategy = ...)`)"
+      )
+    }
+
     ice_required <- c(vars$subjid, vars$visit, vars$strategy)
     ice_missing <- setdiff(ice_required, names(data_ice))
 

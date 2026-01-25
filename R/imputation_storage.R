@@ -206,7 +206,7 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
     is.data.frame(original_data),
     msg = "`original_data` must be a data.frame"
   )
- assertthat::assert_that(
+  assertthat::assert_that(
     is.list(vars),
     msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
   )
@@ -274,13 +274,10 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
         sep = "|||"
       )
 
-      # Replace missing values with imputed
-      for (i in seq_len(nrow(imp_vals))) {
-        match_idx <- which(orig_keys == imp_keys[i])
-        if (length(match_idx) == 1) {
-          dat[[outcome]][match_idx] <- imp_vals[[outcome]][i]
-        }
-      }
+      # Replace missing values with imputed (vectorized)
+      match_idx <- match(imp_keys, orig_keys)
+      valid <- !is.na(match_idx)
+      dat[[outcome]][match_idx[valid]] <- imp_vals[[outcome]][valid]
     }
 
     dat
