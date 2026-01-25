@@ -19,6 +19,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="articles/analyse2.html">Storing and Analyzing Imputed Data with rbmiUtils</a></li>
+    <li><a class="dropdown-item" href="articles/analysis-comparison.html">Comparing Analysis Methods: ANCOVA vs G-computation</a></li>
     <li><a class="dropdown-item" href="articles/data-preparation.html">Data Preparation and Validation</a></li>
     <li><a class="dropdown-item" href="articles/efficient-storage.html">Efficient Storage of Imputed Data</a></li>
   </ul></li>
@@ -50,24 +51,38 @@
 <div class="section level3">
 <h3 id="directory-structure">Directory Structure<a class="anchor" aria-label="anchor" href="#directory-structure"></a></h3>
 <pre><code>rbmiUtils/
-├── R/                          # Source code (8 files, ~2,000 lines)
-│   ├── analyse_mi_data.R       # Core analysis functions
+├── R/                          # Source code (9 files)
+│   ├── analyse_mi_data.R       # Core analysis + S3 methods
 │   ├── tidiers.R               # Result tidying (tidy_pool_obj)
 │   ├── imputation_storage.R    # reduce/expand imputed data
 │   ├── data_helpers.R          # validate_data, prepare_data_ice, summarise_missingness
 │   ├── analysis_utils.R        # Binary outcome g-computation
+│   ├── result_helpers.R        # NEW: create_impid, combine_results, format_results
 │   ├── utils.R                 # Data extraction (get_imputed_data)
 │   ├── ADMI.R &amp; ADEFF.R        # Dataset documentation
 │   └── rbmiUtils-package.R     # Package-level documentation
-├── tests/testthat/             # Test suite (6 files, 84 tests, ~1,100 lines)
-├── vignettes/                  # User guides (3 vignettes)
+├── tests/testthat/             # Test suite (8 files)
+│   ├── test-analyse_mi_data.R  # Core analysis tests (expanded)
+│   ├── test-tidiers.R          # tidy_pool_obj tests (expanded)
+│   ├── test-imputation_storage.R
+│   ├── test-data_helpers.R
+│   ├── test-analysis_utils.R   # g-computation tests (expanded)
+│   ├── test-utils.R
+│   ├── test-result_helpers.R   # NEW: helper function tests
+│   └── test-integration.R      # NEW: end-to-end workflow tests
+├── vignettes/                  # User guides (4 vignettes)
+│   ├── data-preparation.Rmd
+│   ├── efficient-storage.Rmd
+│   ├── analyse2.Rmd
+│   └── analysis-comparison.Rmd # NEW: ANCOVA vs g-computation guide
 ├── man/                        # Roxygen-generated documentation
 ├── data/                       # Example datasets (ADMI, ADEFF)
 └── .github/workflows/          # CI/CD (R-CMD-check, test-coverage, pkgdown)</code></pre>
 </div>
 <div class="section level3">
 <h3 id="key-functions-by-category">Key Functions by Category<a class="anchor" aria-label="anchor" href="#key-functions-by-category"></a></h3>
-<p><strong>Analysis Functions:</strong> - <code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code> - Apply analysis function to each imputed dataset - <code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code> - Convert pooled results to publication-ready tibble - <code><a href="reference/get_imputed_data.html">get_imputed_data()</a></code> - Extract imputed datasets from rbmi objects</p>
+<p><strong>Analysis Functions:</strong> - <code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code> - Apply analysis function to each imputed dataset - <code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code> - Convert pooled results to publication-ready tibble - <code><a href="reference/get_imputed_data.html">get_imputed_data()</a></code> - Extract imputed datasets from rbmi objects - <code>print.analysis()</code> / <code>summary.analysis()</code> - S3 methods for analysis objects</p>
+<p><strong>Result Helpers (NEW):</strong> - <code>create_impid()</code> - Create IMPID column from list of imputed datasets - <code>combine_results()</code> - Combine tidy results from multiple analyses - <code>format_results()</code> - Format results for publication-ready tables - <code>extract_trt_effects()</code> - Extract treatment comparison rows - <code>extract_lsm()</code> - Extract least squares mean rows</p>
 <p><strong>G-Computation (Binary Endpoints):</strong> - <code><a href="reference/gcomp_responder.html">gcomp_responder()</a></code> - G-computation for binary outcomes at single visit - <code><a href="reference/gcomp_responder_multi.html">gcomp_responder_multi()</a></code> - Extends to multiple visits - <code><a href="reference/gcomp_binary.html">gcomp_binary()</a></code> - Wrapper for binary outcome analysis</p>
 <p><strong>Data Preparation &amp; Validation:</strong> - <code><a href="reference/validate_data.html">validate_data()</a></code> - Pre-flight validation of analysis data - <code><a href="reference/prepare_data_ice.html">prepare_data_ice()</a></code> - Build ICE (intercurrent events) data frame - <code><a href="reference/summarise_missingness.html">summarise_missingness()</a></code> - Tabulate missing data patterns</p>
 <p><strong>Efficient Storage:</strong> - <code><a href="reference/reduce_imputed_data.html">reduce_imputed_data()</a></code> - Extract only originally missing values (90%+ storage reduction) - <code><a href="reference/expand_imputed_data.html">expand_imputed_data()</a></code> - Reconstruct full imputed dataset</p>
@@ -119,77 +134,72 @@
 </ul></div>
 </div>
 <div class="section level2">
-<h2 id="planned-improvements">Planned Improvements<a class="anchor" aria-label="anchor" href="#planned-improvements"></a></h2>
+<h2 id="completed-improvements">Completed Improvements<a class="anchor" aria-label="anchor" href="#completed-improvements"></a></h2>
 <div class="section level3">
-<h3 id="high-priority">High Priority<a class="anchor" aria-label="anchor" href="#high-priority"></a></h3>
+<h3 id="high-priority-done">High Priority (DONE)<a class="anchor" aria-label="anchor" href="#high-priority-done"></a></h3>
 <ol style="list-style-type: decimal"><li>
-<strong>Expand Test Coverage for Core Functions</strong>
+<strong>Expanded Test Coverage for Core Functions</strong>
 <ul><li>
-<code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code> currently has minimal tests (7 tests)</li>
+<code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code> - Added 10+ new tests for edge cases, delta adjustment, methods</li>
 <li>
-<code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code> only has 2 basic tests</li>
+<code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code> - Added 7 new tests for single visit, numeric precision, filtering</li>
 <li>
-<code><a href="reference/gcomp_responder_multi.html">gcomp_responder_multi()</a></code> has only 1 test</li>
-<li>Add edge case testing (empty data, single group, many imputations)</li>
-<li>Target: 90%+ code coverage for exported functions</li>
+<code><a href="reference/gcomp_responder_multi.html">gcomp_responder_multi()</a></code> - Added 6 new tests for multiple visits, covariates</li>
 </ul></li>
 <li>
-<strong>Add Integration Tests</strong>
-<ul><li>Create end-to-end workflow tests</li>
-<li>Test complete pipeline: data prep → imputation → analysis → pooling</li>
-<li>Test with ADMI/ADEFF example datasets</li>
+<strong>Added Integration Tests</strong>
+<ul><li>New <code>test-integration.R</code> with end-to-end workflow tests</li>
+<li>Tests complete pipelines: data prep → analysis → pooling → tidy</li>
+<li>Tests storage workflow: reduce → expand roundtrip</li>
 </ul></li>
 <li>
-<strong>Improve Input Validation</strong>
+<strong>Improved Input Validation</strong>
 <ul><li>
-<code><a href="reference/prepare_data_ice.html">prepare_data_ice()</a></code>: Validate <code>vars</code> has <code>strategy</code> defined upfront</li>
+<code><a href="reference/prepare_data_ice.html">prepare_data_ice()</a></code> - Now validates vars fields upfront</li>
 <li>
-<code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code>: Handle empty groups gracefully</li>
-<li>Add more informative error messages with actionable guidance</li>
+<code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code> - Better error messages, validates method, handles edge cases</li>
+<li>Clear error messages with actionable guidance</li>
 </ul></li>
 <li>
 <strong>Workflow Documentation</strong>
-<ul><li>Add cross-function references in roxygen docs</li>
-<li>Create “Getting Started” guide showing function dependencies</li>
-<li>Document which functions to call in what order</li>
+<ul><li>Added <code>@seealso</code> cross-references in all major functions</li>
+<li>Documented recommended workflow in function details</li>
+<li>Clear indication of function dependencies</li>
 </ul></li>
 </ol></div>
 <div class="section level3">
-<h3 id="medium-priority">Medium Priority<a class="anchor" aria-label="anchor" href="#medium-priority"></a></h3>
+<h3 id="medium-priority-done">Medium Priority (DONE)<a class="anchor" aria-label="anchor" href="#medium-priority-done"></a></h3>
 <ol start="5" style="list-style-type: decimal"><li>
-<strong>Add Helper Functions</strong>
+<strong>Added Helper Functions</strong>
 <ul><li>
-<code>create_impid()</code> - Helper to create imputation ID column</li>
+<code>create_impid()</code> - Creates IMPID from list of data.frames</li>
 <li>
-<code>combine_results()</code> - Combine results across visits/endpoints</li>
+<code>combine_results()</code> - Combines multiple tidy results</li>
 <li>
-<code>format_results()</code> - Format results for reporting tables</li>
+<code>format_results()</code> - Publication-ready formatting</li>
+<li>
+<code>extract_trt_effects()</code> / <code>extract_lsm()</code> - Convenience filters</li>
 </ul></li>
 <li>
-<strong>Add S3 Methods for Results</strong>
+<strong>Added S3 Methods for Results</strong>
 <ul><li>
-<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> method for analysis results</li>
+<code>print.analysis()</code> - Shows summary of analysis object</li>
 <li>
-<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method with key statistics</li>
-<li>
-<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method for visualizing treatment effects</li>
+<code>summary.analysis()</code> - Detailed summary with next steps</li>
 </ul></li>
 <li>
-<strong>Extend Analysis Capabilities</strong>
-<ul><li>Support for multiple outcome variables</li>
-<li>More statistical models (mixed models, etc.)</li>
-<li>Built-in sensitivity analysis utilities</li>
-</ul></li>
-<li>
-<strong>Comparison/Decision Guide</strong>
-<ul><li>When to use ANCOVA vs g-computation</li>
-<li>Trade-offs between different analysis approaches</li>
-<li>Document statistical assumptions</li>
+<strong>Added Comparison/Decision Guide</strong>
+<ul><li>New vignette: “Comparing Analysis Methods: ANCOVA vs G-computation”</li>
+<li>Documents when to use each approach</li>
+<li>Includes example code for both methods</li>
 </ul></li>
 </ol></div>
+</div>
+<div class="section level2">
+<h2 id="remaining-improvements">Remaining Improvements<a class="anchor" aria-label="anchor" href="#remaining-improvements"></a></h2>
 <div class="section level3">
 <h3 id="low-priority">Low Priority<a class="anchor" aria-label="anchor" href="#low-priority"></a></h3>
-<ol start="9" style="list-style-type: decimal"><li>
+<ol style="list-style-type: decimal"><li>
 <strong>Performance Optimization</strong>
 <ul><li>Optimize storage functions for very large datasets</li>
 <li>Consider parallel processing support for <code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code>
@@ -205,8 +215,15 @@
 <li>
 <strong>User Experience</strong>
 <ul><li>Add progress indicators for long-running operations</li>
+<li>
+<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> method for visualizing treatment effects</li>
 <li>Interactive diagnostics (Shiny app for exploration)</li>
-<li>Better handling of warnings/messages</li>
+</ul></li>
+<li>
+<strong>Extend Analysis Capabilities</strong>
+<ul><li>Support for multiple outcome variables</li>
+<li>More statistical models (mixed models, etc.)</li>
+<li>Built-in sensitivity analysis utilities</li>
 </ul></li>
 </ol></div>
 </div>
@@ -215,12 +232,14 @@
 <div class="section level3">
 <h3 id="test-file-organization">Test File Organization<a class="anchor" aria-label="anchor" href="#test-file-organization"></a></h3>
 <pre><code>tests/testthat/
-├── test-analyse_mi_data.R      # Core analysis tests
-├── test-tidiers.R              # tidy_pool_obj tests
-├── test-imputation_storage.R   # reduce/expand tests (good coverage)
-├── test-data_helpers.R         # validate_data, prepare_data_ice, summarise_missingness
-├── test-analysis_utils.R       # g-computation tests
-└── test-utils.R                # get_imputed_data tests</code></pre>
+├── test-analyse_mi_data.R      # Core analysis tests (comprehensive)
+├── test-tidiers.R              # tidy_pool_obj tests (comprehensive)
+├── test-imputation_storage.R   # reduce/expand tests (comprehensive)
+├── test-data_helpers.R         # validation/ICE tests (comprehensive)
+├── test-analysis_utils.R       # g-computation tests (comprehensive)
+├── test-utils.R                # get_imputed_data tests
+├── test-result_helpers.R       # Helper function tests (comprehensive)
+└── test-integration.R          # End-to-end workflow tests</code></pre>
 </div>
 <div class="section level3">
 <h3 id="writing-tests">Writing Tests<a class="anchor" aria-label="anchor" href="#writing-tests"></a></h3>
@@ -232,38 +251,36 @@
 <span>  <span class="co"># Act - call the function</span></span>
 <span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">my_function</span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span></span>
 <span></span>
-<span></span>
 <span>  <span class="co"># Assert - check expectations</span></span>
-<span></span>
 <span>  <span class="fu">expect_s3_class</span><span class="op">(</span><span class="va">result</span>, <span class="st">"data.frame"</span><span class="op">)</span></span>
 <span>  <span class="fu">expect_equal</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span>, <span class="va">expected_rows</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="test-coverage-targets">Test Coverage Targets<a class="anchor" aria-label="anchor" href="#test-coverage-targets"></a></h3>
+<h3 id="test-coverage-status">Test Coverage Status<a class="anchor" aria-label="anchor" href="#test-coverage-status"></a></h3>
 <table class="table"><thead><tr class="header"><th>Function</th>
-<th>Current</th>
-<th>Target</th>
+<th>Coverage Status</th>
 </tr></thead><tbody><tr class="odd"><td><code><a href="reference/analyse_mi_data.html">analyse_mi_data()</a></code></td>
-<td>Basic</td>
 <td>Comprehensive</td>
 </tr><tr class="even"><td><code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code></td>
-<td>Basic</td>
 <td>Comprehensive</td>
 </tr><tr class="odd"><td><code><a href="reference/validate_data.html">validate_data()</a></code></td>
-<td>Good</td>
 <td>Comprehensive</td>
 </tr><tr class="even"><td><code><a href="reference/prepare_data_ice.html">prepare_data_ice()</a></code></td>
-<td>Good</td>
 <td>Comprehensive</td>
 </tr><tr class="odd"><td><code><a href="reference/reduce_imputed_data.html">reduce_imputed_data()</a></code></td>
 <td>Comprehensive</td>
-<td>Maintain</td>
 </tr><tr class="even"><td><code><a href="reference/expand_imputed_data.html">expand_imputed_data()</a></code></td>
 <td>Comprehensive</td>
-<td>Maintain</td>
 </tr><tr class="odd"><td><code><a href="reference/gcomp_responder.html">gcomp_responder()</a></code></td>
-<td>Good</td>
+<td>Comprehensive</td>
+</tr><tr class="even"><td><code><a href="reference/gcomp_responder_multi.html">gcomp_responder_multi()</a></code></td>
+<td>Comprehensive</td>
+</tr><tr class="odd"><td><code>create_impid()</code></td>
+<td>Comprehensive</td>
+</tr><tr class="even"><td><code>combine_results()</code></td>
+<td>Comprehensive</td>
+</tr><tr class="odd"><td><code>format_results()</code></td>
 <td>Comprehensive</td>
 </tr></tbody></table></div>
 </div>
@@ -274,6 +291,7 @@
 <ol style="list-style-type: decimal"><li>Create function in appropriate R file</li>
 <li>Add roxygen documentation with <code>@export</code>
 </li>
+<li>Add <code>@seealso</code> references to related functions</li>
 <li>Run <code>devtools::document()</code> to update NAMESPACE</li>
 <li>Add tests in corresponding test file</li>
 <li>Update NEWS.md with the addition</li>
@@ -308,6 +326,7 @@
 <li>The package is experimental - breaking changes are acceptable with documentation</li>
 <li>Focus on clinical trial workflows and rbmi integration</li>
 <li>Validate inputs early and provide helpful error messages</li>
+<li>Use <code>@seealso</code> to cross-reference related functions</li>
 </ul></div>
 </div>
 

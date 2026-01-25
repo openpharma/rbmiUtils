@@ -19,6 +19,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/analyse2.html">Storing and Analyzing Imputed Data with rbmiUtils</a></li>
+    <li><a class="dropdown-item" href="../articles/analysis-comparison.html">Comparing Analysis Methods: ANCOVA vs G-computation</a></li>
     <li><a class="dropdown-item" href="../articles/data-preparation.html">Data Preparation and Validation</a></li>
     <li><a class="dropdown-item" href="../articles/efficient-storage.html">Efficient Storage of Imputed Data</a></li>
   </ul></li>
@@ -40,11 +41,31 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="rbmiutils-development-version">rbmiUtils (development version)<a class="anchor" aria-label="anchor" href="#rbmiutils-development-version"></a></h2>
+<div class="section level3">
+<h3 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>Added <code>create_impid()</code> to convert a list of imputed datasets into a stacked data.frame with IMPID column.</li>
+<li>Added <code>combine_results()</code> to combine tidy results from multiple analyses.</li>
+<li>Added <code>format_results()</code> for publication-ready formatting of results.</li>
+<li>Added <code>extract_trt_effects()</code> and <code>extract_lsm()</code> convenience functions to filter tidy results.</li>
+<li>Added <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> and <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> S3 methods for analysis objects.</li>
+<li>Added new vignette “Comparing Analysis Methods: ANCOVA vs G-computation”.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="improvements-development-version">Improvements<a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h3>
+<ul><li>Enhanced input validation in <code><a href="../reference/analyse_mi_data.html">analyse_mi_data()</a></code> with clearer error messages.</li>
+<li>Enhanced input validation in <code><a href="../reference/prepare_data_ice.html">prepare_data_ice()</a></code> to check vars fields.</li>
+<li>Added cross-references between related functions in documentation.</li>
+<li>Expanded test coverage for core functions (<code><a href="../reference/analyse_mi_data.html">analyse_mi_data()</a></code>, <code><a href="../reference/tidy_pool_obj.html">tidy_pool_obj()</a></code>, <code><a href="../reference/gcomp_responder_multi.html">gcomp_responder_multi()</a></code>).</li>
+<li>Added comprehensive integration tests for complete analysis workflows.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="previous-changes-development-version">Previous Changes<a class="anchor" aria-label="anchor" href="#previous-changes-development-version"></a></h3>
 <ul><li>Added <code><a href="../reference/reduce_imputed_data.html">reduce_imputed_data()</a></code> and <code><a href="../reference/expand_imputed_data.html">expand_imputed_data()</a></code> for efficient storage of imputed datasets when using many imputations.</li>
 <li>Added <code><a href="../reference/validate_data.html">validate_data()</a></code> for pre-flight validation before <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">rbmi::draws()</a></code>.</li>
 <li>Added <code><a href="../reference/prepare_data_ice.html">prepare_data_ice()</a></code> to build <code>data_ice</code> from flagged ICE columns.</li>
 <li>Added <code><a href="../reference/summarise_missingness.html">summarise_missingness()</a></code> to tabulate missing data patterns.</li>
 </ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.8" id="rbmiutils-018">rbmiUtils 0.1.8<a class="anchor" aria-label="anchor" href="#rbmiutils-018"></a></h2><p class="text-muted">CRAN release: 2026-01-24</p>
 </div>
