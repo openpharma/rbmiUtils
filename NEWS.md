@@ -1,3 +1,7 @@
+# rbmiUtils (development version)
+
+# rbmiUtils 0.1.8
+
 # rbmiUtils 0.1.7
 
 * Added `validate_data()` for pre-flight validation before `rbmi::draws()`.
