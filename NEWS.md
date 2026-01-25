@@ -27,6 +27,10 @@
 * Added `validate_data()` for pre-flight validation before `rbmi::draws()`.
 * Added `prepare_data_ice()` to build `data_ice` from flagged ICE columns.
 * Added `summarise_missingness()` to tabulate missing data patterns.
+* Added formatting utilities for publication-ready output:
+  * `format_pvalue()` for p-value formatting with configurable thresholds
+  * `format_estimate()` for estimate with confidence interval formatting
+  * `format_results_table()` to add formatted columns to tidy results
 
 # rbmiUtils 0.1.8
 

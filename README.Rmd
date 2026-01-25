@@ -37,6 +37,7 @@ knitr::opts_chunk$set(
   * [Analysis Functions](#analysis-functions)
   * [Data Preparation](#data-preparation)
   * [Efficient Storage](#efficient-storage)
+  * [Reporting](#reporting)
 * [Development Status](#development-status)
 
 ## Installation
@@ -160,6 +161,27 @@ Functions to reduce storage requirements when working with many imputations:
 
 * `reduce_imputed_data()`: Extracts only imputed values (originally missing), reducing storage by 90%+ for typical datasets.
 * `expand_imputed_data()`: Reconstructs the full imputed dataset from reduced form for analysis.
+
+### Reporting
+
+Functions to format results for publication:
+
+* `format_pvalue()`: Format p-values with configurable thresholds (e.g., "< 0.001").
+* `format_estimate()`: Format estimates with confidence intervals (e.g., "1.23 (0.45, 2.01)").
+* `format_results_table()`: Add formatted columns to tidy results for publication-ready tables.
+
+```{r reporting-example, eval = FALSE}
+# Format results for publication
+tidy_df |>
+  format_results_table() |>
+  dplyr::select(description, est_ci, pval_fmt)
+#> # A tibble
+#>   description                         est_ci                pval_fmt
+#>   <chr>                               <chr>                 <chr>
+#> 1 Treatment Comparison at Week 24     -2.45 (-4.20, -0.70)
+  0.006
+#> 2 Least Squares Mean for Reference    5.20 (3.93, 6.47)     NA
+```
 
 These utilities wrap standard `rbmi` workflows for improved reproducibility and interpretability.
 
