@@ -14,8 +14,6 @@
 - Added [`print()`](https://rdrr.io/r/base/print.html) and
   [`summary()`](https://rdrr.io/r/base/summary.html) S3 methods for
   analysis objects.
-- Added new vignette “Comparing Analysis Methods: ANCOVA vs
-  G-computation”.
 
 ### Improvements
 
@@ -30,7 +28,7 @@
   ([`analyse_mi_data()`](https://openpharma.github.io/rbmiUtils/reference/analyse_mi_data.md),
   [`tidy_pool_obj()`](https://openpharma.github.io/rbmiUtils/reference/tidy_pool_obj.md),
   [`gcomp_responder_multi()`](https://openpharma.github.io/rbmiUtils/reference/gcomp_responder_multi.md)).
-- Added comprehensive integration tests for complete analysis workflows.
+- Added integration tests for complete analysis workflows.
 
 ### Previous Changes
 
