@@ -9,7 +9,6 @@
 * Added `extract_trt_effects()` and `extract_lsm()` convenience functions
   to filter tidy results.
 * Added `print()` and `summary()` S3 methods for analysis objects.
-* Added new vignette "Comparing Analysis Methods: ANCOVA vs G-computation".
 
 ## Improvements
 
@@ -18,7 +17,7 @@
 * Added cross-references between related functions in documentation.
 * Expanded test coverage for core functions (`analyse_mi_data()`,
   `tidy_pool_obj()`, `gcomp_responder_multi()`).
-* Added comprehensive integration tests for complete analysis workflows.
+* Added integration tests for complete analysis workflows.
 
 ## Previous Changes
 
