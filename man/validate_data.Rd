@@ -13,7 +13,7 @@ validate_data(data, vars, data_ice = NULL)
 
 \item{data_ice}{An optional data.frame of intercurrent events. If provided,
 must contain columns corresponding to \code{vars$subjid}, \code{vars$visit}, and
-\code{vars$strategy}.}
+\code{vars$strategy}. Can be created using \code{\link[=prepare_data_ice]{prepare_data_ice()}}.}
 }
 \value{
 Invisibly returns \code{TRUE} if all checks pass. Throws an error with
@@ -35,6 +35,14 @@ The following checks are performed:
 \item Data has one row per subject-visit combination
 \item If \code{data_ice} is provided: correct columns, valid subjects, valid
 visits, recognised strategies, and at most one row per subject
+}
+
+\strong{Recommended Workflow:}
+\enumerate{
+\item Call \code{validate_data()} to check your data
+\item Use \code{\link[=prepare_data_ice]{prepare_data_ice()}} to create ICE data if needed
+\item Review missingness with \code{\link[=summarise_missingness]{summarise_missingness()}}
+\item Proceed with \code{\link[rbmi:draws]{rbmi::draws()}} for imputation
 }
 }
 \examples{
@@ -60,4 +68,11 @@ vars <- set_vars(
 
 validate_data(dat, vars)
 
+}
+\seealso{
+\itemize{
+\item \code{\link[=prepare_data_ice]{prepare_data_ice()}} to create intercurrent event data from flags
+\item \code{\link[=summarise_missingness]{summarise_missingness()}} to understand missing data patterns
+\item \code{\link[rbmi:draws]{rbmi::draws()}} to perform imputation after validation
+}
 }

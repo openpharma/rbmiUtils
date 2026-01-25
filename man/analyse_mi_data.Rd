@@ -14,26 +14,41 @@ analyse_mi_data(
 )
 }
 \arguments{
-\item{data}{A data frame containing the imputed datasets. The data frame should include a variable (e.g., \code{IMPID}) that identifies distinct imputation iterations.}
+\item{data}{A data frame containing the imputed datasets. The data frame should include a variable (e.g., \code{IMPID}) that identifies distinct imputation iterations.
+Typically obtained from \code{\link[=get_imputed_data]{get_imputed_data()}} or \code{\link[=expand_imputed_data]{expand_imputed_data()}}.}
 
-\item{vars}{A list specifying key variables used in the analysis (e.g., \code{subjid}, \code{visit}, \code{group}, \code{outcome}). Required.}
+\item{vars}{A list specifying key variables used in the analysis (e.g., \code{subjid}, \code{visit}, \code{group}, \code{outcome}).
+Created using \code{\link[rbmi:set_vars]{rbmi::set_vars()}}. Required.}
 
-\item{method}{A character string or object specifying the method used for analysis (e.g., Bayesian imputation). Defaults to \code{NULL}.}
+\item{method}{A method object specifying the imputation method used (e.g., Bayesian imputation).
+Created using \code{\link[rbmi:method]{rbmi::method_bayes()}}, \code{\link[rbmi:method]{rbmi::method_approxbayes()}}, or \code{\link[rbmi:method]{rbmi::method_condmean()}}. Required.}
 
-\item{fun}{A function that will be applied to each imputed dataset. Defaults to \code{rbmi::ancova}. Must be a valid analysis function.}
+\item{fun}{A function that will be applied to each imputed dataset. Defaults to \link[rbmi:ancova]{rbmi::ancova}.
+Other options include \code{\link[=gcomp_responder_multi]{gcomp_responder_multi()}} for binary outcomes. Must be a valid analysis function.}
 
-\item{delta}{A \code{data.frame} used for delta adjustments, or \code{NULL} if no delta adjustments are needed. Defaults to \code{NULL}.}
+\item{delta}{A \code{data.frame} used for delta adjustments, or \code{NULL} if no delta adjustments are needed. Defaults to \code{NULL}.
+Must contain columns matching \code{vars$subjid}, \code{vars$visit}, \code{vars$group}, and a \code{delta} column.}
 
 \item{...}{Additional arguments passed to the analysis function \code{fun}.}
 }
 \value{
 An object of class \code{analysis} containing the results from applying the analysis function to each imputed dataset.
+Pass this to \code{\link[rbmi:pool]{rbmi::pool()}} to obtain pooled estimates.
 }
 \description{
 This function applies an analysis function (e.g., ANCOVA) to imputed datasets and stores the results for later pooling. It is designed to work with multiple imputed datasets and apply a given analysis function to each imputation iteration.
 }
 \details{
 The function loops through distinct imputation datasets (identified by \code{IMPID}), applies the provided analysis function \code{fun}, and stores the results for later pooling. If a \code{delta} dataset is provided, it will be merged with the imputed data to apply the specified delta adjustment before analysis.
+
+\strong{Workflow:}
+\enumerate{
+\item Prepare imputed data using \code{\link[=get_imputed_data]{get_imputed_data()}} or \code{\link[=expand_imputed_data]{expand_imputed_data()}}
+\item Define variables using \code{\link[rbmi:set_vars]{rbmi::set_vars()}}
+\item Call \code{analyse_mi_data()} to apply analysis to each imputation
+\item Pool results using \code{\link[rbmi:pool]{rbmi::pool()}}
+\item Tidy results using \code{\link[=tidy_pool_obj]{tidy_pool_obj()}}
+}
 }
 \examples{
 # Example usage with an ANCOVA function
@@ -75,4 +90,13 @@ ana_obj_ancova <- analyse_mi_data(
   delta = NULL   # No sensitivity analysis adjustment
 )
 
+}
+\seealso{
+\itemize{
+\item \code{\link[=tidy_pool_obj]{tidy_pool_obj()}} to format pooled results for publication
+\item \code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed datasets from rbmi objects
+\item \code{\link[=expand_imputed_data]{expand_imputed_data()}} to reconstruct full imputed data from reduced form
+\item \code{\link[=gcomp_responder_multi]{gcomp_responder_multi()}} for binary outcome analysis
+\item \code{\link[=validate_data]{validate_data()}} to check data before imputation
+}
 }

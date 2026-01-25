@@ -7,11 +7,23 @@
 tidy_pool_obj(pool_obj)
 }
 \arguments{
-\item{pool_obj}{A pooled analysis object of class \code{pool}.}
+\item{pool_obj}{A pooled analysis object of class \code{pool}, typically obtained from \code{\link[rbmi:pool]{rbmi::pool()}}
+after calling \code{\link[=analyse_mi_data]{analyse_mi_data()}}.}
 }
 \value{
-A tibble containing the processed pooled analysis results. The tibble includes columns for the parameter,
-description, estimates, standard errors, confidence intervals, p-values, visit, parameter type, and least squares mean type.
+A tibble containing the processed pooled analysis results with the following columns:
+\describe{
+\item{parameter}{Original parameter name from the pooled object}
+\item{description}{Human-readable description of the parameter}
+\item{visit}{Visit name extracted from parameter (if applicable)}
+\item{parameter_type}{Either "trt" (treatment comparison) or "lsm" (least squares mean)}
+\item{lsm_type}{For LSM parameters: "ref" (reference) or "alt" (alternative)}
+\item{est}{Point estimate}
+\item{se}{Standard error}
+\item{lci}{Lower confidence interval}
+\item{uci}{Upper confidence interval}
+\item{pval}{P-value}
+}
 }
 \description{
 This function processes a pooled analysis object of class \code{pool} into a tidy tibble format.
@@ -20,9 +32,17 @@ dynamically identifies visit names from the \code{parameter} column, and provide
 least squares mean type, and visit.
 }
 \details{
-The function rounds numeric columns to three decimal places for presentation. It dynamically processes
-the \code{parameter} column by separating it into components (e.g., type of estimate, reference vs. alternative arm, and visit),
-and provides informative descriptions in the output.
+The function dynamically processes the \code{parameter} column by separating it into
+components (e.g., type of estimate, reference vs. alternative arm, and visit), and provides
+informative descriptions in the output.
+
+\strong{Workflow:}
+\enumerate{
+\item Prepare data and run imputation with rbmi
+\item Analyse with \code{\link[=analyse_mi_data]{analyse_mi_data()}}
+\item Pool with \code{\link[rbmi:pool]{rbmi::pool()}}
+\item Tidy with \code{tidy_pool_obj()} for publication-ready output
+}
 }
 \examples{
 # Example usage:
@@ -72,4 +92,10 @@ tidy_df <- tidy_pool_obj(pool_obj_ancova)
 # Print tidy data frames
 print(tidy_df)
 
+}
+\seealso{
+\itemize{
+\item \code{\link[=analyse_mi_data]{analyse_mi_data()}} to analyse imputed datasets
+\item \code{\link[=format_results]{format_results()}} for additional formatting options
+}
 }
