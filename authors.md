@@ -15,16 +15,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/openpharma/rbmiUtils/blob/v0.1.8/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/openpharma/rbmiUtils/blob/main/DESCRIPTION)
 
 Baillie M, Mütze T, Talboys J (2026). *rbmiUtils: Utility Functions to
-Support and Extend the 'rbmi' Package*. R package version 0.1.8,
+Support and Extend the 'rbmi' Package*. R package version 0.1.8.9000,
 <https://github.com/openpharma/rbmiUtils>.
 
     @Manual{,
       title = {rbmiUtils: Utility Functions to Support and Extend the 'rbmi' Package},
       author = {Mark Baillie and Tobias Mütze and Jack Talboys},
       year = {2026},
-      note = {R package version 0.1.8},
+      note = {R package version 0.1.8.9000},
       url = {https://github.com/openpharma/rbmiUtils},
     }
