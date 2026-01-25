@@ -5,14 +5,36 @@
 #' dynamically identifies visit names from the `parameter` column, and provides additional columns for parameter type,
 #' least squares mean type, and visit.
 #'
-#' @param pool_obj A pooled analysis object of class `pool`.
+#' @param pool_obj A pooled analysis object of class `pool`, typically obtained from [rbmi::pool()]
+#'   after calling [analyse_mi_data()].
 #'
-#' @return A tibble containing the processed pooled analysis results. The tibble includes columns for the parameter,
-#' description, estimates, standard errors, confidence intervals, p-values, visit, parameter type, and least squares mean type.
+#' @return A tibble containing the processed pooled analysis results with the following columns:
+#' \describe{
+#'   \item{parameter}{Original parameter name from the pooled object}
+#'   \item{description}{Human-readable description of the parameter}
+#'   \item{visit}{Visit name extracted from parameter (if applicable)}
+#'   \item{parameter_type}{Either "trt" (treatment comparison) or "lsm" (least squares mean)}
+#'   \item{lsm_type}{For LSM parameters: "ref" (reference) or "alt" (alternative)}
+#'   \item{est}{Point estimate}
+#'   \item{se}{Standard error}
+#'   \item{lci}{Lower confidence interval}
+#'   \item{uci}{Upper confidence interval}
+#'   \item{pval}{P-value}
+#' }
 #'
-#' @details The function rounds numeric columns to three decimal places for presentation. It dynamically processes
-#' the `parameter` column by separating it into components (e.g., type of estimate, reference vs. alternative arm, and visit),
-#' and provides informative descriptions in the output.
+#' @details The function dynamically processes the `parameter` column by separating it into
+#' components (e.g., type of estimate, reference vs. alternative arm, and visit), and provides
+#' informative descriptions in the output.
+#'
+#' **Workflow:**
+#' 1. Prepare data and run imputation with rbmi
+#' 2. Analyse with [analyse_mi_data()]
+#' 3. Pool with [rbmi::pool()]
+#' 4. Tidy with `tidy_pool_obj()` for publication-ready output
+#'
+#' @seealso
+#' * [analyse_mi_data()] to analyse imputed datasets
+#' * [format_results()] for additional formatting options
 #'
 #' @examples
 #' # Example usage:
