@@ -33,8 +33,8 @@ format_results(
 - ci_format:
 
   Character string specifying CI format. Options are: "parens" for
-  "(LCI, UCI)", "brackets" for "LCI, UCI", or "dash" for "LCI - UCI".
-  Default is "parens".
+  "(LCI, UCI)", "brackets" for "\\LCI, UCI\\", or "dash" for "LCI -
+  UCI". Default is "parens".
 
 - pval_digits:
 
