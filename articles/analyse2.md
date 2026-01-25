@@ -104,8 +104,8 @@ draws_obj <- draws(data = dat, vars = vars, method = method)
 #> 
 #> SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.00041 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.1 seconds.
+#> Chain 1: Gradient evaluation took 0.000446 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.46 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -122,9 +122,9 @@ draws_obj <- draws(data = dat, vars = vars, method = method)
 #> Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 400 / 400 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.642 seconds (Warm-up)
-#> Chain 1:                0.531 seconds (Sampling)
-#> Chain 1:                1.173 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.626 seconds (Warm-up)
+#> Chain 1:                0.516 seconds (Sampling)
+#> Chain 1:                1.142 seconds (Total)
 #> Chain 1:
 
 impute_obj <- impute(draws_obj, references = c("Placebo" = "Placebo", "Drug A" = "Placebo"))
@@ -171,11 +171,11 @@ print(pool_obj_ancova)
 #>       parameter      est     se     lci     uci     pval  
 #>   --------------------------------------------------------
 #>      trt_Week 24    -2.177  0.182  -2.535  -1.819  <0.001 
-#>    lsm_ref_Week 24  0.077   0.131  -0.181  0.334   0.559  
-#>    lsm_alt_Week 24   -2.1   0.126  -2.347  -1.854  <0.001 
-#>      trt_Week 48    -3.806  0.256  -4.309  -3.303  <0.001 
-#>    lsm_ref_Week 48  0.044   0.185  -0.32   0.407   0.812  
-#>    lsm_alt_Week 48  -3.762  0.175  -4.107  -3.417  <0.001 
+#>    lsm_ref_Week 24  0.077   0.131  -0.18   0.334   0.557  
+#>    lsm_alt_Week 24   -2.1   0.126  -2.347  -1.853  <0.001 
+#>      trt_Week 48    -3.807  0.256  -4.309  -3.304  <0.001 
+#>    lsm_ref_Week 48  0.044   0.185  -0.319  0.408   0.811  
+#>    lsm_alt_Week 48  -3.762  0.175  -4.107  -3.418  <0.001 
 #>   --------------------------------------------------------
 ```
 
@@ -185,10 +185,10 @@ tidy_pool_obj(pool_obj_ancova)
 #>   parameter       description visit parameter_type lsm_type     est    se    lci
 #>   <chr>           <chr>       <chr> <chr>          <chr>      <dbl> <dbl>  <dbl>
 #> 1 trt_Week 24     Treatment … Week… trt            NA       -2.18   0.182 -2.54 
-#> 2 lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.0765 0.131 -0.181
+#> 2 lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.0770 0.131 -0.180
 #> 3 lsm_alt_Week 24 Least Squa… Week… lsm            alt      -2.10   0.126 -2.35 
 #> 4 trt_Week 48     Treatment … Week… trt            NA       -3.81   0.256 -4.31 
-#> 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0440 0.185 -0.320
+#> 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0444 0.185 -0.319
 #> 6 lsm_alt_Week 48 Least Squa… Week… lsm            alt      -3.76   0.175 -4.11 
 #> # ℹ 2 more variables: uci <dbl>, pval <dbl>
 ```

@@ -160,7 +160,7 @@ all_equal <- all.equal(
 )
 
 cat("Data integrity check:", all_equal, "\n")
-#> Data integrity check: Attributes: < Modes: list, NULL > Attributes: < Lengths: 1, 0 > Attributes: < names for target but not for current > Attributes: < current is not list-like >
+#> Data integrity check: TRUE
 ```
 
 ## Practical Workflow

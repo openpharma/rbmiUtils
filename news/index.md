@@ -4,13 +4,21 @@
 
 ### New Features
 
-- Added `create_impid()` to convert a list of imputed datasets into a
-  stacked data.frame with IMPID column.
-- Added `combine_results()` to combine tidy results from multiple
-  analyses.
-- Added `format_results()` for publication-ready formatting of results.
-- Added `extract_trt_effects()` and `extract_lsm()` convenience
-  functions to filter tidy results.
+- Added
+  [`create_impid()`](https://openpharma.github.io/rbmiUtils/reference/create_impid.md)
+  to convert a list of imputed datasets into a stacked data.frame with
+  IMPID column.
+- Added
+  [`combine_results()`](https://openpharma.github.io/rbmiUtils/reference/combine_results.md)
+  to combine tidy results from multiple analyses.
+- Added
+  [`format_results()`](https://openpharma.github.io/rbmiUtils/reference/format_results.md)
+  for publication-ready formatting of results.
+- Added
+  [`extract_trt_effects()`](https://openpharma.github.io/rbmiUtils/reference/extract_trt_effects.md)
+  and
+  [`extract_lsm()`](https://openpharma.github.io/rbmiUtils/reference/extract_lsm.md)
+  convenience functions to filter tidy results.
 - Added [`print()`](https://rdrr.io/r/base/print.html) and
   [`summary()`](https://rdrr.io/r/base/summary.html) S3 methods for
   analysis objects.
@@ -48,10 +56,12 @@
   [`summarise_missingness()`](https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.md)
   to tabulate missing data patterns.
 - Added formatting utilities for publication-ready output:
-  - `format_pvalue()` for p-value formatting with configurable
-    thresholds
-  - `format_estimate()` for estimate with confidence interval formatting
-  - `format_results_table()` to add formatted columns to tidy results
+  - [`format_pvalue()`](https://openpharma.github.io/rbmiUtils/reference/format_pvalue.md)
+    for p-value formatting with configurable thresholds
+  - [`format_estimate()`](https://openpharma.github.io/rbmiUtils/reference/format_estimate.md)
+    for estimate with confidence interval formatting
+  - [`format_results_table()`](https://openpharma.github.io/rbmiUtils/reference/format_results_table.md)
+    to add formatted columns to tidy results
 
 ## rbmiUtils 0.1.8
 

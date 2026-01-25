@@ -60,23 +60,28 @@
 
 
 <dl><dt id="arg-data">data<a class="anchor" aria-label="anchor" href="#arg-data"></a></dt>
-<dd><p>A data frame containing the imputed datasets. The data frame should include a variable (e.g., <code>IMPID</code>) that identifies distinct imputation iterations.</p></dd>
+<dd><p>A data frame containing the imputed datasets. The data frame should include a variable (e.g., <code>IMPID</code>) that identifies distinct imputation iterations.
+Typically obtained from <code><a href="get_imputed_data.html">get_imputed_data()</a></code> or <code><a href="expand_imputed_data.html">expand_imputed_data()</a></code>.</p></dd>
 
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
-<dd><p>A list specifying key variables used in the analysis (e.g., <code>subjid</code>, <code>visit</code>, <code>group</code>, <code>outcome</code>). Required.</p></dd>
+<dd><p>A list specifying key variables used in the analysis (e.g., <code>subjid</code>, <code>visit</code>, <code>group</code>, <code>outcome</code>).
+Created using <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html" class="external-link">rbmi::set_vars()</a></code>. Required.</p></dd>
 
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
-<dd><p>A character string or object specifying the method used for analysis (e.g., Bayesian imputation). Defaults to <code>NULL</code>.</p></dd>
+<dd><p>A method object specifying the imputation method used (e.g., Bayesian imputation).
+Created using <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_bayes()</a></code>, <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_approxbayes()</a></code>, or <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_condmean()</a></code>. Required.</p></dd>
 
 
 <dt id="arg-fun">fun<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
-<dd><p>A function that will be applied to each imputed dataset. Defaults to <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/ancova.html" class="external-link">rbmi::ancova</a></code>. Must be a valid analysis function.</p></dd>
+<dd><p>A function that will be applied to each imputed dataset. Defaults to <a href="https://openpharma.github.io/rbmi/latest-tag/reference/ancova.html" class="external-link">rbmi::ancova</a>.
+Other options include <code><a href="gcomp_responder_multi.html">gcomp_responder_multi()</a></code> for binary outcomes. Must be a valid analysis function.</p></dd>
 
 
 <dt id="arg-delta">delta<a class="anchor" aria-label="anchor" href="#arg-delta"></a></dt>
-<dd><p>A <code>data.frame</code> used for delta adjustments, or <code>NULL</code> if no delta adjustments are needed. Defaults to <code>NULL</code>.</p></dd>
+<dd><p>A <code>data.frame</code> used for delta adjustments, or <code>NULL</code> if no delta adjustments are needed. Defaults to <code>NULL</code>.
+Must contain columns matching <code>vars$subjid</code>, <code>vars$visit</code>, <code>vars$group</code>, and a <code>delta</code> column.</p></dd>
 
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
@@ -85,11 +90,27 @@
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code>analysis</code> containing the results from applying the analysis function to each imputed dataset.</p>
+    <p>An object of class <code>analysis</code> containing the results from applying the analysis function to each imputed dataset.
+Pass this to <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code> to obtain pooled estimates.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function loops through distinct imputation datasets (identified by <code>IMPID</code>), applies the provided analysis function <code>fun</code>, and stores the results for later pooling. If a <code>delta</code> dataset is provided, it will be merged with the imputed data to apply the specified delta adjustment before analysis.</p>
+<p><strong>Workflow:</strong></p><ol><li><p>Prepare imputed data using <code><a href="get_imputed_data.html">get_imputed_data()</a></code> or <code><a href="expand_imputed_data.html">expand_imputed_data()</a></code></p></li>
+<li><p>Define variables using <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html" class="external-link">rbmi::set_vars()</a></code></p></li>
+<li><p>Call <code>analyse_mi_data()</code> to apply analysis to each imputation</p></li>
+<li><p>Pool results using <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code></p></li>
+<li><p>Tidy results using <code><a href="tidy_pool_obj.html">tidy_pool_obj()</a></code></p></li>
+</ol></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index">
+<ul><li><p><code><a href="tidy_pool_obj.html">tidy_pool_obj()</a></code> to format pooled results for publication</p></li>
+<li><p><code><a href="get_imputed_data.html">get_imputed_data()</a></code> to extract imputed datasets from rbmi objects</p></li>
+<li><p><code><a href="expand_imputed_data.html">expand_imputed_data()</a></code> to reconstruct full imputed data from reduced form</p></li>
+<li><p><code><a href="gcomp_responder_multi.html">gcomp_responder_multi()</a></code> for binary outcome analysis</p></li>
+<li><p><code><a href="validate_data.html">validate_data()</a></code> to check data before imputation</p></li>
+</ul></div>
     </div>
 
     <div class="section level2">
@@ -140,6 +161,7 @@
 <span class="r-in"><span>  fun <span class="op">=</span> <span class="va">ancova</span>,  <span class="co"># Apply ANCOVA</span></span></span>
 <span class="r-in"><span>  delta <span class="op">=</span> <span class="cn">NULL</span>   <span class="co"># No sensitivity analysis adjustment</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Data contains 100 imputations but method expects 20. Using first 20 imputations.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

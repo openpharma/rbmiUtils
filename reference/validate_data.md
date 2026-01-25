@@ -26,7 +26,8 @@ validate_data(data, vars, data_ice = NULL)
 
   An optional data.frame of intercurrent events. If provided, must
   contain columns corresponding to `vars$subjid`, `vars$visit`, and
-  `vars$strategy`.
+  `vars$strategy`. Can be created using
+  [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md).
 
 ## Value
 
@@ -51,6 +52,32 @@ The following checks are performed:
 
 - If `data_ice` is provided: correct columns, valid subjects, valid
   visits, recognised strategies, and at most one row per subject
+
+**Recommended Workflow:**
+
+1.  Call `validate_data()` to check your data
+
+2.  Use
+    [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md)
+    to create ICE data if needed
+
+3.  Review missingness with
+    [`summarise_missingness()`](https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.md)
+
+4.  Proceed with
+    [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
+    for imputation
+
+## See also
+
+- [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md)
+  to create intercurrent event data from flags
+
+- [`summarise_missingness()`](https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.md)
+  to understand missing data patterns
+
+- [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
+  to perform imputation after validation
 
 ## Examples
 

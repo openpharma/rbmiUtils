@@ -24,28 +24,42 @@ analyse_mi_data(
 
   A data frame containing the imputed datasets. The data frame should
   include a variable (e.g., `IMPID`) that identifies distinct imputation
-  iterations.
+  iterations. Typically obtained from
+  [`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
+  or
+  [`expand_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.md).
 
 - vars:
 
   A list specifying key variables used in the analysis (e.g., `subjid`,
-  `visit`, `group`, `outcome`). Required.
+  `visit`, `group`, `outcome`). Created using
+  [`rbmi::set_vars()`](https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html).
+  Required.
 
 - method:
 
-  A character string or object specifying the method used for analysis
-  (e.g., Bayesian imputation). Defaults to `NULL`.
+  A method object specifying the imputation method used (e.g., Bayesian
+  imputation). Created using
+  [`rbmi::method_bayes()`](https://openpharma.github.io/rbmi/latest-tag/reference/method.html),
+  [`rbmi::method_approxbayes()`](https://openpharma.github.io/rbmi/latest-tag/reference/method.html),
+  or
+  [`rbmi::method_condmean()`](https://openpharma.github.io/rbmi/latest-tag/reference/method.html).
+  Required.
 
 - fun:
 
   A function that will be applied to each imputed dataset. Defaults to
-  [`rbmi::ancova`](https://openpharma.github.io/rbmi/latest-tag/reference/ancova.html).
-  Must be a valid analysis function.
+  [rbmi::ancova](https://openpharma.github.io/rbmi/latest-tag/reference/ancova.html).
+  Other options include
+  [`gcomp_responder_multi()`](https://openpharma.github.io/rbmiUtils/reference/gcomp_responder_multi.md)
+  for binary outcomes. Must be a valid analysis function.
 
 - delta:
 
   A `data.frame` used for delta adjustments, or `NULL` if no delta
-  adjustments are needed. Defaults to `NULL`.
+  adjustments are needed. Defaults to `NULL`. Must contain columns
+  matching `vars$subjid`, `vars$visit`, `vars$group`, and a `delta`
+  column.
 
 - ...:
 
@@ -54,7 +68,9 @@ analyse_mi_data(
 ## Value
 
 An object of class `analysis` containing the results from applying the
-analysis function to each imputed dataset.
+analysis function to each imputed dataset. Pass this to
+[`rbmi::pool()`](https://openpharma.github.io/rbmi/latest-tag/reference/pool.html)
+to obtain pooled estimates.
 
 ## Details
 
@@ -63,6 +79,41 @@ The function loops through distinct imputation datasets (identified by
 results for later pooling. If a `delta` dataset is provided, it will be
 merged with the imputed data to apply the specified delta adjustment
 before analysis.
+
+**Workflow:**
+
+1.  Prepare imputed data using
+    [`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
+    or
+    [`expand_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.md)
+
+2.  Define variables using
+    [`rbmi::set_vars()`](https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html)
+
+3.  Call `analyse_mi_data()` to apply analysis to each imputation
+
+4.  Pool results using
+    [`rbmi::pool()`](https://openpharma.github.io/rbmi/latest-tag/reference/pool.html)
+
+5.  Tidy results using
+    [`tidy_pool_obj()`](https://openpharma.github.io/rbmiUtils/reference/tidy_pool_obj.md)
+
+## See also
+
+- [`tidy_pool_obj()`](https://openpharma.github.io/rbmiUtils/reference/tidy_pool_obj.md)
+  to format pooled results for publication
+
+- [`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
+  to extract imputed datasets from rbmi objects
+
+- [`expand_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.md)
+  to reconstruct full imputed data from reduced form
+
+- [`gcomp_responder_multi()`](https://openpharma.github.io/rbmiUtils/reference/gcomp_responder_multi.md)
+  for binary outcome analysis
+
+- [`validate_data()`](https://openpharma.github.io/rbmiUtils/reference/validate_data.md)
+  to check data before imputation
 
 ## Examples
 
@@ -113,4 +164,5 @@ ana_obj_ancova <- analyse_mi_data(
   fun = ancova,  # Apply ANCOVA
   delta = NULL   # No sensitivity analysis adjustment
 )
+#> Warning: Data contains 100 imputations but method expects 20. Using first 20 imputations.
 ```

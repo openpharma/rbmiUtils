@@ -62,19 +62,60 @@ least squares mean type, and visit.</p>
 
 
 <dl><dt id="arg-pool-obj">pool_obj<a class="anchor" aria-label="anchor" href="#arg-pool-obj"></a></dt>
-<dd><p>A pooled analysis object of class <code>pool</code>.</p></dd>
+<dd><p>A pooled analysis object of class <code>pool</code>, typically obtained from <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code>
+after calling <code><a href="analyse_mi_data.html">analyse_mi_data()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A tibble containing the processed pooled analysis results. The tibble includes columns for the parameter,
-description, estimates, standard errors, confidence intervals, p-values, visit, parameter type, and least squares mean type.</p>
-    </div>
+    <p>A tibble containing the processed pooled analysis results with the following columns:</p><dl><dt>parameter</dt>
+<dd><p>Original parameter name from the pooled object</p></dd>
+
+<dt>description</dt>
+<dd><p>Human-readable description of the parameter</p></dd>
+
+<dt>visit</dt>
+<dd><p>Visit name extracted from parameter (if applicable)</p></dd>
+
+<dt>parameter_type</dt>
+<dd><p>Either "trt" (treatment comparison) or "lsm" (least squares mean)</p></dd>
+
+<dt>lsm_type</dt>
+<dd><p>For LSM parameters: "ref" (reference) or "alt" (alternative)</p></dd>
+
+<dt>est</dt>
+<dd><p>Point estimate</p></dd>
+
+<dt>se</dt>
+<dd><p>Standard error</p></dd>
+
+<dt>lci</dt>
+<dd><p>Lower confidence interval</p></dd>
+
+<dt>uci</dt>
+<dd><p>Upper confidence interval</p></dd>
+
+<dt>pval</dt>
+<dd><p>P-value</p></dd>
+
+
+</dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The function rounds numeric columns to three decimal places for presentation. It dynamically processes
-the <code>parameter</code> column by separating it into components (e.g., type of estimate, reference vs. alternative arm, and visit),
-and provides informative descriptions in the output.</p>
+    <p>The function dynamically processes the <code>parameter</code> column by separating it into
+components (e.g., type of estimate, reference vs. alternative arm, and visit), and provides
+informative descriptions in the output.</p>
+<p><strong>Workflow:</strong></p><ol><li><p>Prepare data and run imputation with rbmi</p></li>
+<li><p>Analyse with <code><a href="analyse_mi_data.html">analyse_mi_data()</a></code></p></li>
+<li><p>Pool with <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code></p></li>
+<li><p>Tidy with <code>tidy_pool_obj()</code> for publication-ready output</p></li>
+</ol></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index">
+<ul><li><p><code><a href="analyse_mi_data.html">analyse_mi_data()</a></code> to analyse imputed datasets</p></li>
+<li><p><code><a href="format_results.html">format_results()</a></code> for additional formatting options</p></li>
+</ul></div>
     </div>
 
     <div class="section level2">

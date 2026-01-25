@@ -69,7 +69,7 @@ together in a single error message.</p>
 <dt id="arg-data-ice">data_ice<a class="anchor" aria-label="anchor" href="#arg-data-ice"></a></dt>
 <dd><p>An optional data.frame of intercurrent events. If provided,
 must contain columns corresponding to <code>vars$subjid</code>, <code>vars$visit</code>, and
-<code>vars$strategy</code>.</p></dd>
+<code>vars$strategy</code>. Can be created using <code><a href="prepare_data_ice.html">prepare_data_ice()</a></code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -87,7 +87,19 @@ collected messages if any issues are found.</p>
 <li><p>Data has one row per subject-visit combination</p></li>
 <li><p>If <code>data_ice</code> is provided: correct columns, valid subjects, valid
 visits, recognised strategies, and at most one row per subject</p></li>
+</ul><p><strong>Recommended Workflow:</strong></p><ol><li><p>Call <code>validate_data()</code> to check your data</p></li>
+<li><p>Use <code><a href="prepare_data_ice.html">prepare_data_ice()</a></code> to create ICE data if needed</p></li>
+<li><p>Review missingness with <code><a href="summarise_missingness.html">summarise_missingness()</a></code></p></li>
+<li><p>Proceed with <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">rbmi::draws()</a></code> for imputation</p></li>
+</ol></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index">
+<ul><li><p><code><a href="prepare_data_ice.html">prepare_data_ice()</a></code> to create intercurrent event data from flags</p></li>
+<li><p><code><a href="summarise_missingness.html">summarise_missingness()</a></code> to understand missing data patterns</p></li>
+<li><p><code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">rbmi::draws()</a></code> to perform imputation after validation</p></li>
 </ul></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

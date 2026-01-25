@@ -17,22 +17,81 @@ tidy_pool_obj(pool_obj)
 
 - pool_obj:
 
-  A pooled analysis object of class `pool`.
+  A pooled analysis object of class `pool`, typically obtained from
+  [`rbmi::pool()`](https://openpharma.github.io/rbmi/latest-tag/reference/pool.html)
+  after calling
+  [`analyse_mi_data()`](https://openpharma.github.io/rbmiUtils/reference/analyse_mi_data.md).
 
 ## Value
 
-A tibble containing the processed pooled analysis results. The tibble
-includes columns for the parameter, description, estimates, standard
-errors, confidence intervals, p-values, visit, parameter type, and least
-squares mean type.
+A tibble containing the processed pooled analysis results with the
+following columns:
+
+- parameter:
+
+  Original parameter name from the pooled object
+
+- description:
+
+  Human-readable description of the parameter
+
+- visit:
+
+  Visit name extracted from parameter (if applicable)
+
+- parameter_type:
+
+  Either "trt" (treatment comparison) or "lsm" (least squares mean)
+
+- lsm_type:
+
+  For LSM parameters: "ref" (reference) or "alt" (alternative)
+
+- est:
+
+  Point estimate
+
+- se:
+
+  Standard error
+
+- lci:
+
+  Lower confidence interval
+
+- uci:
+
+  Upper confidence interval
+
+- pval:
+
+  P-value
 
 ## Details
 
-The function rounds numeric columns to three decimal places for
-presentation. It dynamically processes the `parameter` column by
-separating it into components (e.g., type of estimate, reference vs.
-alternative arm, and visit), and provides informative descriptions in
-the output.
+The function dynamically processes the `parameter` column by separating
+it into components (e.g., type of estimate, reference vs. alternative
+arm, and visit), and provides informative descriptions in the output.
+
+**Workflow:**
+
+1.  Prepare data and run imputation with rbmi
+
+2.  Analyse with
+    [`analyse_mi_data()`](https://openpharma.github.io/rbmiUtils/reference/analyse_mi_data.md)
+
+3.  Pool with
+    [`rbmi::pool()`](https://openpharma.github.io/rbmi/latest-tag/reference/pool.html)
+
+4.  Tidy with `tidy_pool_obj()` for publication-ready output
+
+## See also
+
+- [`analyse_mi_data()`](https://openpharma.github.io/rbmiUtils/reference/analyse_mi_data.md)
+  to analyse imputed datasets
+
+- [`format_results()`](https://openpharma.github.io/rbmiUtils/reference/format_results.md)
+  for additional formatting options
 
 ## Examples
 
