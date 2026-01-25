@@ -1,5 +1,9 @@
 # Changelog
 
+## rbmiUtils 0.1.8
+
+CRAN release: 2026-01-24
+
 ## rbmiUtils 0.1.7
 
 - Moved `tidyr` from Suggests to Imports (used in

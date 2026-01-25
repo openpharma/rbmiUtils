@@ -1,10 +1,10 @@
 # rbmiUtils [![rbmiUtils website](reference/figures/rbmiUtils.png)](https://openpharma.github.io/rbmiUtils/)
 
 `rbmiUtils` extends the functionality of
-[`rbmi`](https://github.com/insightsengineering/rbmi) to support more
-streamlined workflows for multiple imputation in clinical trials. It is
-designed to simplify key tasks such as analysis execution, pooling,
-result tidying, and imputed data handling.
+[`rbmi`](https://github.com/openpharma/rbmi) to support more streamlined
+workflows for multiple imputation in clinical trials. It is designed to
+simplify key tasks such as analysis execution, pooling, result tidying,
+and imputed data handling.
 
 ## Table of Contents
 
