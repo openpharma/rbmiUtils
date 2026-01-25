@@ -3,10 +3,9 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   analyse2: analyse2.html
-  analysis-comparison: analysis-comparison.html
   data-preparation: data-preparation.html
   efficient-storage: efficient-storage.html
-last_built: 2026-01-25T19:29Z
+last_built: 2026-01-25T19:55Z
 urls:
   reference: https://openpharma.github.io/rbmiUtils/reference
   article: https://openpharma.github.io/rbmiUtils/articles
