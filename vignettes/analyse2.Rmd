@@ -23,20 +23,24 @@ knitr::opts_chunk$set(
 
 This vignette demonstrates how to:
 
-* Perform multiple imputation using the `{rbmi}` package.
-* Store and modify the imputed data using `{rbmiUtils}`.
+* Perform multiple imputation using the `{rbmi}` package
+* Store and modify the imputed data using `{rbmiUtils}`
 * Analyze the imputed data using:
-
   * A standard ANCOVA on a continuous endpoint (`CHG`)
   * A binary responder analysis on `CRIT1FLN` using `{beeca}`
 
 This pattern enables reproducible workflows where imputation and analysis can be separated and revisited independently.
 
+**Related vignettes:**
+
+* [Data Preparation and Validation](data-preparation.html) - Validate data before imputation
+* [Efficient Storage of Imputed Data](efficient-storage.html) - Reduce storage for large imputations
+
 # Statistical Context
 
-This approach applies **Rubin’s Rules** for inference after multiple imputation:
+This approach applies **Rubin's Rules** for inference after multiple imputation:
 
-> We fit a model to each imputed dataset, dervive a response variable on the CHG score, extract marginal effects or other statistics of interest, and combine the results into a single inference using Rubin’s combining rules.
+> We fit a model to each imputed dataset, derive a response variable on the CHG score, extract marginal effects or other statistics of interest, and combine the results into a single inference using Rubin's combining rules.
 
 ---
 
@@ -190,8 +194,21 @@ print(pool_obj_prop)
 
 # Final Notes
 
-* The `ADMI` object can be saved for later reuse.
-* Analyses can be modularly applied using custom functions.
-* The tidy output from `tidy_pool_obj()` is helpful for reporting and review.
+* The `ADMI` object can be saved for later reuse
+* Analyses can be modularly applied using custom functions
+* The tidy output from `tidy_pool_obj()` is helpful for reporting and review
+
+## Efficient Storage
+
+When working with many imputations, consider using `reduce_imputed_data()` to store only the imputed values:
+```{r efficient-storage, eval = FALSE}
+# Reduce for efficient storage
+reduced <- reduce_imputed_data(ADMI, ADEFF, vars)
+
+# Later, expand back for analysis
+ADMI_restored <- expand_imputed_data(reduced, ADEFF, vars)
+```
+
+See the [Efficient Storage vignette](efficient-storage.html) for details.
 
 

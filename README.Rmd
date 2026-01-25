@@ -34,6 +34,9 @@ knitr::opts_chunk$set(
 * [Example](#example)
 * [Dataset](#dataset)
 * [Utilities](#utilities)
+  * [Analysis Functions](#analysis-functions)
+  * [Data Preparation](#data-preparation)
+  * [Efficient Storage](#efficient-storage)
 * [Development Status](#development-status)
 
 ## Installation
@@ -105,6 +108,24 @@ tidy_df <- tidy_pool_obj(pool_obj)
 print(tidy_df)
 ```
 
+## Data Validation Example
+
+Before running imputation, use `validate_data()` to catch common issues early:
+
+```{r validation, eval = FALSE}
+# Validate data before imputation
+validate_data(ADMI, vars)
+
+# Summarise missing data patterns
+miss_summary <- summarise_missingness(ADMI, vars)
+print(miss_summary$summary)
+#> # A tibble: 2 x 5
+#>   group   n_subjects n_complete n_monotone n_intermittent
+#>   <fct>        <int>      <int>      <int>          <int>
+#> 1 Placebo        250        206         38              6
+#> 2 Drug A         250        214         32              4
+```
+
 ## Datasets
 
 The package includes two example datasets for demonstrating imputation and analysis:
@@ -116,11 +137,29 @@ Use `?ADEFF` and `?ADMI` to view full dataset documentation.
 
 ## Utilities
 
-Key exported functions include:
+### Analysis Functions
+
+Core functions for running analyses on imputed data:
 
 * `analyse_mi_data()`: Applies an analysis function (e.g., ANCOVA) to all imputed datasets.
 * `tidy_pool_obj()`: Tidies and annotates pooled results for reporting.
 * `get_imputed_data()`: Extracts long-format imputed datasets with original subject IDs mapped.
+* `gcomp_responder()`: G-computation for binary responder endpoints using `{beeca}`.
+
+### Data Preparation
+
+Functions to validate and prepare data before imputation:
+
+* `validate_data()`: Pre-flight validation of data structure, types, and completeness before calling `rbmi::draws()`.
+* `prepare_data_ice()`: Builds `data_ice` from a flag column indicating intercurrent events.
+* `summarise_missingness()`: Tabulates missing data patterns (complete, monotone, intermittent) by visit and treatment group.
+
+### Efficient Storage
+
+Functions to reduce storage requirements when working with many imputations:
+
+* `reduce_imputed_data()`: Extracts only imputed values (originally missing), reducing storage by 90%+ for typical datasets.
+* `expand_imputed_data()`: Reconstructs the full imputed dataset from reduced form for analysis.
 
 These utilities wrap standard `rbmi` workflows for improved reproducibility and interpretability.
 
