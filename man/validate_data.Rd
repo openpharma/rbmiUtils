@@ -71,8 +71,8 @@ validate_data(dat, vars)
 }
 \seealso{
 \itemize{
+\item \code{\link[rbmi:draws]{rbmi::draws()}} which requires validated input data
 \item \code{\link[=prepare_data_ice]{prepare_data_ice()}} to create intercurrent event data from flags
 \item \code{\link[=summarise_missingness]{summarise_missingness()}} to understand missing data patterns
-\item \code{\link[rbmi:draws]{rbmi::draws()}} to perform imputation after validation
 }
 }

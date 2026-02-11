@@ -119,7 +119,7 @@ test_that("tidy_pool_obj requires a pool object", {
 
   expect_error(
     tidy_pool_obj(mtcars),
-    "Input object must be of class 'pool'"
+    class = "rbmiUtils_error_validation"
   )
 })
 
@@ -329,10 +329,103 @@ test_that("tidy_pool_obj output can be filtered by visit", {
 
 
 test_that("tidy_pool_obj errors with NULL input", {
-  expect_error(tidy_pool_obj(NULL), "must be of class 'pool'")
+  expect_error(tidy_pool_obj(NULL), class = "rbmiUtils_error_validation")
 })
 
 
 test_that("tidy_pool_obj errors with list input", {
-  expect_error(tidy_pool_obj(list(a = 1, b = 2)), "must be of class 'pool'")
+  expect_error(tidy_pool_obj(list(a = 1, b = 2)), class = "rbmiUtils_error_validation")
+})
+
+
+# =============================================================================
+# Tests for underscore-containing parameter names (HRD-01)
+# =============================================================================
+
+# Helper to build a proper mock pool object matching rbmi internal structure
+make_mock_pool <- function(parameter_names, est, se, lci, uci, pval) {
+  pars <- lapply(seq_along(parameter_names), function(i) {
+    list(
+      est = est[i],
+      se = se[i],
+      ci = c(lci[i], uci[i]),
+      pvalue = pval[i]
+    )
+  })
+  names(pars) <- parameter_names
+  obj <- list(pars = pars)
+  class(obj) <- "pool"
+  obj
+}
+
+
+test_that("tidy_pool_obj handles parameter names with underscores", {
+  mock_pool <- make_mock_pool(
+    parameter_names = c(
+      "trt_Week_24", "lsm_ref_Week_24", "lsm_alt_Week_24",
+      "trt_Follow_Up", "lsm_ref_Follow_Up", "lsm_alt_Follow_Up"
+    ),
+    est = c(-2.5, 10.1, 7.6, -1.8, 9.5, 7.7),
+    se = c(0.8, 0.5, 0.6, 0.9, 0.5, 0.6),
+    lci = c(-4.1, 9.1, 6.4, -3.6, 8.5, 6.5),
+    uci = c(-0.9, 11.1, 8.8, -0.0, 10.5, 8.9),
+    pval = c(0.002, NA, NA, 0.05, NA, NA)
+  )
+
+  result <- tidy_pool_obj(mock_pool)
+
+  # Verify underscore-containing visits are preserved intact
+  expect_true("Week_24" %in% result$visit)
+  expect_true("Follow_Up" %in% result$visit)
+
+  # Verify parameter_type is correctly identified
+  expect_equal(sum(result$parameter_type == "trt"), 2)
+  expect_equal(sum(result$parameter_type == "lsm"), 4)
+
+  # Verify lsm_type is correctly identified
+  lsm_rows <- result[result$parameter_type == "lsm", ]
+  expect_true(all(lsm_rows$lsm_type %in% c("ref", "alt")))
+
+  # Verify trt rows have NA lsm_type
+  trt_rows <- result[result$parameter_type == "trt", ]
+  expect_true(all(is.na(trt_rows$lsm_type)))
+})
+
+
+test_that("tidy_pool_obj handles gcomp-style parameter names", {
+  mock_pool <- make_mock_pool(
+    parameter_names = c(
+      "lsm_Placebo_Week 24", "lsm_Drug A_Week 24",
+      "lsm_Placebo_Week 48", "lsm_Drug A_Week 48"
+    ),
+    est = c(0.30, 0.45, 0.35, 0.55),
+    se = c(0.03, 0.04, 0.03, 0.04),
+    lci = c(0.24, 0.37, 0.29, 0.47),
+    uci = c(0.36, 0.53, 0.41, 0.63),
+    pval = c(NA, NA, NA, NA)
+  )
+
+  result <- tidy_pool_obj(mock_pool)
+
+  # Verify lsm_type captures arm names
+  expect_true("Placebo" %in% result$lsm_type)
+  expect_true("Drug A" %in% result$lsm_type)
+
+  # Verify visit is correctly extracted
+  expect_true("Week 24" %in% result$visit)
+  expect_true("Week 48" %in% result$visit)
+})
+
+
+test_that("tidy_pool_obj errors with informative message for non-pool input", {
+  expect_error(
+    tidy_pool_obj(data.frame(x = 1)),
+    class = "rbmiUtils_error_validation"
+  )
+
+  # Also verify the error inherits from the base class
+  expect_error(
+    tidy_pool_obj(data.frame(x = 1)),
+    class = "rbmiUtils_error"
+  )
 })

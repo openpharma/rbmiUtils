@@ -13,7 +13,10 @@ extract_covariates2(x)
 A character vector of unique variable names.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 Takes a character vector including potentially model terms like \code{*} and \code{:} and
 extracts out the individual variables.
+This function is deprecated and will be removed in a future version.
 }
 \keyword{internal}

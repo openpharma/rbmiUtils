@@ -13,6 +13,7 @@ utils::globalVariables(
     "parameter_type",
     "pct_miss",
     "pval",
+    "remainder",
     "se",
     "uci",
     "visit",

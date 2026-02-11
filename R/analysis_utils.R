@@ -60,6 +60,47 @@ gcomp_responder <- function(
   covariates <- vars$covariates
   visit <- vars$visit
 
+
+  # --- Input validation (fail-early) ---
+  if (!is.data.frame(data)) {
+    cli::cli_abort(
+      "{.arg data} must be a {.cls data.frame}, not {.cls {class(data)}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+
+  required_cols <- unique(c(group, outcome, extract_covariates2(covariates)))
+  missing_cols <- setdiff(required_cols, names(data))
+  if (length(missing_cols) > 0) {
+    cli::cli_abort(
+      "Column{?s} {.field {missing_cols}} not found in {.arg data}.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
+  n_arms <- length(unique(data[[group]]))
+  if (n_arms < 2) {
+    cli::cli_abort(
+      "{.arg data} contains only {n_arms} treatment arm{?s}. G-computation requires at least 2 arms.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
+  if (!is.numeric(data[[outcome]])) {
+    cli::cli_abort(
+      "Outcome column {.field {outcome}} must be numeric (0/1), not {.cls {class(data[[outcome]])}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+
+  outcome_vals <- data[[outcome]][!is.na(data[[outcome]])]
+  if (length(unique(outcome_vals)) < 2) {
+    cli::cli_abort(
+      "Outcome column {.field {outcome}} has zero variance (all values are {outcome_vals[1]}). G-computation requires variation in the outcome.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
   if (is.null(reference_levels)) {
     reference_levels <- levels(data[[group]])[1]
   }
@@ -79,6 +120,22 @@ gcomp_responder <- function(
     contrast = contrast,
     reference = reference_levels
   )
+
+  # --- beeca output schema validation ---
+  if (is.null(marginal_fit$marginal_results)) {
+    cli::cli_abort(
+      "beeca::get_marginal_effect() did not return {.field marginal_results}. This may indicate an incompatible beeca version.",
+      class = "rbmiUtils_error_dependency"
+    )
+  }
+  expected_cols <- c("STAT", "STATVAL", "TRTVAL")
+  missing_beeca_cols <- setdiff(expected_cols, names(marginal_fit$marginal_results))
+  if (length(missing_beeca_cols) > 0) {
+    cli::cli_abort(
+      "beeca output missing expected column{?s}: {.field {missing_beeca_cols}}. This may indicate an incompatible beeca version.",
+      class = "rbmiUtils_error_dependency"
+    )
+  }
 
   res <- marginal_fit$marginal_results |>
     dplyr::filter(STAT %in% c("diff", "diff_se", "risk", "risk_se"))
@@ -176,7 +233,23 @@ gcomp_responder <- function(
 #' }
 gcomp_responder_multi <- function(data, vars, reference_levels = NULL, ...) {
   visit_var <- vars$visit
+
+  # --- Minimal validation ---
+  if (!visit_var %in% names(data)) {
+    cli::cli_abort(
+      "Column {.field {visit_var}} (visit variable) not found in {.arg data}.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
   visits <- unique(data[[visit_var]])
+
+  if (length(visits) == 0) {
+    cli::cli_abort(
+      "{.arg data} contains no visits in column {.field {visit_var}}.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
 
   results <- lapply(visits, function(v) {
     dat <- data[data[[visit_var]] == v, ]
@@ -198,11 +271,22 @@ gcomp_responder_multi <- function(data, vars, reference_levels = NULL, ...) {
 
 
 #' Convert character variable list to formula
+#'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
+#' This function is deprecated and will be removed in a future version.
+#'
 #' @param outcome Character string, the outcome variable.
 #' @param covars Character vector of covariates.
 #' @return A formula object.
 #' @keywords internal
 as_simple_formula2 <- function(outcome, covars) {
+  lifecycle::deprecate_warn(
+    "0.2.0",
+    "as_simple_formula2()",
+    details = "Internal helper will be removed in a future version."
+  )
   frm <- stats::as.formula(
     paste0(
       outcome,
@@ -216,13 +300,22 @@ as_simple_formula2 <- function(outcome, covars) {
 
 #' Extract variable names from model terms
 #'
+#' @description
+#' `r lifecycle::badge("deprecated")`
+#'
 #' Takes a character vector including potentially model terms like `*` and `:` and
 #' extracts out the individual variables.
+#' This function is deprecated and will be removed in a future version.
 #'
 #' @param x A character vector of model terms.
 #' @return A character vector of unique variable names.
 #' @keywords internal
 extract_covariates2 <- function(x) {
+  lifecycle::deprecate_warn(
+    "0.2.0",
+    "extract_covariates2()",
+    details = "Internal helper will be removed in a future version."
+  )
   if (is.null(x)) return(x)
   x_split <- strsplit(x, ":|\\*")
   unique(trimws(unlist(x_split)))

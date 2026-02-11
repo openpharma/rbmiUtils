@@ -93,6 +93,9 @@ ana_obj_ancova <- analyse_mi_data(
 }
 \seealso{
 \itemize{
+\item \code{\link[rbmi:analyse]{rbmi::analyse()}} which this function wraps
+\item \code{\link[rbmi:pool]{rbmi::pool()}} for pooling the analysis results
+\item The \href{https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html}{rbmi quickstart vignette}
 \item \code{\link[=tidy_pool_obj]{tidy_pool_obj()}} to format pooled results for publication
 \item \code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed datasets from rbmi objects
 \item \code{\link[=expand_imputed_data]{expand_imputed_data()}} to reconstruct full imputed data from reduced form

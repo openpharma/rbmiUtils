@@ -38,14 +38,21 @@ test_that("validate_data passes with valid data", {
 
 test_that("validate_data errors when data is not a data.frame", {
   vars <- make_test_vars()
-  expect_error(validate_data(list(a = 1), vars), "must be a data.frame")
+  expect_error(
+    validate_data(list(a = 1), vars),
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when required columns are missing", {
   dat <- make_test_data()
   vars <- make_test_vars()
   dat$CHG <- NULL
-  expect_error(validate_data(dat, vars), "CHG")
+  expect_error(
+    validate_data(dat, vars),
+    "CHG",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when multiple columns are missing", {
@@ -53,43 +60,62 @@ test_that("validate_data errors when multiple columns are missing", {
   vars <- make_test_vars()
   dat$CHG <- NULL
   dat$BASE <- NULL
-  expect_error(validate_data(dat, vars), "CHG")
-  expect_error(validate_data(dat, vars), "BASE")
+  expect_error(validate_data(dat, vars), "CHG", class = "rbmiUtils_error_validation")
+  expect_error(validate_data(dat, vars), "BASE", class = "rbmiUtils_error_validation")
 })
 
 test_that("validate_data errors when subjid is not factor or character", {
   dat <- make_test_data()
   dat$USUBJID <- as.integer(dat$USUBJID)
   vars <- make_test_vars()
-  expect_error(validate_data(dat, vars), "must be a factor")
+  expect_error(
+    validate_data(dat, vars),
+    "must be a factor",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data warns when subjid is character", {
   dat <- make_test_data()
   dat$USUBJID <- as.character(dat$USUBJID)
   vars <- make_test_vars()
-  expect_warning(validate_data(dat, vars), "character")
+  expect_warning(
+    validate_data(dat, vars),
+    class = "rbmiUtils_warning_coercion"
+  )
 })
 
 test_that("validate_data errors when outcome is not numeric", {
   dat <- make_test_data()
   dat$CHG <- as.character(dat$CHG)
   vars <- make_test_vars()
-  expect_error(validate_data(dat, vars), "outcome.*must be numeric")
+  expect_error(
+    validate_data(dat, vars),
+    "must be numeric",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when covariates have NAs", {
   dat <- make_test_data()
   dat$BASE[1] <- NA
   vars <- make_test_vars()
-  expect_error(validate_data(dat, vars), "BASE.*missing")
+  expect_error(
+    validate_data(dat, vars),
+    "missing",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors on duplicate subject-visit rows", {
   dat <- make_test_data()
   dat <- rbind(dat, dat[1, ])
   vars <- make_test_vars()
-  expect_error(validate_data(dat, vars), "duplicate")
+  expect_error(
+    validate_data(dat, vars),
+    "duplicate",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data collects multiple issues in one error", {
@@ -97,9 +123,14 @@ test_that("validate_data collects multiple issues in one error", {
   dat$CHG <- as.character(dat$CHG)
   dat$BASE[1] <- NA
   vars <- make_test_vars()
-  err <- tryCatch(validate_data(dat, vars), error = function(e) e$message)
-  expect_true(grepl("outcome.*must be numeric", err))
-  expect_true(grepl("BASE.*missing", err))
+  err <- tryCatch(
+    validate_data(dat, vars),
+    error = function(e) e
+  )
+  msg <- conditionMessage(err)
+  expect_true(grepl("must be numeric", msg))
+  expect_true(grepl("missing", msg))
+  expect_s3_class(err, "rbmiUtils_error_validation")
 })
 
 test_that("validate_data handles interaction terms in covariates", {
@@ -123,7 +154,133 @@ test_that("validate_data errors on interaction term with missing variable", {
     outcome = "CHG",
     covariates = c("BASE*MISSING_VAR")
   )
-  expect_error(validate_data(dat, vars), "MISSING_VAR")
+  expect_error(
+    validate_data(dat, vars),
+    "MISSING_VAR",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# --- HRD-01: Malformed interaction terms ---
+
+test_that("validate_data errors on empty covariate term", {
+  dat <- make_test_data()
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID", visit = "AVISIT", group = "TRT",
+    outcome = "CHG", covariates = c("BASE", "")
+  )
+  expect_error(
+    validate_data(dat, vars),
+    "Empty covariate",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("validate_data errors on malformed interaction term with trailing operator", {
+  dat <- make_test_data()
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID", visit = "AVISIT", group = "TRT",
+    outcome = "CHG", covariates = c("A*")
+  )
+  expect_error(
+    validate_data(dat, vars),
+    "Malformed",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("validate_data errors on malformed interaction term with leading operator", {
+  dat <- make_test_data()
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID", visit = "AVISIT", group = "TRT",
+    outcome = "CHG", covariates = c(":B")
+  )
+  expect_error(
+    validate_data(dat, vars),
+    "Malformed",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("validate_data errors on consecutive operators in interaction term", {
+  dat <- make_test_data()
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID", visit = "AVISIT", group = "TRT",
+    outcome = "CHG", covariates = c("A**B")
+  )
+  expect_error(
+    validate_data(dat, vars),
+    "Malformed",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# --- HRD-04: Empty data frame ---
+
+test_that("validate_data errors on empty data frame", {
+  dat <- make_test_data()[0, ]
+  vars <- make_test_vars()
+  expect_error(
+    validate_data(dat, vars),
+    "0 rows",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# --- HRD-05: All-NA covariates ---
+
+test_that("validate_data warns on all-NA covariate column", {
+  dat <- make_test_data()
+  dat$BASE <- NA_real_
+  vars <- make_test_vars()
+  expect_warning(
+    validate_data(dat, vars),
+    class = "rbmiUtils_warning_coercion"
+  )
+})
+
+test_that("validate_data still errors on partially-NA covariate column", {
+  dat <- make_test_data()
+  dat$BASE[1] <- NA
+  vars <- make_test_vars()
+  expect_error(
+    validate_data(dat, vars),
+    "missing",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# --- HRD-06: Batched character column warnings ---
+
+test_that("validate_data batches character column warnings", {
+  dat <- make_test_data()
+  dat$USUBJID <- as.character(dat$USUBJID)
+  dat$AVISIT <- as.character(dat$AVISIT)
+  dat$TRT <- as.character(dat$TRT)
+  vars <- make_test_vars()
+  # Should get exactly one warning (batched), not three
+  w <- testthat::capture_warnings(validate_data(dat, vars))
+  # Filter to character coercion warnings
+  coercion_warnings <- w[grepl("character", w)]
+  expect_equal(length(coercion_warnings), 1)
+})
+
+
+# --- All-NA outcome ---
+
+test_that("validate_data errors when all outcome values are NA", {
+  dat <- make_test_data()
+  dat$CHG <- NA_real_
+  vars <- make_test_vars()
+  expect_error(
+    validate_data(dat, vars),
+    "All.*NA",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 
@@ -144,14 +301,22 @@ test_that("validate_data passes with valid data_ice", {
 test_that("validate_data errors when data_ice is not a data.frame", {
   dat <- make_test_data()
   vars <- make_test_vars()
-  expect_error(validate_data(dat, vars, data_ice = "bad"), "data_ice.*must be a data.frame")
+  expect_error(
+    validate_data(dat, vars, data_ice = "bad"),
+    "data_ice",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when data_ice missing required columns", {
   dat <- make_test_data()
   vars <- make_test_vars()
   data_ice <- data.frame(USUBJID = "S2", stringsAsFactors = FALSE)
-  expect_error(validate_data(dat, vars, data_ice = data_ice), "data_ice.*missing")
+  expect_error(
+    validate_data(dat, vars, data_ice = data_ice),
+    "data_ice",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when data_ice has unknown subjects", {
@@ -163,7 +328,11 @@ test_that("validate_data errors when data_ice has unknown subjects", {
     strategy = "JR",
     stringsAsFactors = FALSE
   )
-  expect_error(validate_data(dat, vars, data_ice = data_ice), "not found in `data`")
+  expect_error(
+    validate_data(dat, vars, data_ice = data_ice),
+    "not found",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when data_ice has invalid visits", {
@@ -175,7 +344,11 @@ test_that("validate_data errors when data_ice has invalid visits", {
     strategy = "JR",
     stringsAsFactors = FALSE
   )
-  expect_error(validate_data(dat, vars, data_ice = data_ice), "invalid visit")
+  expect_error(
+    validate_data(dat, vars, data_ice = data_ice),
+    "invalid visit",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when data_ice has invalid strategy", {
@@ -187,7 +360,11 @@ test_that("validate_data errors when data_ice has invalid strategy", {
     strategy = "INVALID",
     stringsAsFactors = FALSE
   )
-  expect_error(validate_data(dat, vars, data_ice = data_ice), "unrecognised strategy")
+  expect_error(
+    validate_data(dat, vars, data_ice = data_ice),
+    "unrecognised strategy",
+    class = "rbmiUtils_error_validation"
+  )
 })
 
 test_that("validate_data errors when data_ice has duplicate subjects", {
@@ -199,7 +376,87 @@ test_that("validate_data errors when data_ice has duplicate subjects", {
     strategy = c("JR", "JR"),
     stringsAsFactors = FALSE
   )
-  expect_error(validate_data(dat, vars, data_ice = data_ice), "multiple rows")
+  expect_error(
+    validate_data(dat, vars, data_ice = data_ice),
+    "multiple rows",
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# --- validate_data() edge case tests (HRD-07) ---
+
+test_that("validate_data handles single subject without error", {
+  dat <- data.frame(
+    USUBJID = factor(rep("S1", 3)),
+    AVISIT = factor(c("Week 4", "Week 8", "Week 12"),
+                    levels = c("Week 4", "Week 8", "Week 12")),
+    TRT = factor(rep("Drug A", 3)),
+    CHG = c(1.0, 2.0, 3.0),
+    BASE = rep(10, 3),
+    STRATA = factor(rep("A", 3))
+  )
+  vars <- make_test_vars()
+  expect_true(validate_data(dat, vars))
+})
+
+test_that("validate_data handles single visit without error", {
+  dat <- data.frame(
+    USUBJID = factor(c("S1", "S2", "S3")),
+    AVISIT = factor(rep("Week 4", 3)),
+    TRT = factor(c("Placebo", "Drug A", "Drug A")),
+    CHG = c(1.0, 2.0, 3.0),
+    BASE = c(10, 12, 11),
+    STRATA = factor(c("A", "B", "A"))
+  )
+  vars <- make_test_vars()
+  expect_true(validate_data(dat, vars))
+})
+
+test_that("validate_data handles single subject single visit without error", {
+  dat <- data.frame(
+    USUBJID = factor("S1"),
+    AVISIT = factor("Week 4"),
+    TRT = factor("Drug A"),
+    CHG = 1.0,
+    BASE = 10,
+    STRATA = factor("A")
+  )
+  vars <- make_test_vars()
+  expect_true(validate_data(dat, vars))
+})
+
+test_that("validate_data emits info message when all outcomes complete", {
+  dat <- make_test_data()
+  dat$CHG <- seq_len(nrow(dat))  # no NAs
+  vars <- make_test_vars()
+  expect_message(
+    validate_data(dat, vars),
+    class = "rbmiUtils_info"
+  )
+})
+
+test_that("validate_data handles single subject with missing outcome", {
+  dat <- data.frame(
+    USUBJID = factor(rep("S1", 3)),
+    AVISIT = factor(c("Week 4", "Week 8", "Week 12"),
+                    levels = c("Week 4", "Week 8", "Week 12")),
+    TRT = factor(rep("Drug A", 3)),
+    CHG = c(1.0, NA, NA),
+    BASE = rep(10, 3),
+    STRATA = factor(rep("A", 3))
+  )
+  vars <- make_test_vars()
+  expect_true(validate_data(dat, vars))
+})
+
+test_that("validate_data passes cleanly with complete covariates", {
+  dat <- make_test_data()
+  dat$CHG <- seq_len(nrow(dat))  # complete outcomes to avoid info message
+  vars <- make_test_vars()
+  # Should not produce any errors (may produce informational message about complete data)
+  result <- validate_data(dat, vars)
+  expect_true(result)
 })
 
 
@@ -260,7 +517,9 @@ test_that("prepare_data_ice returns empty data.frame when no ICE flags", {
   dat$DISCFL <- rep("N", nrow(dat))
   vars <- make_test_vars()
 
-  result <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR")
+  result <- suppressMessages(
+    prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR")
+  )
 
   expect_equal(nrow(result), 0)
   expect_named(result, c("USUBJID", "AVISIT", "strategy"))
@@ -282,7 +541,8 @@ test_that("prepare_data_ice errors on missing ice_col", {
   vars <- make_test_vars()
   expect_error(
     prepare_data_ice(dat, vars, ice_col = "NONEXIST", strategy = "JR"),
-    "not found"
+    "not found",
+    class = "rbmiUtils_error_validation"
   )
 })
 
@@ -292,7 +552,8 @@ test_that("prepare_data_ice errors on invalid strategy", {
   vars <- make_test_vars()
   expect_error(
     prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "INVALID"),
-    "must be one of"
+    "must be one of",
+    class = "rbmiUtils_error_validation"
   )
 })
 
@@ -305,6 +566,129 @@ test_that("prepare_data_ice handles NA values in ice_col", {
 
   expect_equal(nrow(result), 1)
   expect_equal(as.character(result$USUBJID), "S2")
+})
+
+
+# --- HRD-02: NULL strategy error in prepare_data_ice ---
+
+test_that("prepare_data_ice errors when vars$strategy is NULL", {
+  dat <- make_test_data()
+  dat$DISCFL <- c("N","N","N", "N","Y","Y", "N","N","N", "N","N","N")
+  vars <- make_test_vars()
+  vars$strategy <- NULL
+  expect_error(
+    prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR"),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# --- HRD-03: Character visit warning in prepare_data_ice ---
+
+test_that("prepare_data_ice warns when visit column is character", {
+  dat <- make_test_data()
+  dat$AVISIT <- as.character(dat$AVISIT)
+  dat$DISCFL <- c("N","N","N", "N","Y","Y", "N","N","N", "N","N","N")
+  vars <- make_test_vars()
+  expect_warning(
+    prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR"),
+    class = "rbmiUtils_warning_coercion"
+  )
+})
+
+
+# --- prepare_data_ice() edge case tests (HRD-07) ---
+
+test_that("prepare_data_ice handles single subject with ICE", {
+  dat <- data.frame(
+    USUBJID = factor(rep("S1", 3)),
+    AVISIT = factor(c("Week 4", "Week 8", "Week 12"),
+                    levels = c("Week 4", "Week 8", "Week 12")),
+    TRT = factor(rep("Drug A", 3)),
+    CHG = c(1.0, NA, NA),
+    DISCFL = c("N", "Y", "Y")
+  )
+  vars <- make_test_vars()
+  result <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR")
+  expect_equal(nrow(result), 1)
+  expect_equal(as.character(result$USUBJID), "S1")
+  expect_equal(as.character(result$AVISIT), "Week 8")
+})
+
+test_that("prepare_data_ice handles single subject without ICE", {
+  dat <- data.frame(
+    USUBJID = factor(rep("S1", 3)),
+    AVISIT = factor(c("Week 4", "Week 8", "Week 12"),
+                    levels = c("Week 4", "Week 8", "Week 12")),
+    TRT = factor(rep("Drug A", 3)),
+    CHG = c(1.0, 2.0, 3.0),
+    DISCFL = c("N", "N", "N")
+  )
+  vars <- make_test_vars()
+  result <- suppressMessages(
+    prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR")
+  )
+  expect_equal(nrow(result), 0)
+  expect_named(result, c("USUBJID", "AVISIT", "strategy"))
+})
+
+test_that("prepare_data_ice handles single visit", {
+  dat <- data.frame(
+    USUBJID = factor(c("S1", "S2", "S3")),
+    AVISIT = factor(rep("Week 4", 3)),
+    TRT = factor(c("Placebo", "Drug A", "Drug A")),
+    CHG = c(1.0, NA, 3.0),
+    DISCFL = c("N", "Y", "N")
+  )
+  vars <- make_test_vars()
+  result <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "CR")
+  expect_equal(nrow(result), 1)
+  expect_equal(as.character(result$USUBJID), "S2")
+})
+
+test_that("prepare_data_ice emits info message when no ICE flags found", {
+  dat <- make_test_data()
+  dat$DISCFL <- rep("N", nrow(dat))
+  vars <- make_test_vars()
+  expect_message(
+    result <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR"),
+    class = "rbmiUtils_info"
+  )
+  expect_equal(nrow(result), 0)
+})
+
+test_that("prepare_data_ice handles all subjects with ICE at first visit", {
+  dat <- make_test_data()
+  dat$DISCFL <- rep("Y", nrow(dat))
+  vars <- make_test_vars()
+  result <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "MAR")
+  # Each subject should have exactly one row with first visit
+  expect_equal(nrow(result), length(unique(dat$USUBJID)))
+  expect_true(all(as.character(result$AVISIT) == "Week 4"))
+})
+
+test_that("prepare_data_ice handles all-NA ice flag column", {
+  dat <- make_test_data()
+  dat$DISCFL <- NA_character_
+  vars <- make_test_vars()
+  result <- suppressMessages(
+    prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR")
+  )
+  expect_equal(nrow(result), 0)
+})
+
+test_that("prepare_data_ice handles single subject single visit with ICE", {
+  dat <- data.frame(
+    USUBJID = factor("S1"),
+    AVISIT = factor("Week 4"),
+    TRT = factor("Drug A"),
+    CHG = NA_real_,
+    DISCFL = "Y"
+  )
+  vars <- make_test_vars()
+  result <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "CIR")
+  expect_equal(nrow(result), 1)
+  expect_equal(result$strategy, "CIR")
 })
 
 

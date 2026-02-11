@@ -51,3 +51,10 @@ ice <- prepare_data_ice(dat, vars, ice_col = "DISCFL", strategy = "JR")
 print(ice)
 
 }
+\seealso{
+\itemize{
+\item \code{\link[rbmi:draws]{rbmi::draws()}} which accepts the \code{data_ice} output from this function
+\item \code{\link[=validate_data]{validate_data()}} to check data before imputation
+\item \code{\link[=summarise_missingness]{summarise_missingness()}} to understand missing data patterns
+}
+}

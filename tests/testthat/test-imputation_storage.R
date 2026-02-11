@@ -153,11 +153,11 @@ test_that("reduce_imputed_data errors on non-dataframe inputs", {
 
   expect_error(
     reduce_imputed_data("not a df", make_original_data(), vars),
-    "must be a data.frame"
+    class = "rbmiUtils_error_type"
   )
   expect_error(
     reduce_imputed_data(make_imputed_data(), "not a df", vars),
-    "must be a data.frame"
+    class = "rbmiUtils_error_type"
   )
 })
 
@@ -299,11 +299,11 @@ test_that("expand_imputed_data errors on non-dataframe inputs", {
 
   expect_error(
     expand_imputed_data("not a df", make_original_data(), vars),
-    "must be a data.frame"
+    class = "rbmiUtils_error_type"
   )
   expect_error(
     expand_imputed_data(reduced, "not a df", vars),
-    "must be a data.frame"
+    class = "rbmiUtils_error_type"
   )
 })
 
@@ -376,4 +376,153 @@ test_that("storage savings are significant with many imputations", {
   # 25% of full size
   compression <- nrow(reduced) / nrow(imputed)
   expect_equal(compression, 0.25)
+})
+
+
+# =============================================================================
+# Digest and integrity verification tests (01-03 hardening)
+# =============================================================================
+
+test_that("reduce_imputed_data stores digest attribute", {
+  original <- make_original_data()
+  imputed <- make_imputed_data()
+  vars <- make_test_vars()
+
+  reduced <- reduce_imputed_data(imputed, original, vars)
+
+  expect_true(!is.null(attr(reduced, "rbmiUtils_digest")))
+  expect_true(is.character(attr(reduced, "rbmiUtils_digest")))
+  expect_true(nchar(attr(reduced, "rbmiUtils_digest")) > 0)
+})
+
+test_that("reduce_imputed_data stores col_metadata and col_names attributes", {
+  original <- make_original_data()
+  imputed <- make_imputed_data()
+  vars <- make_test_vars()
+
+  reduced <- reduce_imputed_data(imputed, original, vars)
+
+  col_meta <- attr(reduced, "rbmiUtils_col_metadata")
+  col_names <- attr(reduced, "rbmiUtils_col_names")
+
+  expect_true(!is.null(col_meta))
+  expect_true(!is.null(col_names))
+  expect_equal(col_names, names(imputed))
+  expect_true(is.list(col_meta))
+  expect_equal(names(col_meta), names(imputed))
+
+  # Each column metadata has class and typeof
+
+  for (cn in names(col_meta)) {
+    expect_true("class" %in% names(col_meta[[cn]]))
+    expect_true("typeof" %in% names(col_meta[[cn]]))
+  }
+})
+
+test_that("round-trip preserves data exactly", {
+  original <- make_original_data()
+  imputed <- make_imputed_data()
+  vars <- make_test_vars()
+
+  reduced <- reduce_imputed_data(imputed, original, vars)
+  expanded <- expand_imputed_data(reduced, original, vars)
+
+  # Sort both for comparison
+  imputed_sorted <- imputed[order(imputed$IMPID, imputed$USUBJID, imputed$AVISIT), ]
+  expanded_sorted <- expanded[order(expanded$IMPID, expanded$USUBJID, expanded$AVISIT), ]
+
+  # All key columns match exactly
+  expect_equal(expanded_sorted$CHG, imputed_sorted$CHG)
+  expect_equal(as.character(expanded_sorted$USUBJID), as.character(imputed_sorted$USUBJID))
+  expect_equal(as.character(expanded_sorted$AVISIT), as.character(imputed_sorted$AVISIT))
+  expect_equal(expanded_sorted$IMPID, imputed_sorted$IMPID)
+})
+
+test_that("round-trip preserves factor levels and attributes", {
+  original <- make_original_data()
+  imputed <- make_imputed_data()
+  vars <- make_test_vars()
+
+  # Add a custom attribute to a column
+  attr(original$AVISIT, "my_custom_attr") <- "test_value"
+
+  reduced <- reduce_imputed_data(imputed, original, vars)
+  expanded <- expand_imputed_data(reduced, original, vars)
+
+  # Factor levels preserved
+  expect_equal(levels(expanded$AVISIT), levels(original$AVISIT))
+  expect_equal(levels(expanded$USUBJID), levels(original$USUBJID))
+  expect_equal(levels(expanded$TRT), levels(original$TRT))
+
+  # Custom attribute preserved
+  expect_equal(attr(expanded$AVISIT, "my_custom_attr"), "test_value")
+})
+
+test_that("expand integrity check tolerates extra columns in imputed_data", {
+  # When imputed_data had columns not in original_data (e.g., derived columns),
+
+  # the integrity check should NOT error — only columns shared with original_data
+  # are verified.
+  original <- make_original_data()
+  imputed <- make_imputed_data()
+  imputed$EXTRA_DERIVED <- 999
+  vars <- make_test_vars()
+
+  reduced <- reduce_imputed_data(imputed, original, vars)
+
+  # Stored col_names includes EXTRA_DERIVED, but original_data doesn't have it.
+  # The expand should succeed without integrity errors.
+  expanded <- expand_imputed_data(reduced, original, vars)
+  expect_equal(nrow(expanded), nrow(imputed))
+})
+
+test_that("expand detects column type mismatch via digest metadata", {
+  original <- make_original_data()
+  imputed <- make_imputed_data()
+  vars <- make_test_vars()
+
+  reduced <- reduce_imputed_data(imputed, original, vars)
+
+  # Tamper with col_metadata to simulate a type mismatch
+  meta <- attr(reduced, "rbmiUtils_col_metadata")
+  meta[["CHG"]]$class <- "character"
+  attr(reduced, "rbmiUtils_col_metadata") <- meta
+
+  expect_error(
+    expand_imputed_data(reduced, original, vars),
+    class = "rbmiUtils_error_integrity"
+  )
+})
+
+test_that("storage functions error with cli classes on bad input", {
+  vars <- make_test_vars()
+
+  # reduce: non-data.frame
+  expect_error(
+    reduce_imputed_data("not a df", make_original_data(), vars),
+    class = "rbmiUtils_error_type"
+  )
+
+  # reduce: missing IMPID
+  imputed_no_impid <- make_imputed_data()
+  imputed_no_impid$IMPID <- NULL
+  expect_error(
+    reduce_imputed_data(imputed_no_impid, make_original_data(), vars),
+    class = "rbmiUtils_error_validation"
+  )
+
+  # expand: non-data.frame
+  expect_error(
+    expand_imputed_data("not a df", make_original_data(), vars),
+    class = "rbmiUtils_error_type"
+  )
+
+  # expand: missing columns in original_data
+  original_bad <- make_original_data()
+  original_bad$CHG <- NULL
+  reduced <- data.frame(IMPID = "1", USUBJID = "S1", AVISIT = "Week 4", CHG = 1)
+  expect_error(
+    expand_imputed_data(reduced, original_bad, vars),
+    class = "rbmiUtils_error_validation"
+  )
 })

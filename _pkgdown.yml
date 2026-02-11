@@ -1,3 +1,109 @@
 url: https://openpharma.github.io/rbmiUtils/
+
 template:
   bootstrap: 5
+  opengraph:
+    image:
+      src: man/figures/logo.png
+      alt: "rbmiUtils hex logo - Utilities and Extensions for rbmi"
+
+home:
+  title: "rbmiUtils: Utility Functions to Support and Extend rbmi"
+  description: >
+    Bridges rbmi analysis results into publication-ready regulatory tables
+    and forest plots for clinical trial workflows.
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github, lightswitch]
+  components:
+    intro:
+      text: Get Started
+      href: articles/pipeline.html
+    articles:
+      text: Articles
+      menu:
+        - text: "End-to-End Pipeline"
+        - text: "From rbmi Analysis to Regulatory Tables"
+          href: articles/pipeline.html
+        - text: "-------"
+        - text: "Workflow Guides"
+        - text: "Storing and Analyzing Imputed Data"
+          href: articles/analyse2.html
+        - text: "Data Preparation and Validation"
+          href: articles/data-preparation.html
+        - text: "Efficient Storage of Imputed Data"
+          href: articles/efficient-storage.html
+        - text: "-------"
+        - text: "Diagnostics"
+        - text: "MI Diagnostics and Describe Helpers"
+          href: articles/diagnostics.html
+
+reference:
+  - title: "Data Preparation"
+    desc: "Validate and prepare data before imputation"
+    contents:
+      - validate_data
+      - prepare_data_ice
+      - summarise_missingness
+  - title: "Analysis"
+    desc: "Apply analysis functions across imputed datasets"
+    contents:
+      - analyse_mi_data
+      - gcomp_responder
+      - gcomp_responder_multi
+      - gcomp_binary
+  - title: "Tidying"
+    desc: "Tidy and extract results from pooled objects"
+    contents:
+      - tidy_pool_obj
+      - extract_trt_effects
+      - extract_lsm
+  - title: "Reporting"
+    desc: "Publication-ready tables and plots"
+    contents:
+      - efficacy_table
+      - plot_forest
+  - title: "Introspection"
+    desc: "Inspect draws, imputations, and MI diagnostics"
+    contents:
+      - describe_draws
+      - describe_imputation
+  - title: "Formatting"
+    desc: "Format values for publication"
+    contents:
+      - format_pvalue
+      - format_estimate
+      - format_results_table
+      - format_results
+  - title: "Storage"
+    desc: "Efficient storage of imputed datasets"
+    contents:
+      - reduce_imputed_data
+      - expand_imputed_data
+  - title: "Utilities"
+    desc: "Helper functions for imputed data workflows"
+    contents:
+      - get_imputed_data
+      - create_impid
+      - combine_results
+      - pool_to_ard
+  - title: "Print & Summary Methods"
+    desc: "S3 methods for inspecting rbmiUtils objects"
+    contents:
+      - starts_with("print.")
+      - starts_with("summary.")
+  - title: "Datasets"
+    desc: "Example datasets for demonstrations"
+    contents:
+      - ADEFF
+      - ADMI
+
+footer:
+  structure:
+    left: developed_by
+    right: [built_with, community]
+  components:
+    community: >
+      Part of [openpharma](https://openpharma.github.io/)

@@ -27,8 +27,10 @@
 #' Use [expand_imputed_data()] to reconstruct the full imputed dataset when
 #' needed for analysis.
 #'
-#' @seealso [expand_imputed_data()] to reconstruct the full dataset,
-#'   [get_imputed_data()] to extract imputed data from an rbmi imputation object.
+#' @seealso
+#' * [rbmi::impute()] which creates the imputed datasets this function operates on
+#' * [expand_imputed_data()] to reconstruct the full dataset
+#' * [get_imputed_data()] to extract imputed data from an rbmi imputation object
 #'
 #' @examples
 #' library(rbmi)
@@ -63,25 +65,31 @@
 #' @export
 reduce_imputed_data <- function(imputed_data, original_data, vars) {
 
+  if (!is.data.frame(imputed_data)) {
+    cli::cli_abort(
+      "{.arg imputed_data} must be a {.cls data.frame}, not {.cls {class(imputed_data)}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+  if (!"IMPID" %in% names(imputed_data)) {
+    cli::cli_abort(
+      "{.arg imputed_data} must contain an {.field IMPID} column.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
 
-  assertthat::assert_that(
-    is.data.frame(imputed_data),
-    msg = "`imputed_data` must be a data.frame"
-  )
-  assertthat::assert_that(
-    "IMPID" %in% names(imputed_data),
-    msg = "`imputed_data` must contain an `IMPID` column"
-  )
-
-  assertthat::assert_that(
-    is.data.frame(original_data),
-    msg = "`original_data` must be a data.frame"
-  )
-  assertthat::assert_that(
-    is.list(vars),
-    msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
-  )
-
+  if (!is.data.frame(original_data)) {
+    cli::cli_abort(
+      "{.arg original_data} must be a {.cls data.frame}, not {.cls {class(original_data)}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+  if (!is.list(vars)) {
+    cli::cli_abort(
+      "{.arg vars} must be a list as returned by {.fn rbmi::set_vars}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
 
   subjid <- vars$subjid
   visit <- vars$visit
@@ -91,19 +99,19 @@ reduce_imputed_data <- function(imputed_data, original_data, vars) {
   required_orig <- c(subjid, visit, outcome)
   missing_orig <- setdiff(required_orig, names(original_data))
   if (length(missing_orig) > 0) {
-    stop(sprintf(
-      "`original_data` missing column(s): %s",
-      paste0("`", missing_orig, "`", collapse = ", ")
-    ), call. = FALSE)
+    cli::cli_abort(
+      "{.arg original_data} missing column{?s}: {.field {missing_orig}}.",
+      class = "rbmiUtils_error_validation"
+    )
   }
 
   required_imp <- c("IMPID", subjid, visit, outcome)
   missing_imp <- setdiff(required_imp, names(imputed_data))
   if (length(missing_imp) > 0) {
-    stop(sprintf(
-      "`imputed_data` missing column(s): %s",
-      paste0("`", missing_imp, "`", collapse = ", ")
-    ), call. = FALSE)
+    cli::cli_abort(
+      "{.arg imputed_data} missing column{?s}: {.field {missing_imp}}.",
+      class = "rbmiUtils_error_validation"
+    )
   }
 
   # Find which subject-visit combos were originally missing
@@ -145,6 +153,28 @@ reduce_imputed_data <- function(imputed_data, original_data, vars) {
     }
   }
 
+  # Compute digest of the original imputed_data for round-trip verification
+  col_metadata <- lapply(names(imputed_data), function(cn) {
+    list(
+      class = class(imputed_data[[cn]]),
+      typeof = typeof(imputed_data[[cn]])
+    )
+  })
+  names(col_metadata) <- names(imputed_data)
+
+  first_imp <- imputed_data[imputed_data$IMPID == unique(imputed_data$IMPID)[1], , drop = FALSE]
+  digest_val <- rlang::hash(list(
+    col_metadata = col_metadata,
+    first_imp_hash = rlang::hash(first_imp),
+    n_cols = ncol(imputed_data),
+    col_names = names(imputed_data),
+    n_imps = length(unique(imputed_data$IMPID))
+  ))
+
+  attr(reduced, "rbmiUtils_digest") <- digest_val
+  attr(reduced, "rbmiUtils_col_metadata") <- col_metadata
+  attr(reduced, "rbmiUtils_col_names") <- names(imputed_data)
+
   reduced
 }
 
@@ -173,8 +203,10 @@ reduce_imputed_data <- function(imputed_data, original_data, vars) {
 #'   \item Stacks all imputations together
 #' }
 #'
-#' @seealso [reduce_imputed_data()] to create the reduced dataset,
-#'   [get_imputed_data()] to extract imputed data from an rbmi imputation object.
+#' @seealso
+#' * [rbmi::impute()] which creates the imputed datasets this function operates on
+#' * [reduce_imputed_data()] to create the reduced dataset
+#' * [get_imputed_data()] to extract imputed data from an rbmi imputation object
 #'
 #' @examples
 #' library(rbmi)
@@ -209,18 +241,24 @@ reduce_imputed_data <- function(imputed_data, original_data, vars) {
 #' @export
 expand_imputed_data <- function(reduced_data, original_data, vars) {
 
-  assertthat::assert_that(
-    is.data.frame(reduced_data),
-    msg = "`reduced_data` must be a data.frame"
-  )
-  assertthat::assert_that(
-    is.data.frame(original_data),
-    msg = "`original_data` must be a data.frame"
-  )
-  assertthat::assert_that(
-    is.list(vars),
-    msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
-  )
+  if (!is.data.frame(reduced_data)) {
+    cli::cli_abort(
+      "{.arg reduced_data} must be a {.cls data.frame}, not {.cls {class(reduced_data)}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+  if (!is.data.frame(original_data)) {
+    cli::cli_abort(
+      "{.arg original_data} must be a {.cls data.frame}, not {.cls {class(original_data)}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+  if (!is.list(vars)) {
+    cli::cli_abort(
+      "{.arg vars} must be a list as returned by {.fn rbmi::set_vars}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
 
   subjid <- vars$subjid
   visit <- vars$visit
@@ -230,10 +268,10 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
   required_orig <- c(subjid, visit, outcome)
   missing_orig <- setdiff(required_orig, names(original_data))
   if (length(missing_orig) > 0) {
-    stop(sprintf(
-      "`original_data` missing column(s): %s",
-      paste0("`", missing_orig, "`", collapse = ", ")
-    ), call. = FALSE)
+    cli::cli_abort(
+      "{.arg original_data} missing column{?s}: {.field {missing_orig}}.",
+      class = "rbmiUtils_error_validation"
+    )
   }
 
   # Handle empty reduced_data (no missing values case)
@@ -246,18 +284,20 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
     return(result)
   }
 
-  assertthat::assert_that(
-    "IMPID" %in% names(reduced_data),
-    msg = "`reduced_data` must contain an `IMPID` column"
-  )
+  if (!"IMPID" %in% names(reduced_data)) {
+    cli::cli_abort(
+      "{.arg reduced_data} must contain an {.field IMPID} column.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
 
   required_red <- c("IMPID", subjid, visit, outcome)
   missing_red <- setdiff(required_red, names(reduced_data))
   if (length(missing_red) > 0) {
-    stop(sprintf(
-      "`reduced_data` missing column(s): %s",
-      paste0("`", missing_red, "`", collapse = ", ")
-    ), call. = FALSE)
+    cli::cli_abort(
+      "{.arg reduced_data} missing column{?s}: {.field {missing_red}}.",
+      class = "rbmiUtils_error_validation"
+    )
   }
 
   imp_ids <- unique(reduced_data$IMPID)
@@ -320,6 +360,58 @@ expand_imputed_data <- function(reduced_data, original_data, vars) {
           attr(result[[col_name]], attr_name) <- col_attrs[[attr_name]]
         }
       }
+    }
+  }
+
+  # --- Round-trip digest verification ---
+  stored_col_names <- attr(reduced_data, "rbmiUtils_col_names")
+  stored_col_metadata <- attr(reduced_data, "rbmiUtils_col_metadata")
+
+  if (!is.null(stored_col_names)) {
+    # Verify that all original_data columns appear in the expanded result.
+    # Note: imputed_data may have had extra columns not in original_data
+    # (e.g., derived columns added during imputation). These won't appear in
+    # the expanded result since expansion is built from original_data, so we
+    # only check columns that exist in both stored metadata AND original_data.
+    orig_cols <- names(original_data)
+    expected_cols <- intersect(setdiff(stored_col_names, "IMPID"), orig_cols)
+    expanded_cols <- setdiff(names(result), "IMPID")
+    col_name_diff <- setdiff(expected_cols, expanded_cols)
+    if (length(col_name_diff) > 0) {
+      cli::cli_abort(
+        c(
+          "Round-trip integrity check failed: column name{?s} {.field {col_name_diff}} expected but not found in expanded data.",
+          "i" = "The original imputed data had columns: {.field {stored_col_names}}.",
+          "i" = "The expanded data has columns: {.field {names(result)}}."
+        ),
+        class = "rbmiUtils_error_integrity"
+      )
+    }
+  }
+
+  if (!is.null(stored_col_metadata)) {
+    # Verify column types match
+    type_mismatches <- character(0)
+    for (cn in names(stored_col_metadata)) {
+      if (cn %in% names(result)) {
+        expected_class <- stored_col_metadata[[cn]]$class
+        actual_class <- class(result[[cn]])
+        if (!identical(expected_class, actual_class)) {
+          type_mismatches <- c(
+            type_mismatches,
+            paste0(cn, " (expected ", paste(expected_class, collapse = "/"), ", got ", paste(actual_class, collapse = "/"), ")")
+          )
+        }
+      }
+    }
+    if (length(type_mismatches) > 0) {
+      cli::cli_abort(
+        c(
+          "Round-trip integrity check failed: column type mismatch.",
+          stats::setNames(type_mismatches, rep("x", length(type_mismatches)))
+        ),
+        class = "rbmiUtils_error_integrity"
+      )
     }
   }
 

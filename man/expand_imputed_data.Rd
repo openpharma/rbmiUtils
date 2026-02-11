@@ -65,6 +65,9 @@ cat("Expanded rows:", nrow(expanded), "\n")
 
 }
 \seealso{
-\code{\link[=reduce_imputed_data]{reduce_imputed_data()}} to create the reduced dataset,
-\code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed data from an rbmi imputation object.
+\itemize{
+\item \code{\link[rbmi:impute]{rbmi::impute()}} which creates the imputed datasets this function operates on
+\item \code{\link[=reduce_imputed_data]{reduce_imputed_data()}} to create the reduced dataset
+\item \code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed data from an rbmi imputation object
+}
 }

@@ -33,9 +33,9 @@
 #' 4. Proceed with [rbmi::draws()] for imputation
 #'
 #' @seealso
+#' * [rbmi::draws()] which requires validated input data
 #' * [prepare_data_ice()] to create intercurrent event data from flags
 #' * [summarise_missingness()] to understand missing data patterns
-#' * [rbmi::draws()] to perform imputation after validation
 #'
 #' @examples
 #' library(rbmi)
@@ -63,31 +63,70 @@
 #' @export
 validate_data <- function(data, vars, data_ice = NULL) {
 
-  issues <- character(0)
+  # --- Fatal pre-checks (fail fast) ---
 
-  # --- Basic type checks ---
-  if (!is.data.frame(data)) {
-    issues <- c(issues, "`data` must be a data.frame")
+  if (!is.list(vars)) {
+    cli::cli_abort(
+      "{.arg vars} must be a list as returned by {.fn rbmi::set_vars}, not {.cls {class(vars)}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
 
-  assertthat::assert_that(
-    is.list(vars),
-    msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
-  )
+  if (!is.data.frame(data)) {
+    cli::cli_abort(
+      "{.arg data} must be a {.cls data.frame}, not {.cls {class(data)}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
+
+  if (nrow(data) == 0) {
+    cli::cli_abort(
+      c(
+        "{.arg data} has 0 rows.",
+        "i" = "Provide a data frame with at least one subject-visit observation."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
 
   if (!is.null(data_ice) && !is.data.frame(data_ice)) {
-    issues <- c(issues, "`data_ice` must be a data.frame or NULL")
+    cli::cli_abort(
+      "{.arg data_ice} must be a {.cls data.frame} or NULL, not {.cls {class(data_ice)}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
 
-  # If data is not a data.frame, cannot proceed with column checks
-
-  if (!is.data.frame(data)) {
-    stop(paste(c("Data validation failed:", issues), collapse = "\n  - "))
-  }
+  # --- Collectible validation issues ---
+  issues <- character(0)
 
   # --- Column existence checks ---
   required_cols <- c(vars$subjid, vars$visit, vars$group, vars$outcome)
   covariate_cols <- vars$covariates
+
+  # Validate interaction term syntax before parsing (HRD-01)
+  if (!is.null(covariate_cols) && length(covariate_cols) > 0) {
+    for (term in covariate_cols) {
+      if (!nzchar(trimws(term))) {
+        cli::cli_abort(
+          c(
+            "Empty covariate term found in {.arg vars$covariates}.",
+            "i" = "Remove empty strings from the covariates vector."
+          ),
+          class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+        )
+      }
+      if (grepl("^[*:]|[*:]$|[*:]{2}", trimws(term))) {
+        cli::cli_abort(
+          c(
+            "Malformed interaction term in {.arg vars$covariates}: {.val {term}}.",
+            "x" = "Interaction terms must have variable names on both sides of {.code *} or {.code :}.",
+            "i" = "Example valid terms: {.code c(\"BASE\", \"TRT*STRATA\", \"TRT:BASE\")}"
+          ),
+          class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+        )
+      }
+    }
+  }
 
   # Parse interaction terms to get individual variable names
   all_covar_names <- unique(unlist(
@@ -100,48 +139,91 @@ validate_data <- function(data, vars, data_ice = NULL) {
   missing_cols <- setdiff(all_required, names(data))
 
   if (length(missing_cols) > 0) {
-    issues <- c(issues, sprintf(
-      "Column(s) not found in `data`: %s",
-      paste0("`", missing_cols, "`", collapse = ", ")
+    issues <- c(issues, paste0(
+      "Column(s) not found in {.arg data}: ",
+      paste0("{.field ", missing_cols, "}", collapse = ", ")
     ))
   }
 
   # Only proceed with type checks if columns exist
   existing_cols <- intersect(all_required, names(data))
 
-  # --- Column type checks ---
+  # --- Column type checks (HRD-06: batch character warnings) ---
   factor_cols <- intersect(c(vars$subjid, vars$visit, vars$group), existing_cols)
+  char_cols <- character(0)
   for (col in factor_cols) {
     if (!is.factor(data[[col]]) && !is.character(data[[col]])) {
       issues <- c(issues, sprintf(
-        "Column `%s` must be a factor (found %s)", col, class(data[[col]])[1]
+        "Column {.field %s} must be a factor (found %s)", col, class(data[[col]])[1]
       ))
     } else if (is.character(data[[col]])) {
-      warning(sprintf(
-        "Column `%s` is character and will be converted to factor by `rbmi::draws()`",
-        col
-      ), call. = FALSE)
+      char_cols <- c(char_cols, col)
     }
+  }
+
+  if (length(char_cols) > 0) {
+    cli::cli_warn(
+      c(
+        "{length(char_cols)} column{?s} {?is/are} character instead of factor.",
+        "i" = "Column{?s}: {.field {char_cols}}.",
+        "i" = "{.fn rbmi::draws} will auto-coerce, but explicit conversion gives you control over level ordering.",
+        "i" = "Example: {.code data${char_cols[1]} <- factor(data${char_cols[1]})}"
+      ),
+      class = c("rbmiUtils_warning_coercion", "rbmiUtils_warning")
+    )
   }
 
   if (vars$outcome %in% existing_cols) {
     if (!is.numeric(data[[vars$outcome]])) {
       issues <- c(issues, sprintf(
-        "Column `%s` (outcome) must be numeric (found %s)",
+        "Column {.field %s} (outcome) must be numeric (found %s)",
         vars$outcome, class(data[[vars$outcome]])[1]
       ))
     }
   }
 
-  # --- Missing covariate checks ---
+  # --- All-NA outcome check ---
+  if (vars$outcome %in% existing_cols && is.numeric(data[[vars$outcome]])) {
+    if (all(is.na(data[[vars$outcome]]))) {
+      issues <- c(issues, sprintf(
+        "All values in outcome column {.field %s} are NA -- analysis cannot proceed",
+        vars$outcome
+      ))
+    } else if (!any(is.na(data[[vars$outcome]]))) {
+      cli::cli_inform(
+        c(
+          "v" = "All outcome values are complete -- no missing data to impute.",
+          "i" = "You may not need {.arg data_ice} for {.fn rbmi::draws}."
+        ),
+        class = "rbmiUtils_info"
+      )
+    }
+  }
+
+  # --- Missing covariate checks (HRD-05: all-NA covariates warn) ---
   existing_covars <- intersect(all_covar_names, existing_cols)
+  all_na_covars <- character(0)
+
   for (col in existing_covars) {
     n_na <- sum(is.na(data[[col]]))
-    if (n_na > 0) {
+    if (n_na == nrow(data)) {
+      all_na_covars <- c(all_na_covars, col)
+    } else if (n_na > 0) {
       issues <- c(issues, sprintf(
-        "Covariate `%s` has %d missing value(s)", col, n_na
+        "Covariate {.field %s} has %d missing value(s)", col, n_na
       ))
     }
+  }
+
+  if (length(all_na_covars) > 0) {
+    n_na_cov <- length(all_na_covars)
+    cli::cli_warn(
+      c(
+        "{n_na_cov} covariate column{?s} entirely NA -- excluded from validation: {.field {all_na_covars}}.",
+        "i" = "Consider removing from {.arg vars$covariates} or investigating why all values are missing."
+      ),
+      class = c("rbmiUtils_warning_coercion", "rbmiUtils_warning")
+    )
   }
 
   # --- Duplicate subject-visit check ---
@@ -161,7 +243,7 @@ validate_data <- function(data, vars, data_ice = NULL) {
     # Validate that vars$strategy is defined
     if (is.null(vars$strategy) || !nzchar(vars$strategy)) {
       issues <- c(issues,
-        "`vars$strategy` must be defined when `data_ice` is provided (use `rbmi::set_vars(strategy = ...)`)"
+        "{.field vars$strategy} must be defined when {.arg data_ice} is provided (use {.fn rbmi::set_vars} with {.code strategy = ...})"
       )
     }
 
@@ -169,9 +251,9 @@ validate_data <- function(data, vars, data_ice = NULL) {
     ice_missing <- setdiff(ice_required, names(data_ice))
 
     if (length(ice_missing) > 0) {
-      issues <- c(issues, sprintf(
-        "`data_ice` missing column(s): %s",
-        paste0("`", ice_missing, "`", collapse = ", ")
+      issues <- c(issues, paste0(
+        "{.arg data_ice} missing column(s): ",
+        paste0("{.field ", ice_missing, "}", collapse = ", ")
       ))
     }
 
@@ -182,7 +264,7 @@ validate_data <- function(data, vars, data_ice = NULL) {
       unknown_subjects <- setdiff(as.character(ice_subjects), as.character(data_subjects))
       if (length(unknown_subjects) > 0) {
         issues <- c(issues, sprintf(
-          "`data_ice` contains %d subject(s) not found in `data`",
+          "{.arg data_ice} contains %d subject(s) not found in {.arg data}",
           length(unknown_subjects)
         ))
       }
@@ -196,9 +278,9 @@ validate_data <- function(data, vars, data_ice = NULL) {
       ice_visits <- unique(as.character(data_ice[[vars$visit]]))
       invalid_visits <- setdiff(ice_visits, valid_visits)
       if (length(invalid_visits) > 0) {
-        issues <- c(issues, sprintf(
-          "`data_ice` contains invalid visit(s): %s",
-          paste0("`", invalid_visits, "`", collapse = ", ")
+        issues <- c(issues, paste0(
+          "{.arg data_ice} contains invalid visit(s): ",
+          paste0("{.val ", invalid_visits, "}", collapse = ", ")
         ))
       }
 
@@ -207,10 +289,11 @@ validate_data <- function(data, vars, data_ice = NULL) {
       ice_strategies <- unique(as.character(data_ice[[vars$strategy]]))
       invalid_strategies <- setdiff(ice_strategies, valid_strategies)
       if (length(invalid_strategies) > 0) {
-        issues <- c(issues, sprintf(
-          "`data_ice` contains unrecognised strategy(ies): %s. Valid values: %s",
-          paste0("`", invalid_strategies, "`", collapse = ", "),
-          paste0("`", valid_strategies, "`", collapse = ", ")
+        issues <- c(issues, paste0(
+          "{.arg data_ice} contains unrecognised strategy(ies): ",
+          paste0("{.val ", invalid_strategies, "}", collapse = ", "),
+          ". Valid values: ",
+          paste0("{.val ", valid_strategies, "}", collapse = ", ")
         ))
       }
 
@@ -219,7 +302,7 @@ validate_data <- function(data, vars, data_ice = NULL) {
       dup_subjects <- names(ice_subj_counts[ice_subj_counts > 1])
       if (length(dup_subjects) > 0) {
         issues <- c(issues, sprintf(
-          "`data_ice` has multiple rows for %d subject(s)", length(dup_subjects)
+          "{.arg data_ice} has multiple rows for %d subject(s)", length(dup_subjects)
         ))
       }
     }
@@ -227,8 +310,11 @@ validate_data <- function(data, vars, data_ice = NULL) {
 
   # --- Report results ---
   if (length(issues) > 0) {
-    stop(paste(c("Data validation failed:", issues), collapse = "\n  - "),
-         call. = FALSE)
+    bullets <- stats::setNames(issues, rep("x", length(issues)))
+    cli::cli_abort(
+      c("Data validation failed.", bullets),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
 
   invisible(TRUE)
@@ -252,6 +338,11 @@ validate_data <- function(data, vars, data_ice = NULL) {
 #' @return A data.frame with columns corresponding to `vars$subjid`,
 #'   `vars$visit`, and `vars$strategy`, suitable for passing to
 #'   [rbmi::draws()].
+#'
+#' @seealso
+#' * [rbmi::draws()] which accepts the `data_ice` output from this function
+#' * [validate_data()] to check data before imputation
+#' * [summarise_missingness()] to understand missing data patterns
 #'
 #' @examples
 #' library(rbmi)
@@ -278,58 +369,90 @@ validate_data <- function(data, vars, data_ice = NULL) {
 #' @export
 prepare_data_ice <- function(data, vars, ice_col, strategy) {
 
-  assertthat::assert_that(
-    is.data.frame(data),
-    msg = "`data` must be a data.frame"
-  )
-  assertthat::assert_that(
-    is.list(vars),
-    msg = "`vars` must be a list as returned by `rbmi::set_vars()`"
-  )
-  assertthat::assert_that(
-    is.character(ice_col) && length(ice_col) == 1,
-    msg = "`ice_col` must be a single character string"
-  )
-  assertthat::assert_that(
-    ice_col %in% names(data),
-    msg = sprintf("Column `%s` not found in `data`", ice_col)
-  )
+  # --- Type checks ---
+  if (!is.data.frame(data)) {
+    cli::cli_abort(
+      "{.arg data} must be a {.cls data.frame}, not {.cls {class(data)}}.",
+      class = c("rbmiUtils_error_type", "rbmiUtils_error")
+    )
+  }
+
+  if (!is.list(vars)) {
+    cli::cli_abort(
+      "{.arg vars} must be a list as returned by {.fn rbmi::set_vars}, not {.cls {class(vars)}}.",
+      class = c("rbmiUtils_error_type", "rbmiUtils_error")
+    )
+  }
+
+  if (!is.character(ice_col) || length(ice_col) != 1) {
+    cli::cli_abort(
+      "{.arg ice_col} must be a single character string.",
+      class = c("rbmiUtils_error_type", "rbmiUtils_error")
+    )
+  }
+
+  if (!ice_col %in% names(data)) {
+    cli::cli_abort(
+      "Column {.field {ice_col}} not found in {.arg data}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
 
   # Validate required vars fields
   required_vars <- c("subjid", "visit")
   missing_vars <- setdiff(required_vars, names(vars))
   if (length(missing_vars) > 0) {
-    stop(sprintf(
-      "`vars` must contain: %s. Use `rbmi::set_vars()` to create a valid vars object.",
-      paste0("`", missing_vars, "`", collapse = ", ")
-    ), call. = FALSE)
+    cli::cli_abort(
+      "{.arg vars} must contain {.field {missing_vars}}. Use {.fn rbmi::set_vars} to create a valid vars object.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
 
-  # Validate vars$strategy is defined (or will use default "strategy")
+  # HRD-02: Error when vars$strategy is NULL (do not silently default)
   if (is.null(vars$strategy) || !nzchar(vars$strategy)) {
-    vars$strategy <- "strategy"
+    cli::cli_abort(
+      c(
+        "{.field vars$strategy} must be defined when preparing ICE data.",
+        "i" = "Set it via: {.code rbmi::set_vars(strategy = \"strategy_column_name\", ...)}"
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
 
   # Validate subjid and visit columns exist in data
   if (!vars$subjid %in% names(data)) {
-    stop(sprintf(
-      "Column `%s` (subjid) not found in `data`", vars$subjid
-    ), call. = FALSE)
+    cli::cli_abort(
+      "Column {.field {vars$subjid}} ({.arg subjid}) not found in {.arg data}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
   if (!vars$visit %in% names(data)) {
-    stop(sprintf(
-      "Column `%s` (visit) not found in `data`", vars$visit
-    ), call. = FALSE)
+    cli::cli_abort(
+      "Column {.field {vars$visit}} ({.arg visit}) not found in {.arg data}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
+
+  # HRD-03: Warn when visit column is character (not factor)
+  if (is.character(data[[vars$visit]])) {
+    cli::cli_warn(
+      c(
+        "Visit column {.field {vars$visit}} is character, not factor.",
+        "!" = "Character visits use alphabetical ordering, which may be incorrect for clinical visit sequences.",
+        "i" = "Convert to factor with explicit level ordering:",
+        " " = '{.code data${vars$visit} <- factor(data${vars$visit}, levels = c("Week 4", "Week 8", ...))}'
+      ),
+      class = c("rbmiUtils_warning_coercion", "rbmiUtils_warning")
+    )
   }
 
   valid_strategies <- c("MAR", "CR", "JR", "CIR", "LMCF")
-  assertthat::assert_that(
-    is.character(strategy) && length(strategy) == 1 && strategy %in% valid_strategies,
-    msg = sprintf(
-      "`strategy` must be one of: %s",
-      paste0("`", valid_strategies, "`", collapse = ", ")
+  if (!is.character(strategy) || length(strategy) != 1 || !strategy %in% valid_strategies) {
+    cli::cli_abort(
+      "{.arg strategy} must be one of: {.val {valid_strategies}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
     )
-  )
+  }
 
   # Convert ICE flag to logical
   ice_flag <- data[[ice_col]]
@@ -341,16 +464,23 @@ prepare_data_ice <- function(data, vars, ice_col, strategy) {
   } else if (is.numeric(ice_flag)) {
     is_ice <- ice_flag == 1 & !is.na(ice_flag)
   } else {
-    stop(sprintf(
-      "Column `%s` must be logical, character ('Y'/'N'), or numeric (1/0)",
-      ice_col
-    ), call. = FALSE)
+    cli::cli_abort(
+      "Column {.field {ice_col}} must be logical, character ({.val Y}/{.val N}), or numeric ({.val 1}/{.val 0}).",
+      class = c("rbmiUtils_error_type", "rbmiUtils_error")
+    )
   }
 
   # Filter to ICE rows
   ice_data <- data[is_ice, , drop = FALSE]
 
   if (nrow(ice_data) == 0) {
+    cli::cli_inform(
+      c(
+        "v" = "No ICE flags found -- all visits appear complete.",
+        "i" = "Returning empty {.cls data.frame}. You may not need {.arg data_ice} for {.fn rbmi::draws}."
+      ),
+      class = "rbmiUtils_info"
+    )
     # Return empty data.frame with correct structure
     result <- data.frame(
       subjid = character(0),
@@ -410,6 +540,11 @@ prepare_data_ice <- function(data, vars, ice_col, strategy) {
 #'   \item{summary}{A tibble with columns: group, n_subjects, n_complete,
 #'     n_monotone, n_intermittent}
 #' }
+#'
+#' @seealso
+#' * [rbmi::draws()] for imputation after reviewing missingness patterns
+#' * [validate_data()] to check data before imputation
+#' * [prepare_data_ice()] to create intercurrent event data from flags
 #'
 #' @examples
 #' library(rbmi)

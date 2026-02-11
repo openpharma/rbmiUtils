@@ -95,6 +95,7 @@ print(tidy_df)
 }
 \seealso{
 \itemize{
+\item \code{\link[rbmi:pool]{rbmi::pool()}} which creates the pool objects this function tidies
 \item \code{\link[=analyse_mi_data]{analyse_mi_data()}} to analyse imputed datasets
 \item \code{\link[=format_results]{format_results()}} for additional formatting options
 }
