@@ -155,7 +155,7 @@ The `draws()` function fits the Bayesian imputation model. This is the most
 computationally intensive step in the pipeline. We pass the dataset with only the
 columns needed for the model.
 
-```{r draws, message = FALSE}
+```{r draws, message = FALSE, warning = FALSE}
 dat <- ADEFF |>
   select(USUBJID, STRATA, REGION, TRT, BASE, CHG, AVISIT)
 

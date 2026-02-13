@@ -60,6 +60,11 @@ gcomp_responder <- function(
   covariates <- vars$covariates
   visit <- vars$visit
 
+  # Local helper to avoid calling deprecated extract_covariates2()
+  .extract_covars <- function(x) {
+    if (is.null(x)) return(x)
+    unique(trimws(unlist(strsplit(x, ":|\\*"))))
+  }
 
   # --- Input validation (fail-early) ---
   if (!is.data.frame(data)) {
@@ -69,7 +74,7 @@ gcomp_responder <- function(
     )
   }
 
-  required_cols <- unique(c(group, outcome, extract_covariates2(covariates)))
+  required_cols <- unique(c(group, outcome, .extract_covars(covariates)))
   missing_cols <- setdiff(required_cols, names(data))
   if (length(missing_cols) > 0) {
     cli::cli_abort(
@@ -105,10 +110,11 @@ gcomp_responder <- function(
     reference_levels <- levels(data[[group]])[1]
   }
 
-  frm <- as_simple_formula2(
-    outcome,
-    setdiff(unique(c(group, extract_covariates2(covariates))), visit)
+  covars_for_model <- setdiff(unique(c(group, .extract_covars(covariates))), visit)
+  frm <- stats::as.formula(
+    paste0(outcome, " ~ 1 + ", paste0(covars_for_model, collapse = " + "))
   )
+  environment(frm) <- globalenv()
 
   model <- stats::glm(frm, data = data, family = binomial)
 
