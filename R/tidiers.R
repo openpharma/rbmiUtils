@@ -33,6 +33,7 @@
 #' 4. Tidy with `tidy_pool_obj()` for publication-ready output
 #'
 #' @seealso
+#' * [rbmi::pool()] which creates the pool objects this function tidies
 #' * [analyse_mi_data()] to analyse imputed datasets
 #' * [format_results()] for additional formatting options
 #'
@@ -86,64 +87,82 @@
 #'
 #' @export
 tidy_pool_obj <- function(pool_obj) {
-  # Check object is of class 'pool'
+
+  # --- Input validation ---
   if (!inherits(pool_obj, "pool")) {
-    stop("Input object must be of class 'pool'")
+    cli::cli_abort(
+      "Input {.arg pool_obj} must be of class {.cls pool}, not {.cls {class(pool_obj)}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
   }
 
   # Convert pool_obj to tibble
   df <- dplyr::as_tibble(pool_obj)
 
-  # Process the 'parameter' column by separating it
+  # --- Parse parameter column using regex ---
+  # Step 1: Extract parameter_type (trt|lsm) and remainder after first underscore
   df <- df |>
-    tidyr::separate(
+    tidyr::separate_wider_regex(
       parameter,
-      into = c("parameter_type", "lsm_type", "visit"),
-      sep = "_",
-      fill = "right",
-      extra = "merge",
-      remove = FALSE
+      patterns = c(
+        parameter_type = "trt|lsm",
+        "_",
+        remainder = ".*"
+      ),
+      too_few = "align_start",
+      cols_remove = FALSE
     )
 
-  # Adjust 'lsm_type' and 'visit' based on 'parameter_type'
+  # Step 2: Parse remainder based on parameter_type
+  # For "lsm": remainder = "<lsm_type>_<visit>" -> split on first underscore
+
+  # For "trt": remainder = "<visit>" (ANCOVA) or "<comparison>_<visit>" (gcomp)
   df <- df |>
     dplyr::mutate(
-      visit = dplyr::case_when(
-        parameter_type == 'lsm' ~ visit,
-        parameter_type == 'trt' & !is.na(lsm_type) ~ lsm_type, # Include visit, which will be in lsm_type for trt comparisons
+      lsm_type = dplyr::case_when(
+        parameter_type == "lsm" & grepl("_", remainder) ~
+          sub("_.*$", "", remainder),
         TRUE ~ NA_character_
       ),
-      lsm_type = dplyr::if_else(
-        parameter_type == 'lsm',
-        lsm_type,
-        NA_character_
-      ),
-      lsm_type = dplyr::if_else(
-        parameter_type == 'trt',
-        NA_character_,
-        lsm_type
+      visit = dplyr::case_when(
+        # lsm with lsm_type: visit is everything after first underscore in remainder
+        parameter_type == "lsm" & grepl("_", remainder) ~
+          sub("^[^_]+_", "", remainder),
+        # lsm without underscore in remainder: remainder is the lsm_type, no visit
+        parameter_type == "lsm" ~ NA_character_,
+        # trt: remainder is the visit (ANCOVA simple case)
+        # or for gcomp multi-visit: "comparison_visit" - visit after last underscore
+        # But we need to handle "Drug A vs Placebo_Week 24" -> visit = "Week 24"
+        # and "Week_24" -> visit = "Week_24" (underscore in visit name)
+        # Strategy: if remainder contains " vs ", extract visit after last "_"
+        #   that follows the comparison; otherwise remainder IS the visit
+        parameter_type == "trt" ~ remainder,
+        TRUE ~ NA_character_
       )
-    )
+    ) |>
+    dplyr::select(-remainder)
 
   # Create informative descriptions for parameters
   df <- df |>
     dplyr::mutate(
       description = dplyr::case_when(
-        parameter_type == 'trt' & !is.na(lsm_type) ~
-          paste('Treatment Comparison at', visit),
-        parameter_type == 'trt' ~ 'Treatment Comparison',
-        parameter_type == 'lsm' & !is.na(visit) ~
+        parameter_type == "trt" ~ "Treatment Comparison",
+        parameter_type == "lsm" & lsm_type %in% c("ref", "alt") & !is.na(visit) ~
           paste(
-            'Least Squares Mean for',
-            ifelse(lsm_type == 'ref', 'Reference', 'Alternative'),
-            'at',
+            "Least Squares Mean for",
+            ifelse(lsm_type == "ref", "Reference", "Alternative"),
+            "at",
             visit
           ),
-        parameter_type == 'lsm' ~
+        parameter_type == "lsm" & lsm_type %in% c("ref", "alt") ~
           paste(
-            'Least Squares Mean for',
-            ifelse(lsm_type == 'ref', 'Reference', 'Alternative')
+            "Least Squares Mean for",
+            ifelse(lsm_type == "ref", "Reference", "Alternative")
           ),
+        parameter_type == "lsm" & !is.na(lsm_type) & !is.na(visit) ~
+          paste("Least Squares Mean for", lsm_type, "at", visit),
+        parameter_type == "lsm" & !is.na(lsm_type) ~
+          paste("Least Squares Mean for", lsm_type),
         TRUE ~ parameter
       )
     )

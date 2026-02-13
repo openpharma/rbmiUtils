@@ -51,3 +51,10 @@ print(result$patterns)
 print(result$summary)
 
 }
+\seealso{
+\itemize{
+\item \code{\link[rbmi:draws]{rbmi::draws()}} for imputation after reviewing missingness patterns
+\item \code{\link[=validate_data]{validate_data()}} to check data before imputation
+\item \code{\link[=prepare_data_ice]{prepare_data_ice()}} to create intercurrent event data from flags
+}
+}

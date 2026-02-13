@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 # Introduction
-This vignette demonstrates how to prepare and validate data before running multiple imputation with `{rbmi}`. The `{rbmiUtils}` package provides three key functions for this workflow:
+This vignette demonstrates how to prepare and validate data before running multiple imputation with [`{rbmi}`](https://cran.r-project.org/package=rbmi). The `{rbmiUtils}` package provides three key functions for this workflow:
 
 * `validate_data()`: Pre-flight validation to catch common data issues
 * `prepare_data_ice()`: Build intercurrent event data from flag columns
@@ -162,7 +162,7 @@ The three pattern types are:
 
 # Preparing ICE Data
 
-When subjects discontinue treatment, you may want to apply reference-based imputation strategies. The `prepare_data_ice()` function builds the required `data_ice` data.frame from a discontinuation flag:
+When subjects discontinue treatment, you may want to apply reference-based imputation strategies (see the [`{rbmi}` documentation](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html) for details on intercurrent event handling). The `prepare_data_ice()` function builds the required `data_ice` data.frame from a discontinuation flag:
 
 ```{r prepare-ice}
 data_ice <- prepare_data_ice(
@@ -191,7 +191,7 @@ Available strategies are:
 
 # Complete Workflow
 
-Here's how these functions fit into a typical `{rbmi}` workflow:
+Here's how these functions fit into a typical [`{rbmi}`](https://cran.r-project.org/package=rbmi) workflow:
 
 ```{r workflow, eval = FALSE}
 library(rbmi)
@@ -232,4 +232,6 @@ The data preparation functions in `{rbmiUtils}` help you:
 2. **Understand your data** with `summarise_missingness()` to characterize missing data patterns
 3. **Simplify ICE handling** with `prepare_data_ice()` to build `data_ice` from flag columns
 
-These utilities complement the core `{rbmi}` package and support reproducible, well-documented analysis workflows.
+These utilities complement the core [`{rbmi}`](https://cran.r-project.org/package=rbmi) package and support reproducible, well-documented analysis workflows.
+
+After data preparation, see `vignette('pipeline')` for the complete analysis workflow from imputation through to regulatory tables.

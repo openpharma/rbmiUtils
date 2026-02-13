@@ -1,0 +1,392 @@
+---
+title: "From rbmi Analysis to Regulatory Tables"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{From rbmi Analysis to Regulatory Tables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+Clinical trial analyses that use reference-based multiple imputation typically involve
+several steps: fitting an imputation model, generating imputed datasets, applying an
+analysis to each dataset, and pooling results using Rubin's rules. The
+[rbmi](https://cran.r-project.org/package=rbmi) package implements this pipeline
+with its `draws()`, `impute()`, `analyse()`, and `pool()` functions. However, turning
+the pooled results into publication-ready outputs -- formatted tables and forest plots
+suitable for regulatory submissions -- requires additional work.
+
+The **rbmiUtils** package bridges this gap. It provides utilities that sit on top of
+rbmi, transforming pooled analysis objects into tidy data frames, regulatory-style
+efficacy tables, and three-panel forest plots. It also includes data preparation
+helpers that catch common issues before the computationally expensive imputation step.
+
+In this vignette, you will walk through the complete pipeline from raw clinical trial
+data to two publication-ready outputs: an efficacy summary table and a forest plot.
+By the end, you will have seen every major step in a typical rbmi + rbmiUtils workflow.
+For a more focused reference on the analysis functions, see the
+[analyse2 vignette](analyse2.html). For detailed guidance on data preparation, see the
+[data preparation vignette](data-preparation.html).
+
+# Setup and Data
+
+We begin by loading the packages we need. The core pipeline requires **rbmi** and
+**rbmiUtils**, with **dplyr** for data manipulation. The reporting outputs use
+**gt** (for tables) and **ggplot2** + **patchwork** (for plots), which are
+optional dependencies.
+
+```{r libraries, message = FALSE, warning = FALSE}
+library(rbmi)
+library(rbmiUtils)
+library(dplyr)
+```
+
+The `ADEFF` dataset bundled with rbmiUtils is a simulated ADaM-style efficacy dataset
+from a two-arm clinical trial. It contains continuous change-from-baseline outcomes
+(`CHG`) measured at two visits (Week 24 and Week 48), with realistic missing data
+patterns across 500 subjects.
+
+```{r load-data}
+data("ADEFF", package = "rbmiUtils")
+```
+
+```{r inspect-data}
+str(ADEFF)
+```
+
+Before entering the rbmi pipeline, we convert the key grouping columns to factors.
+Factor levels control the ordering of treatment arms and visits throughout the analysis,
+so it is important to set them explicitly.
+
+```{r factor-prep}
+ADEFF <- ADEFF |>
+  mutate(
+    TRT = factor(TRT01P, levels = c("Placebo", "Drug A")),
+    USUBJID = factor(USUBJID),
+    AVISIT = factor(AVISIT, levels = c("Week 24", "Week 48"))
+  )
+```
+
+# Data Preparation
+
+Before running the imputation model, it is worth investing a moment to validate the
+data and understand the missing data patterns. These checks can save considerable time
+by catching issues before the computationally intensive `draws()` step.
+
+## Validation
+
+The `validate_data()` function performs a comprehensive set of pre-flight checks: it
+verifies that all required columns exist, that factors are properly typed, that the
+outcome is numeric, that covariates have no missing values, and that there are no
+duplicate subject-visit rows.
+
+```{r define-vars}
+vars <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CHG",
+  covariates = c("BASE", "STRATA", "REGION")
+)
+```
+
+```{r validate}
+validate_data(ADEFF, vars)
+```
+
+A successful validation returns `TRUE` silently. If issues are found, all problems are
+reported together in a single error message so you can fix them in one pass.
+
+## Missingness Summary
+
+The `summarise_missingness()` function characterises the missing data patterns in your
+dataset, classifying each subject as complete, monotone (dropout), or intermittent.
+
+```{r missingness}
+miss <- summarise_missingness(ADEFF, vars)
+print(miss$summary)
+```
+
+This summary helps you decide on an appropriate imputation strategy. For datasets
+that require intercurrent event (ICE) handling, rbmiUtils also provides
+`prepare_data_ice()` to build the `data_ice` data frame from flag columns -- see the
+[data preparation vignette](data-preparation.html) for details.
+
+# rbmi Analysis Pipeline
+
+With the data validated, we now run the core rbmi pipeline. This consists of four
+steps: specifying the imputation method, fitting the imputation model, generating
+imputed datasets, and analysing each one.
+
+## Specify the Imputation Method
+
+The `method_bayes()` function configures Bayesian multiple imputation using MCMC
+sampling. Here we use a small number of samples and a short warmup period to keep the
+vignette build time manageable. In a real analysis, you would typically use more samples
+(e.g., `n_samples = 500` or more) for better precision. For details on the statistical
+methodology, see the
+[rbmi quickstart vignette](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html).
+
+```{r method}
+set.seed(1974)
+
+method <- method_bayes(
+  n_samples = 100,
+  control = control_bayes(warmup = 200, thin = 2)
+)
+```
+
+## Fit the Imputation Model
+
+The `draws()` function fits the Bayesian imputation model. This is the most
+computationally intensive step in the pipeline. We pass the dataset with only the
+columns needed for the model.
+
+```{r draws, message = FALSE}
+dat <- ADEFF |>
+  select(USUBJID, STRATA, REGION, TRT, BASE, CHG, AVISIT)
+
+draws_obj <- draws(data = dat, vars = vars, method = method)
+```
+
+## Generate Imputed Datasets
+
+The `impute()` function generates complete datasets under the specified reference-based
+assumption. Here we use a jump-to-reference approach where both arms are imputed under
+the reference (Placebo) distribution.
+
+```{r impute}
+impute_obj <- impute(
+  draws_obj,
+  references = c("Placebo" = "Placebo", "Drug A" = "Placebo")
+)
+```
+
+## Analyse Each Imputed Dataset
+
+Rather than calling `rbmi::analyse()` directly, rbmiUtils provides `analyse_mi_data()`,
+which wraps the analyse step to work with the stacked imputed data format. It applies
+an analysis function -- here, the built-in `ancova` function -- to each imputed dataset
+and stores the results for pooling.
+
+First, we extract the imputed data into a stacked data frame using `get_imputed_data()`:
+
+```{r get-imputed}
+ADMI <- get_imputed_data(impute_obj)
+```
+
+Then we analyse:
+
+```{r analyse}
+ana_obj <- analyse_mi_data(
+  data = ADMI,
+  vars = vars,
+  method = method,
+  fun = ancova
+)
+```
+
+## Pool Results
+
+Finally, `pool()` combines the per-imputation results using
+[Rubin's rules](https://cran.r-project.org/package=rbmi) to produce a single set of
+estimates, standard errors, confidence intervals, and p-values.
+
+```{r pool}
+pool_obj <- pool(ana_obj)
+print(pool_obj)
+```
+
+# Tidying Results
+
+The pool object contains all the information we need, but its structure is not
+immediately convenient for reporting. The `tidy_pool_obj()` function converts it into
+a tidy tibble with clearly labelled columns.
+
+```{r tidy}
+tidy_df <- tidy_pool_obj(pool_obj)
+print(tidy_df)
+```
+
+Each row represents one parameter at one visit. The key columns are:
+
+- **parameter**: the raw parameter name from the pool object
+- **parameter_type**: `"trt"` for treatment differences, `"lsm"` for least squares means
+- **lsm_type**: `"ref"` or `"alt"` for LS mean rows
+- **visit**: the visit name
+- **est**, **se**, **lci**, **uci**, **pval**: the numeric results
+
+This tidy format is the foundation for all downstream reporting. You can filter,
+reshape, or format it as needed for your specific tables.
+
+# Efficacy Table
+
+The `efficacy_table()` function takes the pool object and produces a regulatory-style
+gt table in the format commonly seen in ICH/CDISC Table 14.2.x submissions. It
+displays LS means by arm, treatment differences, confidence intervals, and p-values,
+organised by visit.
+
+```{r efficacy-table-default, eval = requireNamespace("gt", quietly = TRUE)}
+tbl <- efficacy_table(pool_obj)
+tbl
+```
+
+You can customise the table with descriptive titles and treatment arm labels that
+match your study protocol:
+
+```{r efficacy-table-custom, eval = requireNamespace("gt", quietly = TRUE)}
+tbl_custom <- efficacy_table(
+  pool_obj,
+  title = "Table 14.2.1: ANCOVA of Change from Baseline",
+  subtitle = "Reference-Based Multiple Imputation (Jump to Reference)",
+  arm_labels = c(ref = "Placebo", alt = "Drug A")
+)
+tbl_custom
+```
+
+The returned object is a standard gt table, so you can apply any gt customisation on
+top. For example, you could add footnotes, adjust column widths, or change the table
+styling using `gt::tab_options()`.
+
+# Forest Plot
+
+The `plot_forest()` function creates a three-panel forest plot: a text panel with
+visit labels and formatted estimates, a graphical panel with point estimates and
+confidence interval whiskers, and a p-value panel.
+
+## Treatment Difference Mode
+
+The default `display = "trt"` mode shows treatment differences across visits, with a
+vertical reference line at zero. Filled circles indicate visits where the confidence
+interval excludes zero (statistically significant); open circles indicate
+non-significant results.
+
+```{r forest-trt, fig.width = 10, fig.height = 3, eval = requireNamespace("ggplot2", quietly = TRUE) && requireNamespace("patchwork", quietly = TRUE)}
+p <- plot_forest(
+  pool_obj,
+  title = "Treatment Effect: Change from Baseline (Drug A vs Placebo)"
+)
+p
+```
+
+## LS Mean Display Mode
+
+The `display = "lsm"` mode shows the LS mean estimates for each treatment arm,
+colour-coded using the Okabe-Ito colourblind-friendly palette.
+
+```{r forest-lsm, fig.width = 10, fig.height = 4, eval = requireNamespace("ggplot2", quietly = TRUE) && requireNamespace("patchwork", quietly = TRUE)}
+p_lsm <- plot_forest(
+  pool_obj,
+  display = "lsm",
+  arm_labels = c(ref = "Placebo", alt = "Drug A"),
+  title = "LS Mean Estimates by Visit"
+)
+p_lsm
+```
+
+Both plot modes return a patchwork object that you can further customise using the
+`& theme()` operator. For example, to increase the text size across all panels:
+
+```
+plot_forest(pool_obj) & ggplot2::theme(text = ggplot2::element_text(size = 14))
+```
+
+# Appendix: Binary/Responder Analysis {.appendix}
+
+The pipeline for binary responder endpoints follows the same overall structure, but
+differs in two key ways: the analysis function uses g-computation with logistic
+regression instead of ANCOVA, and the responder variable is derived from the
+continuous outcome.
+
+For this section, we use the pre-computed `ADMI` dataset bundled with rbmiUtils.
+This dataset already contains 100 imputed copies of the trial data with a binary
+responder variable (`CRIT1FLN`), so we skip the `draws()` and `impute()` steps.
+
+```{r binary-setup}
+data("ADMI", package = "rbmiUtils")
+
+ADMI_binary <- ADMI |>
+  mutate(
+    TRT = factor(TRT, levels = c("Placebo", "Drug A")),
+    USUBJID = factor(USUBJID),
+    AVISIT = factor(AVISIT),
+    STRATA = factor(STRATA),
+    REGION = factor(REGION)
+  )
+```
+
+The `gcomp_responder_multi()` function applies g-computation via
+[beeca](https://openpharma.github.io/beeca/) at each visit. It fits a logistic
+regression model and uses the method of Ge et al. to estimate covariate-adjusted
+marginal treatment effects.
+
+```{r binary-vars}
+vars_binary <- set_vars(
+  subjid = "USUBJID",
+  visit = "AVISIT",
+  group = "TRT",
+  outcome = "CRIT1FLN",
+  covariates = c("BASE", "STRATA", "REGION")
+)
+```
+
+```{r binary-method}
+method_binary <- method_bayes(
+  n_samples = 100,
+  control = control_bayes(warmup = 200, thin = 2)
+)
+```
+
+```{r binary-analyse}
+ana_obj_binary <- analyse_mi_data(
+  data = ADMI_binary,
+  vars = vars_binary,
+  method = method_binary,
+  fun = gcomp_responder_multi,
+  reference_levels = "Placebo"
+)
+```
+
+```{r binary-pool}
+pool_obj_binary <- pool(ana_obj_binary)
+print(pool_obj_binary)
+```
+
+The same reporting functions work seamlessly with the binary pool object:
+
+```{r binary-tidy}
+tidy_pool_obj(pool_obj_binary)
+```
+
+```{r binary-table, eval = requireNamespace("gt", quietly = TRUE)}
+efficacy_table(
+  pool_obj_binary,
+  title = "Table 14.2.2: Responder Analysis (CHG > 3)",
+  subtitle = "G-computation with Marginal Effects",
+  arm_labels = c(ref = "Placebo", alt = "Drug A")
+)
+```
+
+```{r binary-forest, fig.width = 10, fig.height = 3, eval = requireNamespace("ggplot2", quietly = TRUE) && requireNamespace("patchwork", quietly = TRUE)}
+plot_forest(
+  pool_obj_binary,
+  title = "Responder Rate Difference (Drug A vs Placebo)"
+)
+```
+
+This demonstrates that `efficacy_table()` and `plot_forest()` are output-agnostic:
+they work with any pool object produced by the rbmi pipeline, whether the underlying
+analysis used ANCOVA for a continuous endpoint or g-computation for a binary one.

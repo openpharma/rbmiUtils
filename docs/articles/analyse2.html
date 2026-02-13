@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Storing and Analyzing Imputed Data with rbmiUtils • rbmiUtils</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -20,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,11 +35,21 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../articles/pipeline.html">Get Started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/analyse2.html">Storing and Analyzing Imputed Data with rbmiUtils</a></li>
+<li><h6 class="dropdown-header" data-toc-skip>End-to-End Pipeline</h6></li>
+    <li><a class="dropdown-item" href="../articles/pipeline.html">From rbmi Analysis to Regulatory Tables</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Workflow Guides</h6></li>
+    <li><a class="dropdown-item" href="../articles/analyse2.html">Storing and Analyzing Imputed Data</a></li>
+    <li><a class="dropdown-item" href="../articles/data-preparation.html">Data Preparation and Validation</a></li>
+    <li><a class="dropdown-item" href="../articles/efficient-storage.html">Efficient Storage of Imputed Data</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Diagnostics</h6></li>
+    <li><a class="dropdown-item" href="../articles/diagnostics.html">MI Diagnostics and Describe Helpers</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -58,7 +74,7 @@
 
       <h1>Storing and Analyzing Imputed Data with rbmiUtils</h1>
             
-            <h4 data-toc-skip class="date">2025-05-23</h4>
+            <h4 data-toc-skip class="date">2026-02-11</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/openpharma/rbmiUtils/blob/HEAD/vignettes/analyse2.Rmd" class="external-link"><code>vignettes/analyse2.Rmd</code></a></small>
       <div class="d-none name"><code>analyse2.Rmd</code></div>
@@ -71,33 +87,43 @@
 </h2>
 <p>This vignette demonstrates how to:</p>
 <ul>
-<li><p>Perform multiple imputation using the <a href="https://insightsengineering.github.io/rbmi/" class="external-link">rbmi</a>
-package.</p></li>
-<li><p>Store and modify the imputed data using
-<a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a>.</p></li>
-<li>
-<p>Analyze the imputed data using:</p>
+<li>Perform multiple imputation using the <a href="https://cran.r-project.org/package=rbmi" class="external-link"><code>{rbmi}</code></a>
+package</li>
+<li>Store and modify the imputed data using
+<a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a>
+</li>
+<li>Analyze the imputed data using:
 <ul>
 <li>A standard ANCOVA on a continuous endpoint (<code>CHG</code>)</li>
-<li>A binary responder analysis on <code>CRIT1FLN</code> using
-<a href="https://openpharma.github.io/beeca/" class="external-link">beeca</a>
+<li>A binary responder analysis on <code>CRIT1FLN</code> using <a href="https://openpharma.github.io/beeca/" class="external-link"><code>{beeca}</code></a>
 </li>
 </ul>
 </li>
 </ul>
 <p>This pattern enables reproducible workflows where imputation and
 analysis can be separated and revisited independently.</p>
+<p><strong>Related vignettes:</strong></p>
+<ul>
+<li>
+<a href="data-preparation.html">Data Preparation and Validation</a>
+- Validate data before imputation</li>
+<li>
+<a href="efficient-storage.html">Efficient Storage of Imputed
+Data</a> - Reduce storage for large imputations</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="statistical-context">Statistical Context<a class="anchor" aria-label="anchor" href="#statistical-context"></a>
 </h2>
 <p>This approach applies <strong>Rubin’s Rules</strong> for inference
-after multiple imputation:</p>
+after multiple imputation (see the <a href="https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html" class="external-link">rbmi
+quickstart vignette</a> for background on the draws/impute/analyse/pool
+pipeline):</p>
 <blockquote>
-<p>We fit a model to each imputed dataset, dervive a response variable
-on the CHG score, extract marginal effects or other statistics of
-interest, and combine the results into a single inference using Rubin’s
-combining rules.</p>
+<p>We fit a model to each imputed dataset, derive a response variable on
+the CHG score, extract marginal effects or other statistics of interest,
+and combine the results into a single inference using Rubin’s combining
+rules.</p>
 </blockquote>
 <hr>
 </div>
@@ -109,7 +135,7 @@ combining rules.</p>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://insightsengineering.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/beeca/" class="external-link">beeca</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a></span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -127,8 +153,10 @@ combining rules.</p>
 <div class="section level2">
 <h2 id="step-2-define-imputation-model">Step 2: Define Imputation Model<a class="anchor" aria-label="anchor" href="#step-2-define-imputation-model"></a>
 </h2>
+<p>We use <a href="https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html" class="external-link"><code>rbmi::set_vars()</code></a>
+to specify the key variable roles:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
 <span>  subjid <span class="op">=</span> <span class="st">"USUBJID"</span>,</span>
 <span>  visit <span class="op">=</span> <span class="st">"AVISIT"</span>,</span>
 <span>  group <span class="op">=</span> <span class="st">"TRT"</span>,</span>
@@ -136,20 +164,35 @@ combining rules.</p>
 <span>  covariates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BASE"</span>, <span class="st">"STRATA"</span>, <span class="st">"REGION"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">method</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">method_bayes</a></span><span class="op">(</span></span>
 <span>  n_samples <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  control <span class="op">=</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span>warmup <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>  control <span class="op">=</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span>warmup <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">ADEFF</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">USUBJID</span>, <span class="va">STRATA</span>, <span class="va">REGION</span>, <span class="va">REGIONC</span>, <span class="va">TRT</span>, <span class="va">BASE</span>, <span class="va">CHG</span>, <span class="va">AVISIT</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">draws_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/draws.html" class="external-link">draws</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span>
+<span><span class="va">draws_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">draws</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Trying to compile a simple C file</span></span>
+<span><span class="co">#&gt; Running /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/bin/R \</span></span>
+<span><span class="co">#&gt;   CMD SHLIB foo.c</span></span>
+<span><span class="co">#&gt; using C compiler: ‘Apple clang version 17.0.0 (clang-1700.6.3.2)’</span></span>
+<span><span class="co">#&gt; using SDK: ‘MacOSX26.2.sdk’</span></span>
+<span><span class="co">#&gt; clang -arch arm64 -I"/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/include" -DNDEBUG   -I"/Users/bailliem/Library/R/arm64/4.4/library/Rcpp/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/unsupported"  -I"/Users/bailliem/Library/R/arm64/4.4/library/BH/include" -I"/Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/src/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/RcppParallel/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c foo.c -o foo.o</span></span>
+<span><span class="co">#&gt; In file included from &lt;built-in&gt;:1:</span></span>
+<span><span class="co">#&gt; In file included from /Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22:</span></span>
+<span><span class="co">#&gt; In file included from /Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/Eigen/Dense:1:</span></span>
+<span><span class="co">#&gt; In file included from /Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/Eigen/Core:19:</span></span>
+<span><span class="co">#&gt; /Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: 'cmath' file not found</span></span>
+<span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
+<span><span class="co">#&gt;       |          ^~~~~~~</span></span>
+<span><span class="co">#&gt; 1 error generated.</span></span>
+<span><span class="co">#&gt; make: *** [foo.o] Error 1</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; SAMPLING FOR MODEL 'rbmi_mmrm' NOW (CHAIN 1).</span></span>
+<span><span class="co">#&gt; SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000243 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.43 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000228 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.28 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -166,12 +209,14 @@ combining rules.</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.313 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.238 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.551 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.323 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.248 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.571 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span>
+<span><span class="co">#&gt; Warning: The Effective Sample Size is below 40% for 1 parameters. Please</span></span>
+<span><span class="co">#&gt; consider increasing burn-in and/or burn-between, or the number of samples</span></span>
 <span></span>
-<span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>, references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>, references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ADMI</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_imputed_data.html">get_imputed_data</a></span><span class="op">(</span><span class="va">impute_obj</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -197,39 +242,33 @@ combining rules.</p>
 <span>  fun <span class="op">=</span> <span class="va">ancova</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pool_obj_ancova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_ancova</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pool_obj_ancova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_ancova</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pool_obj_ancova</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Pool Object</span></span>
-<span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt; Number of Results Combined: 100</span></span>
-<span><span class="co">#&gt; Method: rubin</span></span>
-<span><span class="co">#&gt; Confidence Level: 0.95</span></span>
-<span><span class="co">#&gt; Alternative: two.sided</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Results:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   ========================================================</span></span>
-<span><span class="co">#&gt;       parameter      est     se     lci     uci     pval  </span></span>
-<span><span class="co">#&gt;   --------------------------------------------------------</span></span>
-<span><span class="co">#&gt;      trt_Week 24    -2.177  0.182  -2.535  -1.819  &lt;0.001 </span></span>
-<span><span class="co">#&gt;    lsm_ref_Week 24  0.077   0.131  -0.18   0.334   0.558  </span></span>
-<span><span class="co">#&gt;    lsm_alt_Week 24   -2.1   0.125  -2.347  -1.854  &lt;0.001 </span></span>
-<span><span class="co">#&gt;      trt_Week 48    -3.806  0.256  -4.309  -3.304  &lt;0.001 </span></span>
-<span><span class="co">#&gt;    lsm_ref_Week 48  0.044   0.185  -0.319  0.408   0.811  </span></span>
-<span><span class="co">#&gt;    lsm_alt_Week 48  -3.762  0.176  -4.107  -3.417  &lt;0.001 </span></span>
-<span><span class="co">#&gt;   --------------------------------------------------------</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Pool Object</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; 6 parameters across 2 visits</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">Method</span>: rubin</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">N imputations</span>: 100</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">Confidence</span>: 95%</span></span>
+<span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt;        parameter   visit   est   lci   uci    pval</span></span>
+<span><span class="co">#&gt;      trt_Week 24 Week 24 -2.18 -2.53 -1.82 &lt; 0.001</span></span>
+<span><span class="co">#&gt;  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.560</span></span>
+<span><span class="co">#&gt;  lsm_alt_Week 24 Week 24 -2.10 -2.35 -1.85 &lt; 0.001</span></span>
+<span><span class="co">#&gt;      trt_Week 48 Week 48 -3.81 -4.31 -3.30 &lt; 0.001</span></span>
+<span><span class="co">#&gt;  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.814</span></span>
+<span><span class="co">#&gt;  lsm_alt_Week 48 Week 48 -3.76 -4.11 -3.42 &lt; 0.001</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidy_pool_obj.html">tidy_pool_obj</a></span><span class="op">(</span><span class="va">pool_obj_ancova</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
 <span><span class="co">#&gt;   parameter       description visit parameter_type lsm_type     est    se    lci</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> trt_Week 24     Treatment … Week… trt            <span style="color: #BB0000;">NA</span>       -<span style="color: #BB0000;">2.18</span>   0.182 -<span style="color: #BB0000;">2.53</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.076<span style="text-decoration: underline;">6</span> 0.131 -<span style="color: #BB0000;">0.180</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.076<span style="text-decoration: underline;">4</span> 0.131 -<span style="color: #BB0000;">0.181</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> lsm_alt_Week 24 Least Squa… Week… lsm            alt      -<span style="color: #BB0000;">2.10</span>   0.125 -<span style="color: #BB0000;">2.35</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> trt_Week 48     Treatment … Week… trt            <span style="color: #BB0000;">NA</span>       -<span style="color: #BB0000;">3.81</span>   0.256 -<span style="color: #BB0000;">4.31</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.044<span style="text-decoration: underline;">2</span> 0.185 -<span style="color: #BB0000;">0.319</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> lsm_alt_Week 48 Least Squa… Week… lsm            alt      -<span style="color: #BB0000;">3.76</span>   0.176 -<span style="color: #BB0000;">4.11</span> </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.043<span style="text-decoration: underline;">6</span> 0.185 -<span style="color: #BB0000;">0.320</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> lsm_alt_Week 48 Least Squa… Week… lsm            alt      -<span style="color: #BB0000;">3.76</span>   0.175 -<span style="color: #BB0000;">4.11</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: uci &lt;dbl&gt;, pval &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -238,6 +277,9 @@ combining rules.</p>
 <div class="section level3">
 <h3 id="define-analysis-function">Define Analysis Function<a class="anchor" aria-label="anchor" href="#define-analysis-function"></a>
 </h3>
+<p>We use <a href="https://openpharma.github.io/beeca/reference/get_marginal_effect.html" class="external-link"><code>beeca::get_marginal_effect()</code></a>
+for robust variance estimation of marginal treatment effects from the
+logistic model:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gcomp_responder</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">CRIT1FLN</span> <span class="op">~</span> <span class="va">TRT</span> <span class="op">+</span> <span class="va">BASE</span> <span class="op">+</span> <span class="va">STRATA</span> <span class="op">+</span> <span class="va">REGION</span>, data <span class="op">=</span> <span class="va">data</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
@@ -265,7 +307,7 @@ combining rules.</p>
 <h3 id="define-variables-and-run-analysis">Define Variables and Run Analysis<a class="anchor" aria-label="anchor" href="#define-variables-and-run-analysis"></a>
 </h3>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">vars_binary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
+<code class="sourceCode R"><span><span class="va">vars_binary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
 <span>  subjid <span class="op">=</span> <span class="st">"USUBJID"</span>,</span>
 <span>  visit <span class="op">=</span> <span class="st">"AVISIT"</span>,</span>
 <span>  group <span class="op">=</span> <span class="st">"TRT"</span>,</span>
@@ -280,34 +322,48 @@ combining rules.</p>
 <span>  fun <span class="op">=</span> <span class="va">gcomp_responder</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pool_obj_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://insightsengineering.github.io/rbmi/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_prop</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pool_obj_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_prop</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pool_obj_prop</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Pool Object</span></span>
-<span><span class="co">#&gt; -----------</span></span>
-<span><span class="co">#&gt; Number of Results Combined: 100</span></span>
-<span><span class="co">#&gt; Method: rubin</span></span>
-<span><span class="co">#&gt; Confidence Level: 0.95</span></span>
-<span><span class="co">#&gt; Alternative: two.sided</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Results:</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;   ==================================================</span></span>
-<span><span class="co">#&gt;    parameter   est     se     lci     uci     pval  </span></span>
-<span><span class="co">#&gt;   --------------------------------------------------</span></span>
-<span><span class="co">#&gt;       trt     -0.063  0.012  -0.087  -0.039  &lt;0.001 </span></span>
-<span><span class="co">#&gt;   --------------------------------------------------</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Pool Object</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
+<span><span class="co">#&gt; 1 parameter across 0 visits</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">Method</span>: rubin</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">N imputations</span>: 100</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">Confidence</span>: 95%</span></span>
+<span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span>
+<span><span class="co">#&gt;  parameter visit   est   lci   uci    pval</span></span>
+<span><span class="co">#&gt;        trt  &lt;NA&gt; -0.06 -0.09 -0.04 &lt; 0.001</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="final-notes">Final Notes<a class="anchor" aria-label="anchor" href="#final-notes"></a>
 </h2>
 <ul>
-<li>The <code>ADMI</code> object can be saved for later reuse.</li>
-<li>Analyses can be modularly applied using custom functions.</li>
+<li>The <code>ADMI</code> object can be saved for later reuse</li>
+<li>Analyses can be modularly applied using custom functions</li>
 <li>The tidy output from <code><a href="../reference/tidy_pool_obj.html">tidy_pool_obj()</a></code> is helpful for
-reporting and review.</li>
+reporting and review</li>
 </ul>
+<div class="section level3">
+<h3 id="efficient-storage">Efficient Storage<a class="anchor" aria-label="anchor" href="#efficient-storage"></a>
+</h3>
+<p>When working with many imputations, consider using
+<code><a href="../reference/reduce_imputed_data.html">reduce_imputed_data()</a></code> to store only the imputed values:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reduce for efficient storage</span></span>
+<span><span class="va">reduced</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reduce_imputed_data.html">reduce_imputed_data</a></span><span class="op">(</span><span class="va">ADMI</span>, <span class="va">ADEFF</span>, <span class="va">vars</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Later, expand back for analysis</span></span>
+<span><span class="va">ADMI_restored</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/expand_imputed_data.html">expand_imputed_data</a></span><span class="op">(</span><span class="va">reduced</span>, <span class="va">ADEFF</span>, <span class="va">vars</span><span class="op">)</span></span></code></pre></div>
+<p>See the <a href="efficient-storage.html">Efficient Storage
+vignette</a> for details.</p>
+</div>
+<div class="section level3">
+<h3 id="see-also">See Also<a class="anchor" aria-label="anchor" href="#see-also"></a>
+</h3>
+<p>For a guided tutorial walking through the complete pipeline from raw
+data to regulatory tables, see <code><a href="../articles/pipeline.html">vignette('pipeline')</a></code>.</p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
@@ -320,7 +376,7 @@ reporting and review.</li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1. Part of <a href="https://openpharma.github.io/" class="external-link">openpharma</a></p>
 </div>
 
     </footer>

@@ -6,6 +6,8 @@
 \alias{rbmiUtils-package}
 \title{rbmiUtils: Utility Functions to Support and Extend the 'rbmi' Package}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides utility functions that extend the capabilities of the reference-based multiple imputation package 'rbmi'. It supports clinical trial analysis workflows with functions for managing imputed datasets, applying analysis methods across imputations, and tidying results for reporting.
 }
 \seealso{

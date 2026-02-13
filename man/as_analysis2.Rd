@@ -21,9 +21,13 @@ as_analysis2(results, method, delta = NULL, fun = NULL, fun_name = NULL)
 An object of class \code{analysis} with the results and associated metadata.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 This is a helper function to create an analysis object that stores the
 results from multiple imputation analyses. It validates the results and
 ensures proper class assignment.
 
 This is a modification of the rbmi::as_analysis function.
+This function is deprecated and will be removed in a future version.
 }
+\keyword{internal}

@@ -15,6 +15,8 @@ as_simple_formula2(outcome, covars)
 A formula object.
 }
 \description{
-Convert character variable list to formula
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+This function is deprecated and will be removed in a future version.
 }
 \keyword{internal}

@@ -1,6 +1,6 @@
 Package: rbmiUtils
 Title: Utility Functions to Support and Extend the 'rbmi' Package 
-Version: 0.1.9
+Version: 0.2.2
 Authors@R: c( 
     person("Mark", "Baillie", email = "bailliem@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5618-0667")),
@@ -20,22 +20,27 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests:
+    cards,
+    ggplot2,
+    gt,
     knitr,
+    patchwork,
+    readr,
     rmarkdown,
+    rstan,
     spelling,
     testthat (>= 3.0.0),
-    readr,
-    tibble,
-    ggplot2,
-    rstan
+    tibble
 Config/testthat/edition: 3
 Language: en-US
 Imports:
     assertthat,
+    beeca,
+    cli (>= 3.6.0),
     dplyr,
+    lifecycle (>= 1.0.4),
     purrr,
     rbmi (>= 1.4),
-    beeca,
     rlang,
     tidyr
 VignetteBuilder: knitr

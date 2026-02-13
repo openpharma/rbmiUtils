@@ -430,3 +430,159 @@ testthat::test_that("gcomp_responder_multi handles unbalanced data across visits
   expect_true(any(grepl("_W4$", names(out))))
   expect_true(any(grepl("_W8$", names(out))))
 })
+
+
+# =============================================================================
+# Input validation edge case tests (01-03 hardening)
+# =============================================================================
+
+testthat::test_that("gcomp_responder errors on single-arm data", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(200)
+  dat <- data.frame(
+    Y = rbinom(40, 1, 0.5),
+    TRT = factor(rep("Placebo", 40), levels = c("Placebo", "Drug")),
+    BASE = rnorm(40),
+    VIS = "W4"
+  )
+  vars <- list(outcome = "Y", group = "TRT", covariates = "BASE", visit = "VIS")
+
+  expect_error(
+    gcomp_responder(dat, vars, reference_levels = "Placebo"),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+testthat::test_that("gcomp_responder errors on missing columns", {
+  testthat::skip_if_not_installed("beeca")
+  dat <- data.frame(
+    Y = rbinom(20, 1, 0.5),
+    TRT = factor(rep(c("Placebo", "Drug"), 10)),
+    VIS = "W4"
+  )
+  vars <- list(outcome = "Y", group = "TRT", covariates = "NONEXISTENT", visit = "VIS")
+
+  expect_error(
+    gcomp_responder(dat, vars, reference_levels = "Placebo"),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+testthat::test_that("gcomp_responder errors on zero-variance outcome", {
+  testthat::skip_if_not_installed("beeca")
+  dat <- data.frame(
+    Y = rep(1, 40),
+    TRT = factor(rep(c("Placebo", "Drug"), 20)),
+    BASE = rnorm(40),
+    VIS = "W4"
+  )
+  vars <- list(outcome = "Y", group = "TRT", covariates = "BASE", visit = "VIS")
+
+  expect_error(
+    gcomp_responder(dat, vars, reference_levels = "Placebo"),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+testthat::test_that("gcomp_responder errors on non-numeric outcome", {
+  testthat::skip_if_not_installed("beeca")
+  dat <- data.frame(
+    Y = rep(c("yes", "no"), 20),
+    TRT = factor(rep(c("Placebo", "Drug"), 20)),
+    BASE = rnorm(40),
+    VIS = "W4",
+    stringsAsFactors = FALSE
+  )
+  vars <- list(outcome = "Y", group = "TRT", covariates = "BASE", visit = "VIS")
+
+  expect_error(
+    gcomp_responder(dat, vars, reference_levels = "Placebo"),
+    class = "rbmiUtils_error_type"
+  )
+})
+
+testthat::test_that("gcomp_responder errors on non-dataframe input", {
+  testthat::skip_if_not_installed("beeca")
+  vars <- list(outcome = "Y", group = "TRT", covariates = "BASE", visit = "VIS")
+
+  expect_error(
+    gcomp_responder(list(a = 1), vars, reference_levels = "Placebo"),
+    class = "rbmiUtils_error_type"
+  )
+})
+
+testthat::test_that("gcomp_binary errors on single-arm data", {
+  testthat::skip_if_not_installed("beeca")
+  set.seed(201)
+  dat <- data.frame(
+    CRIT1FLN = rbinom(40, 1, 0.5),
+    TRT = factor(rep("Placebo", 40), levels = c("Placebo", "Drug")),
+    BASE = rnorm(40),
+    STRATA = factor(rep("A", 40)),
+    REGION = factor(rep("US", 40))
+  )
+
+  expect_error(
+    gcomp_binary(data = dat),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+testthat::test_that("gcomp_binary errors on missing columns", {
+  testthat::skip_if_not_installed("beeca")
+  dat <- data.frame(
+    CRIT1FLN = rbinom(20, 1, 0.5),
+    TRT = factor(rep(c("Placebo", "Drug"), 10))
+  )
+
+  expect_error(
+    gcomp_binary(data = dat),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+testthat::test_that("gcomp_binary errors on non-numeric outcome", {
+  testthat::skip_if_not_installed("beeca")
+  dat <- data.frame(
+    CRIT1FLN = rep(c("yes", "no"), 20),
+    TRT = factor(rep(c("Placebo", "Drug"), 20)),
+    BASE = rnorm(40),
+    STRATA = factor(rep("A", 40)),
+    REGION = factor(rep("US", 40)),
+    stringsAsFactors = FALSE
+  )
+
+  expect_error(
+    gcomp_binary(data = dat),
+    class = "rbmiUtils_error_type"
+  )
+})
+
+testthat::test_that("gcomp_binary errors on zero-variance outcome", {
+  testthat::skip_if_not_installed("beeca")
+  dat <- data.frame(
+    CRIT1FLN = rep(0, 40),
+    TRT = factor(rep(c("Placebo", "Drug"), 20)),
+    BASE = rnorm(40),
+    STRATA = factor(rep("A", 40)),
+    REGION = factor(rep("US", 40))
+  )
+
+  expect_error(
+    gcomp_binary(data = dat),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+testthat::test_that("gcomp_responder_multi errors when visit_var not in data", {
+  dat <- data.frame(
+    Y = rbinom(20, 1, 0.5),
+    TRT = factor(rep(c("Placebo", "Drug"), 10))
+  )
+  vars <- list(outcome = "Y", group = "TRT", covariates = NULL, visit = "MISSING_VIS")
+
+  expect_error(
+    gcomp_responder_multi(dat, vars),
+    class = "rbmiUtils_error_validation"
+  )
+})

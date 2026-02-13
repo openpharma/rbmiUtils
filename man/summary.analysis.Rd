@@ -4,10 +4,13 @@
 \alias{summary.analysis}
 \title{Summary Method for Analysis Objects}
 \usage{
-\method{summary}{analysis}(object, ...)
+\method{summary}{analysis}(object, n_preview = 5, ...)
 }
 \arguments{
 \item{object}{An object of class \code{analysis}.}
+
+\item{n_preview}{Maximum number of parameters to show in the preview table.
+Defaults to 5.}
 
 \item{...}{Additional arguments (currently unused).}
 }

@@ -70,6 +70,9 @@ cat("Compression:", round(100 * nrow(reduced) / nrow(ADMI), 1), "\%\n")
 
 }
 \seealso{
-\code{\link[=expand_imputed_data]{expand_imputed_data()}} to reconstruct the full dataset,
-\code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed data from an rbmi imputation object.
+\itemize{
+\item \code{\link[rbmi:impute]{rbmi::impute()}} which creates the imputed datasets this function operates on
+\item \code{\link[=expand_imputed_data]{expand_imputed_data()}} to reconstruct the full dataset
+\item \code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed data from an rbmi imputation object
+}
 }

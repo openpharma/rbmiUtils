@@ -141,6 +141,46 @@ gcomp_binary <- function(
   type = "HC0",
   ...
 ) {
+  # --- Input validation (fail-early) ---
+  if (!is.data.frame(data)) {
+    cli::cli_abort(
+      "{.arg data} must be a {.cls data.frame}, not {.cls {class(data)}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+
+  required_cols <- unique(c(treatment, outcome, covariates))
+  missing_cols <- setdiff(required_cols, names(data))
+  if (length(missing_cols) > 0) {
+    cli::cli_abort(
+      "Column{?s} {.field {missing_cols}} not found in {.arg data}.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
+  n_arms <- length(unique(data[[treatment]]))
+  if (n_arms < 2) {
+    cli::cli_abort(
+      "{.arg data} contains only {n_arms} treatment arm{?s}. G-computation requires at least 2 arms.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
+  if (!is.numeric(data[[outcome]])) {
+    cli::cli_abort(
+      "Outcome column {.field {outcome}} must be numeric (0/1), not {.cls {class(data[[outcome]])}}.",
+      class = "rbmiUtils_error_type"
+    )
+  }
+
+  outcome_vals <- data[[outcome]][!is.na(data[[outcome]])]
+  if (length(unique(outcome_vals)) < 2) {
+    cli::cli_abort(
+      "Outcome column {.field {outcome}} has zero variance (all values are {outcome_vals[1]}). G-computation requires variation in the outcome.",
+      class = "rbmiUtils_error_validation"
+    )
+  }
+
   # Construct formula
   form <- stats::as.formula(
     paste0(outcome, " ~ ", paste(c(treatment, covariates), collapse = " + "))
@@ -159,6 +199,22 @@ gcomp_binary <- function(
     reference = reference,
     ...
   )
+
+  # --- beeca output schema validation ---
+  if (is.null(marginal_fit$marginal_results)) {
+    cli::cli_abort(
+      "beeca::get_marginal_effect() did not return {.field marginal_results}. This may indicate an incompatible beeca version.",
+      class = "rbmiUtils_error_dependency"
+    )
+  }
+  expected_cols <- c("STAT", "STATVAL", "TRTVAL")
+  missing_beeca_cols <- setdiff(expected_cols, names(marginal_fit$marginal_results))
+  if (length(missing_beeca_cols) > 0) {
+    cli::cli_abort(
+      "beeca output missing expected column{?s}: {.field {missing_beeca_cols}}. This may indicate an incompatible beeca version.",
+      class = "rbmiUtils_error_dependency"
+    )
+  }
 
   res <- marginal_fit$marginal_results
 

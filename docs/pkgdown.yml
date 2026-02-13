@@ -1,9 +1,13 @@
-pandoc: '3.4'
+pandoc: 3.8.3
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   analyse2: analyse2.html
-last_built: 2025-05-23T19:45Z
+  data-preparation: data-preparation.html
+  diagnostics: diagnostics.html
+  efficient-storage: efficient-storage.html
+  pipeline: pipeline.html
+last_built: 2026-02-11T22:18Z
 urls:
   reference: https://openpharma.github.io/rbmiUtils/reference
   article: https://openpharma.github.io/rbmiUtils/articles
