@@ -130,7 +130,7 @@ if (requireNamespace("ggplot2", quietly = TRUE) &&
     display = "lsm",
     arm_labels = c(ref = "Placebo", alt = "Drug A"),
     title = "LS Mean Estimates by Visit",
-    panel_widths = c(3, 5)
+    panel_widths = c(3, 5, 1.5)
   )
 }
 }

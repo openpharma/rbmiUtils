@@ -79,9 +79,7 @@
 * Cross-references between related functions in documentation.
 * Expanded test coverage and integration tests.
 
-# Previous Versions
-
-## rbmiUtils 0.1.9
+# rbmiUtils 0.1.9
 
 * `reduce_imputed_data()` and `expand_imputed_data()` for efficient storage
   of imputed datasets.
@@ -92,23 +90,23 @@
 * `ADEFF` and `ADMI` example datasets.
 * Initial documentation via pkgdown.
 
-## rbmiUtils 0.1.8
+# rbmiUtils 0.1.8
 CRAN release: 2026-01-24
 
-## rbmiUtils 0.1.7
+# rbmiUtils 0.1.7
 
 * Moved tidyr from Suggests to Imports (used in tidy_pool_obj()).
 * Added examples to gcomp_responder() documentation.
 * Standardized examples to use native pipe operator |>.
 
-## rbmiUtils 0.1.6
+# rbmiUtils 0.1.6
 CRAN release: 2025-09-13
 Added additional tests for all utility functions.
 
-## rbmiUtils 0.1.4
+# rbmiUtils 0.1.4
 CRAN release: 2025-05-23
 
-## First release
+# rbmiUtils 0.1.0
 * Preparation for CRAN submission.
 * Initial draft package.
 * Added a NEWS.md file to track changes to the package.
