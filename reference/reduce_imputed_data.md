@@ -52,10 +52,14 @@ to reconstruct the full imputed dataset when needed for analysis.
 
 ## See also
 
-[`expand_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.md)
-to reconstruct the full dataset,
-[`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
-to extract imputed data from an rbmi imputation object.
+- [`rbmi::impute()`](https://openpharma.github.io/rbmi/latest-tag/reference/impute.html)
+  which creates the imputed datasets this function operates on
+
+- [`expand_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.md)
+  to reconstruct the full dataset
+
+- [`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
+  to extract imputed data from an rbmi imputation object
 
 ## Examples
 

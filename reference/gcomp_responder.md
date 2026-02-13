@@ -81,6 +81,14 @@ result <- gcomp_responder(
   vars = vars,
   reference_levels = "Placebo"
 )
+#> Warning: `extract_covariates2()` was deprecated in rbmiUtils 0.2.0.
+#> ℹ Internal helper will be removed in a future version.
+#> ℹ The deprecated feature was likely used in the rbmiUtils package.
+#>   Please report the issue at <https://github.com/openpharma/rbmiUtils/issues>.
+#> Warning: `as_simple_formula2()` was deprecated in rbmiUtils 0.2.0.
+#> ℹ Internal helper will be removed in a future version.
+#> ℹ The deprecated feature was likely used in the rbmiUtils package.
+#>   Please report the issue at <https://github.com/openpharma/rbmiUtils/issues>.
 
 print(result)
 #> $`trt_Drug A-Placebo`

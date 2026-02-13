@@ -100,6 +100,15 @@ before analysis.
 
 ## See also
 
+- [`rbmi::analyse()`](https://openpharma.github.io/rbmi/latest-tag/reference/analyse.html)
+  which this function wraps
+
+- [`rbmi::pool()`](https://openpharma.github.io/rbmi/latest-tag/reference/pool.html)
+  for pooling the analysis results
+
+- The [rbmi quickstart
+  vignette](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html)
+
 - [`tidy_pool_obj()`](https://openpharma.github.io/rbmiUtils/reference/tidy_pool_obj.md)
   to format pooled results for publication
 
@@ -164,5 +173,6 @@ ana_obj_ancova <- analyse_mi_data(
   fun = ancova,  # Apply ANCOVA
   delta = NULL   # No sensitivity analysis adjustment
 )
-#> Warning: Data contains 100 imputations but method expects 20. Using first 20 imputations.
+#> Warning: Data contains 100 imputations but method expects 20. Using first 20
+#> imputations.
 ```

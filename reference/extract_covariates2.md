@@ -1,7 +1,10 @@
 # Extract variable names from model terms
 
+**\[deprecated\]**
+
 Takes a character vector including potentially model terms like `*` and
-`:` and extracts out the individual variables.
+`:` and extracts out the individual variables. This function is
+deprecated and will be removed in a future version.
 
 ## Usage
 

@@ -1,6 +1,8 @@
 # Convert character variable list to formula
 
-Convert character variable list to formula
+**\[deprecated\]**
+
+This function is deprecated and will be removed in a future version.
 
 ## Usage
 

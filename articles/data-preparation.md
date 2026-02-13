@@ -4,7 +4,7 @@
 
 This vignette demonstrates how to prepare and validate data before
 running multiple imputation with
-[rbmi](https://openpharma.github.io/rbmi/). The
+[`{rbmi}`](https://cran.r-project.org/package=rbmi). The
 [rbmiUtils](https://github.com/openpharma/rbmiUtils) package provides
 three key functions for this workflow:
 
@@ -132,10 +132,12 @@ tryCatch(
  validate_data(bad_dat, vars),
  error = function(e) cat(e$message)
 )
-#> Warning: Column `TRT` is character and will be converted to factor by
-#> `rbmi::draws()`
-#> Data validation failed:
-#>   - Covariate `BASE` has 1 missing value(s)
+#> Warning: 1 column is character instead of factor.
+#> ℹ Column: TRT.
+#> ℹ `rbmi::draws()` will auto-coerce, but explicit conversion gives you control
+#>   over level ordering.
+#> ℹ Example: `data$TRT <- factor(data$TRT)`
+#> Data validation failed.
 ```
 
 ## Summarising Missing Data
@@ -215,7 +217,9 @@ The three pattern types are:
 ## Preparing ICE Data
 
 When subjects discontinue treatment, you may want to apply
-reference-based imputation strategies. The
+reference-based imputation strategies (see the [`{rbmi}`
+documentation](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html)
+for details on intercurrent event handling). The
 [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md)
 function builds the required `data_ice` data.frame from a
 discontinuation flag:
@@ -252,7 +256,7 @@ Available strategies are:
 ## Complete Workflow
 
 Here’s how these functions fit into a typical
-[rbmi](https://openpharma.github.io/rbmi/) workflow:
+[`{rbmi}`](https://cran.r-project.org/package=rbmi) workflow:
 
 ``` r
 library(rbmi)
@@ -301,5 +305,10 @@ The data preparation functions in
     to build `data_ice` from flag columns
 
 These utilities complement the core
-[rbmi](https://openpharma.github.io/rbmi/) package and support
+[`{rbmi}`](https://cran.r-project.org/package=rbmi) package and support
 reproducible, well-documented analysis workflows.
+
+After data preparation, see
+[`vignette('pipeline')`](https://openpharma.github.io/rbmiUtils/articles/pipeline.md)
+for the complete analysis workflow from imputation through to regulatory
+tables.

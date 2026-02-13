@@ -87,6 +87,9 @@ arm, and visit), and provides informative descriptions in the output.
 
 ## See also
 
+- [`rbmi::pool()`](https://openpharma.github.io/rbmi/latest-tag/reference/pool.html)
+  which creates the pool objects this function tidies
+
 - [`analyse_mi_data()`](https://openpharma.github.io/rbmiUtils/reference/analyse_mi_data.md)
   to analyse imputed datasets
 

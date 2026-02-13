@@ -1,10 +1,13 @@
 # Construct an rbmi `analysis` object
 
+**\[deprecated\]**
+
 This is a helper function to create an analysis object that stores the
 results from multiple imputation analyses. It validates the results and
 ensures proper class assignment.
 
-This is a modification of the rbmi::as_analysis function.
+This is a modification of the rbmi::as_analysis function. This function
+is deprecated and will be removed in a future version.
 
 ## Usage
 

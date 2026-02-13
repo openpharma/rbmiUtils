@@ -2,10 +2,11 @@
 
 ## Introduction
 
-When performing multiple imputation with many imputations (e.g.,
-100-1000), the full imputed dataset can become very large. However, most
-of this data is redundant: observed values are identical across all
-imputations.
+When performing multiple imputation with
+[`{rbmi}`](https://cran.r-project.org/package=rbmi) using many
+imputations (e.g., 100-1000), the full imputed dataset can become very
+large. However, most of this data is redundant: observed values are
+identical across all imputations.
 
 The [rbmiUtils](https://github.com/openpharma/rbmiUtils) package
 provides two functions to address this:
@@ -270,3 +271,6 @@ functions provide an efficient way to store imputed datasets:
 
 This approach is particularly valuable when working with large numbers
 of imputations or when storage and memory are constrained.
+
+For the complete analysis workflow using imputed data, see
+[`vignette('pipeline')`](https://openpharma.github.io/rbmiUtils/articles/pipeline.md).

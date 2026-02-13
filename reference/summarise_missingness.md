@@ -40,6 +40,17 @@ A list with three components:
   A tibble with columns: group, n_subjects, n_complete, n_monotone,
   n_intermittent
 
+## See also
+
+- [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
+  for imputation after reviewing missingness patterns
+
+- [`validate_data()`](https://openpharma.github.io/rbmiUtils/reference/validate_data.md)
+  to check data before imputation
+
+- [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md)
+  to create intercurrent event data from flags
+
 ## Examples
 
 ``` r

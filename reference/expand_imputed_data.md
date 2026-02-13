@@ -47,10 +47,14 @@ For each imputation (identified by `IMPID`), this function:
 
 ## See also
 
-[`reduce_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/reduce_imputed_data.md)
-to create the reduced dataset,
-[`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
-to extract imputed data from an rbmi imputation object.
+- [`rbmi::impute()`](https://openpharma.github.io/rbmi/latest-tag/reference/impute.html)
+  which creates the imputed datasets this function operates on
+
+- [`reduce_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/reduce_imputed_data.md)
+  to create the reduced dataset
+
+- [`get_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/get_imputed_data.md)
+  to extract imputed data from an rbmi imputation object
 
 ## Examples
 

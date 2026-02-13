@@ -70,14 +70,14 @@ The following checks are performed:
 
 ## See also
 
+- [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
+  which requires validated input data
+
 - [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md)
   to create intercurrent event data from flags
 
 - [`summarise_missingness()`](https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.md)
   to understand missing data patterns
-
-- [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
-  to perform imputation after validation
 
 ## Examples
 

@@ -38,6 +38,17 @@ A data.frame with columns corresponding to `vars$subjid`, `vars$visit`,
 and `vars$strategy`, suitable for passing to
 [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html).
 
+## See also
+
+- [`rbmi::draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
+  which accepts the `data_ice` output from this function
+
+- [`validate_data()`](https://openpharma.github.io/rbmiUtils/reference/validate_data.md)
+  to check data before imputation
+
+- [`summarise_missingness()`](https://openpharma.github.io/rbmiUtils/reference/summarise_missingness.md)
+  to understand missing data patterns
+
 ## Examples
 
 ``` r

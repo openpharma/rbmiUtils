@@ -7,7 +7,7 @@ Provides a detailed summary of an analysis object from
 
 ``` r
 # S3 method for class 'analysis'
-summary(object, ...)
+summary(object, n_preview = 5, ...)
 ```
 
 ## Arguments
@@ -15,6 +15,11 @@ summary(object, ...)
 - object:
 
   An object of class `analysis`.
+
+- n_preview:
+
+  Maximum number of parameters to show in the preview table. Defaults to
+  5.
 
 - ...:
 
@@ -40,27 +45,32 @@ vars <- set_vars(
 method <- method_bayes(n_samples = 10, control = control_bayes(warmup = 10))
 
 ana_obj <- analyse_mi_data(ADMI, vars, method, fun = function(d, v, ...) 1)
-#> Warning: Data contains 100 imputations but method expects 10. Using first 10 imputations.
+#> Warning: Data contains 100 imputations but method expects 10. Using first 10
+#> imputations.
 summary(ana_obj)
-#> Analysis Object Summary
-#> =======================
 #> 
-#> Imputations:
-#>   Number of imputations: 10 
+#> ── Analysis Object Summary ─────────────────────────────────────────────────────
 #> 
-#> Analysis:
-#>   Function: <Anonymous Function> 
-#>   Delta adjustment: None
+#> ── Imputations ──
 #> 
-#> Method:
-#>   Type: bayes 
-#>   Samples: 10 
+#> Count: 10
 #> 
-#> Pooling:
-#>   Method: rubin 
+#> ── Analysis ──
+#> 
+#> Function: `<Anonymous Function>()`
+#> Delta: None
+#> 
+#> ── Method ──
+#> 
+#> Type: bayes
+#> Samples: 10
+#> 
+#> ── Pooling ──
+#> 
+#> Method: rubin
 #> 
 #> Next steps:
-#>   1. Pool results: pool_obj <- rbmi::pool(analysis_obj)
-#>   2. Tidy results: tidy_df <- tidy_pool_obj(pool_obj)
+#> 1. `pool_obj <- rbmi::pool(analysis_obj)`
+#> 2. `tidy_df <- tidy_pool_obj(pool_obj)`
 # }
 ```

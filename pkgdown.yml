@@ -4,8 +4,10 @@ pkgdown_sha: ~
 articles:
   analyse2: analyse2.html
   data-preparation: data-preparation.html
+  diagnostics: diagnostics.html
   efficient-storage: efficient-storage.html
-last_built: 2026-01-25T21:15Z
+  pipeline: pipeline.html
+last_built: 2026-02-13T21:11Z
 urls:
   reference: https://openpharma.github.io/rbmiUtils/reference
   article: https://openpharma.github.io/rbmiUtils/articles
