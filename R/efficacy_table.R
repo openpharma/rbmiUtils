@@ -168,7 +168,7 @@ efficacy_table <- function(
   # Clean visit labels: underscore -> space, letter-digit boundary -> space, title case
   visit_clean <- gsub("_", " ", tidy_df$visit)
   visit_clean <- gsub("([a-zA-Z])(\\d)", "\\1 \\2", visit_clean)
-  tidy_df$visit_label <- tools::toTitleCase(visit_clean)
+  tidy_df$visit_label <- visit_clean
 
   # Preserve visit ordering from pool object (first-appearance order, not alphabetical)
   visit_levels <- unique(tidy_df$visit_label)
@@ -192,13 +192,25 @@ efficacy_table <- function(
       paste0("LS Mean (", ref_label, ")"),
     tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "alt" ~
       paste0("LS Mean (", alt_label, ")"),
+    tidy_df$parameter_type == "lsm" & !is.na(tidy_df$lsm_type) ~
+      paste0("LS Mean (", tidy_df$lsm_type, ")"),
     tidy_df$parameter_type == "trt" ~ "Treatment Difference",
     TRUE ~ tidy_df$parameter
   )
 
+  # Determine reference arm name for g-comp row ordering
+  # (first unique lsm_type that isn't "ref"/"alt" is treated as reference)
+  lsm_types <- unique(tidy_df$lsm_type[tidy_df$parameter_type == "lsm" &
+                                          !is.na(tidy_df$lsm_type)])
+  gcomp_types <- setdiff(lsm_types, c("ref", "alt"))
+  gcomp_ref <- if (length(gcomp_types) > 0) gcomp_types[1] else NA_character_
+
   tidy_df$row_order <- dplyr::case_when(
     tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "ref" ~ 1L,
     tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "alt" ~ 2L,
+    tidy_df$parameter_type == "lsm" & !is.na(tidy_df$lsm_type) &
+      tidy_df$lsm_type == gcomp_ref ~ 1L,
+    tidy_df$parameter_type == "lsm" & !is.na(tidy_df$lsm_type) ~ 2L,
     tidy_df$parameter_type == "trt" ~ 3L,
     TRUE ~ 4L
   )

@@ -11,8 +11,8 @@ plot_forest(
   ci_level = NULL,
   arm_labels = NULL,
   title = NULL,
-  text_size = 3,
-  point_size = 3,
+  text_size = 3.5,
+  point_size = 3.5,
   show_pvalues = TRUE,
   font_family = NULL,
   panel_widths = NULL
@@ -42,9 +42,9 @@ providing custom labels for the reference and treatment arms when
 \item{title}{Optional character string for the plot title.}
 
 \item{text_size}{Numeric. Text size for the table and p-value panels.
-Default is 3.}
+Default is 3.5.}
 
-\item{point_size}{Numeric. Point size for the forest plot. Default is 3.}
+\item{point_size}{Numeric. Point size for the forest plot. Default is 3.5.}
 
 \item{show_pvalues}{Logical. Whether to display the p-value panel on the
 right side of the plot. Default is \code{TRUE}. Set to \code{FALSE} for a cleaner
@@ -94,6 +94,11 @@ each visit.
 \strong{Customization:} The returned patchwork object supports \verb{& theme()} for
 applying theme changes to all panels. For example:
 \code{plot_forest(pool_obj) & theme(text = element_text(size = 14))}.
+
+\strong{Suggested dimensions for regulatory documents:} For A4 or US Letter page
+sizes, \verb{width = 10, height = 3 + 0.4 * n_visits} (in inches) provides good
+results when saving with \code{ggplot2::ggsave()}. For example, a 5-visit plot
+works well at 10 x 5 inches.
 
 \strong{Example output (treatment difference mode):}
 

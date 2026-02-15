@@ -136,6 +136,8 @@ tidy_pool_obj <- function(pool_obj) {
         # and "Week_24" -> visit = "Week_24" (underscore in visit name)
         # Strategy: if remainder contains " vs ", extract visit after last "_"
         #   that follows the comparison; otherwise remainder IS the visit
+        parameter_type == "trt" & grepl("-.*_", remainder) ~
+          sub("^.*_", "", remainder),
         parameter_type == "trt" ~ remainder,
         TRUE ~ NA_character_
       )
