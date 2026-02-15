@@ -15,8 +15,8 @@ plot_forest(
   ci_level = NULL,
   arm_labels = NULL,
   title = NULL,
-  text_size = 3,
-  point_size = 3,
+  text_size = 3.5,
+  point_size = 3.5,
   show_pvalues = TRUE,
   font_family = NULL,
   panel_widths = NULL
@@ -63,11 +63,11 @@ plot_forest(
 
 - text_size:
 
-  Numeric. Text size for the table and p-value panels. Default is 3.
+  Numeric. Text size for the table and p-value panels. Default is 3.5.
 
 - point_size:
 
-  Numeric. Point size for the forest plot. Default is 3.
+  Numeric. Point size for the forest plot. Default is 3.5.
 
 - show_pvalues:
 
@@ -121,6 +121,12 @@ composition:
 **Customization:** The returned patchwork object supports `& theme()`
 for applying theme changes to all panels. For example:
 `plot_forest(pool_obj) & theme(text = element_text(size = 14))`.
+
+**Suggested dimensions for regulatory documents:** For A4 or US Letter
+page sizes, `width = 10, height = 3 + 0.4 * n_visits` (in inches)
+provides good results when saving with
+[`ggplot2::ggsave()`](https://ggplot2.tidyverse.org/reference/ggsave.html).
+For example, a 5-visit plot works well at 10 x 5 inches.
 
 **Example output (treatment difference mode):**
 

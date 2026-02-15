@@ -68,8 +68,8 @@ showing formatted estimates, and a p-value panel.</p>
 <span>  ci_level <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  arm_labels <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  title <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  text_size <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>  point_size <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>  text_size <span class="op">=</span> <span class="fl">3.5</span>,</span>
+<span>  point_size <span class="op">=</span> <span class="fl">3.5</span>,</span>
 <span>  show_pvalues <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  font_family <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  panel_widths <span class="op">=</span> <span class="cn">NULL</span></span>
@@ -116,11 +116,11 @@ providing custom labels for the reference and treatment arms when
 
 <dt id="arg-text-size">text_size<a class="anchor" aria-label="anchor" href="#arg-text-size"></a></dt>
 <dd><p>Numeric. Text size for the table and p-value panels.
-Default is 3.</p></dd>
+Default is 3.5.</p></dd>
 
 
 <dt id="arg-point-size">point_size<a class="anchor" aria-label="anchor" href="#arg-point-size"></a></dt>
-<dd><p>Numeric. Point size for the forest plot. Default is 3.</p></dd>
+<dd><p>Numeric. Point size for the forest plot. Default is 3.5.</p></dd>
 
 
 <dt id="arg-show-pvalues">show_pvalues<a class="anchor" aria-label="anchor" href="#arg-show-pvalues"></a></dt>
@@ -165,6 +165,10 @@ each visit.</p></li>
 </ul><p><strong>Customization:</strong> The returned patchwork object supports <code>&amp; theme()</code> for
 applying theme changes to all panels. For example:
 <code>plot_forest(pool_obj) &amp; theme(text = element_text(size = 14))</code>.</p>
+<p><strong>Suggested dimensions for regulatory documents:</strong> For A4 or US Letter page
+sizes, <code>width = 10, height = 3 + 0.4 * n_visits</code> (in inches) provides good
+results when saving with <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggplot2::ggsave()</a></code>. For example, a 5-visit plot
+works well at 10 x 5 inches.</p>
 <p><strong>Example output (treatment difference mode):</strong></p>
 <p><img src="figures/plot_forest-trt.png" width="80%"></p>
     </div>

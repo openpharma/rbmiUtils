@@ -172,7 +172,7 @@ the vignette build time manageable. In a real analysis, you would
 typically use more samples (e.g., `n_samples = 500` or more) for better
 precision. For details on the statistical methodology, see the [rbmi
 quickstart
-vignette](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html).
+vignette](https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html).
 
 ``` r
 set.seed(1974)
@@ -211,8 +211,8 @@ draws_obj <- draws(data = dat, vars = vars, method = method)
 #> 
 #> SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000442 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.42 seconds.
+#> Chain 1: Gradient evaluation took 0.000453 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.53 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -229,9 +229,9 @@ draws_obj <- draws(data = dat, vars = vars, method = method)
 #> Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 400 / 400 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.622 seconds (Warm-up)
-#> Chain 1:                0.513 seconds (Sampling)
-#> Chain 1:                1.135 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.674 seconds (Warm-up)
+#> Chain 1:                0.531 seconds (Sampling)
+#> Chain 1:                1.205 seconds (Total)
 #> Chain 1:
 ```
 
@@ -289,19 +289,12 @@ of estimates, standard errors, confidence intervals, and p-values.
 ``` r
 pool_obj <- pool(ana_obj)
 print(pool_obj)
-#> 
-#> ── Pool Object ─────────────────────────────────────────────────────────────────
-#> 6 parameters across 2 visits
-#> Method: rubin
-#> N imputations: 100
-#> Confidence: 95%
-#> ────────────────────────────────────────────────────────────────────────────────
 #>        parameter   visit   est   lci   uci    pval
 #>      trt_Week 24 Week 24 -2.18 -2.54 -1.82 < 0.001
-#>  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.557
+#>  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.559
 #>  lsm_alt_Week 24 Week 24 -2.10 -2.35 -1.85 < 0.001
 #>      trt_Week 48 Week 48 -3.81 -4.31 -3.30 < 0.001
-#>  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.811
+#>  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.812
 #>  lsm_alt_Week 48 Week 48 -3.76 -4.11 -3.42 < 0.001
 ```
 
@@ -319,10 +312,10 @@ print(tidy_df)
 #>   parameter       description visit parameter_type lsm_type     est    se    lci
 #>   <chr>           <chr>       <chr> <chr>          <chr>      <dbl> <dbl>  <dbl>
 #> 1 trt_Week 24     Treatment … Week… trt            NA       -2.18   0.182 -2.54 
-#> 2 lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.0770 0.131 -0.180
+#> 2 lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.0765 0.131 -0.181
 #> 3 lsm_alt_Week 24 Least Squa… Week… lsm            alt      -2.10   0.126 -2.35 
 #> 4 trt_Week 48     Treatment … Week… trt            NA       -3.81   0.256 -4.31 
-#> 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0444 0.185 -0.319
+#> 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0440 0.185 -0.320
 #> 6 lsm_alt_Week 48 Least Squa… Week… lsm            alt      -3.76   0.175 -4.11 
 #> # ℹ 2 more variables: uci <dbl>, pval <dbl>
 ```
@@ -356,11 +349,11 @@ tbl
 |                            | Estimate | Std. Error | 95% CI         | P-value  |
 |----------------------------|----------|------------|----------------|----------|
 | Week 24                    |          |            |                |          |
-| LS Mean (Reference)        | 0.08     | 0.13       | (-0.18, 0.33)  | 0.557    |
+| LS Mean (Reference)        | 0.08     | 0.13       | (-0.18, 0.33)  | 0.559    |
 | LS Mean (Treatment)        | −2.10    | 0.13       | (-2.35, -1.85) | \< 0.001 |
 | Treatment Difference       | −2.18    | 0.18       | (-2.54, -1.82) | \< 0.001 |
 | Week 48                    |          |            |                |          |
-| LS Mean (Reference)        | 0.04     | 0.18       | (-0.32, 0.41)  | 0.811    |
+| LS Mean (Reference)        | 0.04     | 0.18       | (-0.32, 0.41)  | 0.812    |
 | LS Mean (Treatment)        | −3.76    | 0.18       | (-4.11, -3.42) | \< 0.001 |
 | Treatment Difference       | −3.81    | 0.26       | (-4.31, -3.30) | \< 0.001 |
 | Pooling method: rubin      |          |            |                |          |
@@ -385,11 +378,11 @@ tbl_custom
 | Reference-Based Multiple Imputation (Jump to Reference) |          |            |                |          |
 |                                                         | Estimate | Std. Error | 95% CI         | P-value  |
 | Week 24                                                 |          |            |                |          |
-| LS Mean (Placebo)                                       | 0.08     | 0.13       | (-0.18, 0.33)  | 0.557    |
+| LS Mean (Placebo)                                       | 0.08     | 0.13       | (-0.18, 0.33)  | 0.559    |
 | LS Mean (Drug A)                                        | −2.10    | 0.13       | (-2.35, -1.85) | \< 0.001 |
 | Treatment Difference                                    | −2.18    | 0.18       | (-2.54, -1.82) | \< 0.001 |
 | Week 48                                                 |          |            |                |          |
-| LS Mean (Placebo)                                       | 0.04     | 0.18       | (-0.32, 0.41)  | 0.811    |
+| LS Mean (Placebo)                                       | 0.04     | 0.18       | (-0.32, 0.41)  | 0.812    |
 | LS Mean (Drug A)                                        | −3.76    | 0.18       | (-4.11, -3.42) | \< 0.001 |
 | Treatment Difference                                    | −3.81    | 0.26       | (-4.31, -3.30) | \< 0.001 |
 | Pooling method: rubin                                   |          |            |                |          |
@@ -450,144 +443,12 @@ across all panels:
 
     plot_forest(pool_obj) & ggplot2::theme(text = ggplot2::element_text(size = 14))
 
-## Appendix: Binary/Responder Analysis
+## Binary/Responder Analysis
 
-The pipeline for binary responder endpoints follows the same overall
-structure, but differs in two key ways: the analysis function uses
-g-computation with logistic regression instead of ANCOVA, and the
-responder variable is derived from the continuous outcome.
-
-For this section, we use the pre-computed `ADMI` dataset bundled with
-rbmiUtils. This dataset already contains 100 imputed copies of the trial
-data with a binary responder variable (`CRIT1FLN`), so we skip the
-[`draws()`](https://openpharma.github.io/rbmi/latest-tag/reference/draws.html)
-and
-[`impute()`](https://openpharma.github.io/rbmi/latest-tag/reference/impute.html)
-steps.
-
-``` r
-data("ADMI", package = "rbmiUtils")
-
-ADMI_binary <- ADMI |>
-  mutate(
-    TRT = factor(TRT, levels = c("Placebo", "Drug A")),
-    USUBJID = factor(USUBJID),
-    AVISIT = factor(AVISIT),
-    STRATA = factor(STRATA),
-    REGION = factor(REGION)
-  )
-```
-
-The
-[`gcomp_responder_multi()`](https://openpharma.github.io/rbmiUtils/reference/gcomp_responder_multi.md)
-function applies g-computation via
-[beeca](https://openpharma.github.io/beeca/) at each visit. It fits a
-logistic regression model and uses the method of Ge et al. to estimate
-covariate-adjusted marginal treatment effects.
-
-``` r
-vars_binary <- set_vars(
-  subjid = "USUBJID",
-  visit = "AVISIT",
-  group = "TRT",
-  outcome = "CRIT1FLN",
-  covariates = c("BASE", "STRATA", "REGION")
-)
-```
-
-``` r
-method_binary <- method_bayes(
-  n_samples = 100,
-  control = control_bayes(warmup = 200, thin = 2)
-)
-```
-
-``` r
-ana_obj_binary <- analyse_mi_data(
-  data = ADMI_binary,
-  vars = vars_binary,
-  method = method_binary,
-  fun = gcomp_responder_multi,
-  reference_levels = "Placebo"
-)
-```
-
-``` r
-pool_obj_binary <- pool(ana_obj_binary)
-print(pool_obj_binary)
-#> 
-#> ── Pool Object ─────────────────────────────────────────────────────────────────
-#> 6 parameters across 4 visits
-#> Method: rubin
-#> N imputations: 100
-#> Confidence: 95%
-#> ────────────────────────────────────────────────────────────────────────────────
-#>                   parameter                  visit   est   lci   uci    pval
-#>  trt_Drug A-Placebo_Week 24 Drug A-Placebo_Week 24 -0.03 -0.05 -0.01   0.007
-#>          lsm_Drug A_Week 24                Week 24  0.00  0.00  0.00   0.921
-#>         lsm_Placebo_Week 24                Week 24  0.03  0.01  0.05   0.007
-#>  trt_Drug A-Placebo_Week 48 Drug A-Placebo_Week 48 -0.10 -0.14 -0.05 < 0.001
-#>          lsm_Drug A_Week 48                Week 48  0.01  0.00  0.02   0.150
-#>         lsm_Placebo_Week 48                Week 48  0.10  0.06  0.14 < 0.001
-```
-
-The same reporting functions work seamlessly with the binary pool
-object:
-
-``` r
-tidy_pool_obj(pool_obj_binary)
-#> # A tibble: 6 × 10
-#>   parameter  description visit parameter_type lsm_type      est      se      lci
-#>   <chr>      <chr>       <chr> <chr>          <chr>       <dbl>   <dbl>    <dbl>
-#> 1 trt_Drug … Treatment … Drug… trt            NA       -3.08e-2 1.15e-2 -0.0534 
-#> 2 lsm_Drug … Least Squa… Week… lsm            Drug A    7.79e-5 7.85e-4 -0.00146
-#> 3 lsm_Place… Least Squa… Week… lsm            Placebo   3.09e-2 1.15e-2  0.00843
-#> 4 trt_Drug … Treatment … Drug… trt            NA       -9.57e-2 2.10e-2 -0.137  
-#> 5 lsm_Drug … Least Squa… Week… lsm            Drug A    7.27e-3 5.04e-3 -0.00262
-#> 6 lsm_Place… Least Squa… Week… lsm            Placebo   1.03e-1 2.06e-2  0.0627 
-#> # ℹ 2 more variables: uci <dbl>, pval <dbl>
-```
-
-``` r
-efficacy_table(
-  pool_obj_binary,
-  title = "Table 14.2.2: Responder Analysis (CHG > 3)",
-  subtitle = "G-computation with Marginal Effects",
-  arm_labels = c(ref = "Placebo", alt = "Drug A")
-)
-```
-
-| Table 14.2.2: Responder Analysis (CHG \> 3) |          |            |                |          |
-|---------------------------------------------|----------|------------|----------------|----------|
-| G-computation with Marginal Effects         |          |            |                |          |
-|                                             | Estimate | Std. Error | 95% CI         | P-value  |
-| Drug a-Placebo Week 24                      |          |            |                |          |
-| Treatment Difference                        | −0.03    | 0.01       | (-0.05, -0.01) | 0.007    |
-| Week 24                                     |          |            |                |          |
-| lsm_Drug A_Week 24                          | 0.00     | 0.00       | (-0.00, 0.00)  | 0.921    |
-| lsm_Placebo_Week 24                         | 0.03     | 0.01       | (0.01, 0.05)   | 0.007    |
-| Drug a-Placebo Week 48                      |          |            |                |          |
-| Treatment Difference                        | −0.10    | 0.02       | (-0.14, -0.05) | \< 0.001 |
-| Week 48                                     |          |            |                |          |
-| lsm_Drug A_Week 48                          | 0.01     | 0.01       | (-0.00, 0.02)  | 0.150    |
-| lsm_Placebo_Week 48                         | 0.10     | 0.02       | (0.06, 0.14)   | \< 0.001 |
-| Pooling method: rubin                       |          |            |                |          |
-| Number of imputations: 100                  |          |            |                |          |
-| Confidence level: 95%                       |          |            |                |          |
-
-``` r
-plot_forest(
-  pool_obj_binary,
-  title = "Responder Rate Difference (Drug A vs Placebo)"
-)
-```
-
-![](pipeline_files/figure-html/binary-forest-1.png)
-
-This demonstrates that
-[`efficacy_table()`](https://openpharma.github.io/rbmiUtils/reference/efficacy_table.md)
-and
-[`plot_forest()`](https://openpharma.github.io/rbmiUtils/reference/plot_forest.md)
-are output-agnostic: they work with any pool object produced by the rbmi
-pipeline, whether the underlying analysis used ANCOVA for a continuous
-endpoint or g-computation for a binary one.
+For binary responder endpoints using g-computation, see the [deriving
+endpoints
+vignette](https://openpharma.github.io/rbmiUtils/articles/deriving-endpoints.md),
+which demonstrates how to define responder thresholds and analyse them
+using the same reporting functions
+([`efficacy_table()`](https://openpharma.github.io/rbmiUtils/reference/efficacy_table.md),
+[`plot_forest()`](https://openpharma.github.io/rbmiUtils/reference/plot_forest.md)).

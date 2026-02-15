@@ -6,6 +6,8 @@
   rbmiUtils](https://openpharma.github.io/rbmiUtils/articles/analyse2.md):
 - [Data Preparation and
   Validation](https://openpharma.github.io/rbmiUtils/articles/data-preparation.md):
+- [Deriving Endpoints from Imputed
+  Data](https://openpharma.github.io/rbmiUtils/articles/deriving-endpoints.md):
 - [MI Diagnostics and Pipeline
   Inspection](https://openpharma.github.io/rbmiUtils/articles/diagnostics.md):
 - [Efficient Storage of Imputed

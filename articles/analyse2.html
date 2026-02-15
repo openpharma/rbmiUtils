@@ -72,7 +72,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Storing and Analyzing Imputed Data with rbmiUtils</h1>
             
-            <h4 data-toc-skip class="date">2026-02-13</h4>
+            <h4 data-toc-skip class="date">2026-02-15</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/openpharma/rbmiUtils/blob/main/vignettes/analyse2.Rmd" class="external-link"><code>vignettes/analyse2.Rmd</code></a></small>
       <div class="d-none name"><code>analyse2.Rmd</code></div>
@@ -114,7 +114,7 @@ Data</a> - Reduce storage for large imputations</li>
 <h2 id="statistical-context">Statistical Context<a class="anchor" aria-label="anchor" href="#statistical-context"></a>
 </h2>
 <p>This approach applies <strong>Rubin’s Rules</strong> for inference
-after multiple imputation (see the <a href="https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html" class="external-link">rbmi
+after multiple imputation (see the <a href="https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html" class="external-link">rbmi
 quickstart vignette</a> for background on the draws/impute/analyse/pool
 pipeline):</p>
 <blockquote>
@@ -151,7 +151,7 @@ rules.</p>
 <div class="section level2">
 <h2 id="step-2-define-imputation-model">Step 2: Define Imputation Model<a class="anchor" aria-label="anchor" href="#step-2-define-imputation-model"></a>
 </h2>
-<p>We use <a href="https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html" class="external-link"><code>rbmi::set_vars()</code></a>
+<p>We use <a href="https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html" class="external-link"><code>rbmi::set_vars()</code></a>
 to specify the key variable roles:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/set_vars.html" class="external-link">set_vars</a></span><span class="op">(</span></span>
@@ -171,7 +171,6 @@ to specify the key variable roles:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">USUBJID</span>, <span class="va">STRATA</span>, <span class="va">REGION</span>, <span class="va">REGIONC</span>, <span class="va">TRT</span>, <span class="va">BASE</span>, <span class="va">CHG</span>, <span class="va">AVISIT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">draws_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">draws</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Trying to compile a simple C file</span></span>
 <span><span class="co">#&gt; Running /opt/R/4.5.2/lib/R/bin/R CMD SHLIB foo.c</span></span>
 <span><span class="co">#&gt; using C compiler: ‘gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0’</span></span>
 <span><span class="co">#&gt; gcc -std=gnu2x -I"/opt/R/4.5.2/lib/R/include" -DNDEBUG   -I"/home/runner/work/_temp/Library/Rcpp/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/"  -I"/home/runner/work/_temp/Library/RcppEigen/include/unsupported"  -I"/home/runner/work/_temp/Library/BH/include" -I"/home/runner/work/_temp/Library/StanHeaders/include/src/"  -I"/home/runner/work/_temp/Library/StanHeaders/include/"  -I"/home/runner/work/_temp/Library/RcppParallel/include/"  -I"/home/runner/work/_temp/Library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/home/runner/work/_temp/Library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/usr/local/include    -fpic  -g -O2  -c foo.c -o foo.o</span></span>
@@ -187,8 +186,8 @@ to specify the key variable roles:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000443 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.43 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000453 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.53 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -205,9 +204,9 @@ to specify the key variable roles:</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.62 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.51 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                1.13 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.648 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.531 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                1.179 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span>
 <span></span>
 <span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>, references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span>
@@ -238,19 +237,12 @@ to specify the key variable roles:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pool_obj_ancova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_ancova</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pool_obj_ancova</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Pool Object</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; 6 parameters across 2 visits</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Method</span>: rubin</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">N imputations</span>: 100</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Confidence</span>: 95%</span></span>
-<span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt;        parameter   visit   est   lci   uci    pval</span></span>
 <span><span class="co">#&gt;      trt_Week 24 Week 24 -2.18 -2.54 -1.82 &lt; 0.001</span></span>
-<span><span class="co">#&gt;  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.557</span></span>
+<span><span class="co">#&gt;  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.559</span></span>
 <span><span class="co">#&gt;  lsm_alt_Week 24 Week 24 -2.10 -2.35 -1.85 &lt; 0.001</span></span>
 <span><span class="co">#&gt;      trt_Week 48 Week 48 -3.81 -4.31 -3.30 &lt; 0.001</span></span>
-<span><span class="co">#&gt;  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.811</span></span>
+<span><span class="co">#&gt;  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.812</span></span>
 <span><span class="co">#&gt;  lsm_alt_Week 48 Week 48 -3.76 -4.11 -3.42 &lt; 0.001</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/tidy_pool_obj.html">tidy_pool_obj</a></span><span class="op">(</span><span class="va">pool_obj_ancova</span><span class="op">)</span></span>
@@ -258,10 +250,10 @@ to specify the key variable roles:</p>
 <span><span class="co">#&gt;   parameter       description visit parameter_type lsm_type     est    se    lci</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> trt_Week 24     Treatment … Week… trt            <span style="color: #BB0000;">NA</span>       -<span style="color: #BB0000;">2.18</span>   0.182 -<span style="color: #BB0000;">2.54</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.077<span style="text-decoration: underline;">0</span> 0.131 -<span style="color: #BB0000;">0.180</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.076<span style="text-decoration: underline;">5</span> 0.131 -<span style="color: #BB0000;">0.181</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> lsm_alt_Week 24 Least Squa… Week… lsm            alt      -<span style="color: #BB0000;">2.10</span>   0.126 -<span style="color: #BB0000;">2.35</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> trt_Week 48     Treatment … Week… trt            <span style="color: #BB0000;">NA</span>       -<span style="color: #BB0000;">3.81</span>   0.256 -<span style="color: #BB0000;">4.31</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.044<span style="text-decoration: underline;">4</span> 0.185 -<span style="color: #BB0000;">0.319</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.044<span style="text-decoration: underline;">0</span> 0.185 -<span style="color: #BB0000;">0.320</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> lsm_alt_Week 48 Least Squa… Week… lsm            alt      -<span style="color: #BB0000;">3.76</span>   0.175 -<span style="color: #BB0000;">4.11</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: uci &lt;dbl&gt;, pval &lt;dbl&gt;</span></span></span></code></pre></div>
 </div>
@@ -318,13 +310,6 @@ logistic model:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pool_obj_prop</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj_prop</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">pool_obj_prop</span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">Pool Object</span> <span style="color: #00BBBB;">─────────────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; 1 parameter across 0 visits</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Method</span>: rubin</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">N imputations</span>: 100</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Confidence</span>: 95%</span></span>
-<span><span class="co">#&gt; ────────────────────────────────────────────────────────────────────────────────</span></span>
 <span><span class="co">#&gt;  parameter visit   est   lci   uci    pval</span></span>
 <span><span class="co">#&gt;        trt  &lt;NA&gt; -0.06 -0.09 -0.04 &lt; 0.001</span></span></code></pre></div>
 </div>
