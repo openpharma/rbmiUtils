@@ -397,3 +397,98 @@ test_that("LSM mode respects font_family and left-alignment", {
   expect_equal(b$data[[1]]$family[1], "serif")
   expect_equal(b$data[[1]]$hjust[1], 0)
 })
+
+
+# --- Visual refinement tests (VIZ-01) ---
+
+test_that("reference line is dashed in trt mode", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool)
+  # Middle panel is second in patches
+
+  mid_panel <- p$patches$plots[[2]]
+  b <- ggplot2::ggplot_build(mid_panel)
+  # Find the geom_vline layer -- it has xintercept in data
+  vline_data <- NULL
+  for (i in seq_along(b$data)) {
+    if ("xintercept" %in% names(b$data[[i]])) {
+      vline_data <- b$data[[i]]
+      break
+    }
+  }
+  expect_false(is.null(vline_data), info = "geom_vline layer should exist")
+  # linetype "dashed" is numeric 2 in ggplot2 build data
+  expect_equal(vline_data$linetype[1], "dashed")
+})
+
+test_that("forest panel has visible border", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool)
+  mid_panel <- p$patches$plots[[2]]
+  theme_bg <- ggplot2::theme_get()
+  panel_bg <- mid_panel$theme$panel.background
+  # Should be an element_rect with a non-NA colour
+  expect_true(inherits(panel_bg, "element_rect"))
+  expect_false(is.na(panel_bg$colour))
+})
+
+test_that("horizontal gridlines are present in forest panel", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool)
+  mid_panel <- p$patches$plots[[2]]
+  grid_y <- mid_panel$theme$panel.grid.major.y
+  # Should be an element_line, not element_blank
+
+  expect_true(inherits(grid_y, "element_line"))
+})
+
+test_that("x-axis title includes CI label in trt mode", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool)
+  mid_panel <- p$patches$plots[[2]]
+  x_label <- mid_panel$labels$x
+  expect_true(grepl("95% CI", x_label))
+  expect_true(grepl("Treatment Difference", x_label))
+})
+
+test_that("x-axis title includes CI label in lsm mode", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool, display = "lsm")
+  mid_panel <- p$patches$plots[[2]]
+  x_label <- mid_panel$labels$x
+  expect_true(grepl("95% CI", x_label))
+  expect_true(grepl("LS Mean Estimate", x_label))
+})
+
+test_that("default text size is 3.5 (updated from 3)", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool)
+  left_panel <- p$patches$plots[[1]]
+  b <- ggplot2::ggplot_build(left_panel)
+  # Text size in build data should be 3.5
+
+  expect_equal(b$data[[1]]$size[1], 3.5)
+})
+
+test_that("panel subtitles are bold", {
+  skip_if_not_installed("ggplot2")
+  skip_if_not_installed("patchwork")
+  mock_pool <- make_mock_pool()
+  p <- plot_forest(mock_pool)
+  left_panel <- p$patches$plots[[1]]
+  subtitle_theme <- left_panel$theme$plot.subtitle
+  expect_true(inherits(subtitle_theme, "element_text"))
+  expect_equal(subtitle_theme$face, "bold")
+})

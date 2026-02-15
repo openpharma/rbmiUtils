@@ -23,7 +23,8 @@ knitr::opts_chunk$set(
 [![test-coverage](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/openpharma/rbmiUtils/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
-`rbmiUtils` bridges [rbmi](https://github.com/openpharma/rbmi) analysis results into publication-ready regulatory tables and forest plots. It extends rbmi for clinical trial workflows, handling everything from data validation through to formatted efficacy outputs.
+`rbmiUtils` bridges [rbmi](https://github.com/openpharma/rbmi) analysis results into publication-ready regulatory tables and forest plots. It extends rbmi for clinical trial workflows, providing additional utilities from data validation, 
+storing imputed data sets, through to formatted efficacy outputs.
 
 ## Installation
 
@@ -36,7 +37,7 @@ Development | GitHub | `remotes::install_github("openpharma/rbmiUtils")`
 
 ## Quick Start
 
-`rbmiUtils` extends the [rbmi](https://openpharma.github.io/rbmi/) pipeline from raw data to publication-ready outputs. Here is the complete workflow using the bundled `ADEFF` dataset:
+`rbmiUtils` provides additional support for the [rbmi](https://openpharma.github.io/rbmi/) pipeline from raw data to publication-ready outputs. Here is an example workflow to illustrate these utilities using the bundled `ADEFF` dataset:
 
 ```{r quick-start, eval = FALSE}
 library(rbmiUtils)
@@ -80,22 +81,18 @@ impute_obj <- impute(
 # Step 3: Extract stacked imputed data
 ADMI <- get_imputed_data(impute_obj)
 
+# Modification of the complete data is possible (i.e. collapsing variables).
+
 # Step 4: Analyse each imputed dataset
 ana_obj <- analyse_mi_data(data = ADMI, vars = vars, method = method, fun = ancova)
 
 # Step 5: Pool results using Rubin's rules
 pool_obj <- pool(ana_obj)
 
-# Publication-ready outputs
+# Publication-ready table
 efficacy_table(pool_obj, arm_labels = c(ref = "Placebo", alt = "Drug A"))
-plot_forest(pool_obj, arm_labels = c(ref = "Placebo", alt = "Drug A"))
 ```
 
-**Forest Plot**
-
-![Forest Plot](man/figures/README-forest-plot-1.png)
-
-**Efficacy Table**
 
 ![Efficacy Table](man/figures/README-efficacy-table-1.png)
 

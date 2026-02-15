@@ -81,6 +81,8 @@
 
 # rbmiUtils 0.1.9
 
+## New Features
+
 * `reduce_imputed_data()` and `expand_imputed_data()` for efficient storage
   of imputed datasets.
 * `validate_data()` for pre-flight validation before `rbmi::draws()`.
@@ -88,26 +90,49 @@
 * `summarise_missingness()` for tabulating missing data patterns.
 * `format_pvalue()`, `format_estimate()`, `format_results_table()` formatting utilities.
 * `ADEFF` and `ADMI` example datasets.
+
+## Improvements
+
 * Initial documentation via pkgdown.
 
 # rbmiUtils 0.1.8
-CRAN release: 2026-01-24
+
+## CRAN Release
+
+* Released to CRAN on 2026-01-24.
 
 # rbmiUtils 0.1.7
+
+## Improvements
 
 * Moved tidyr from Suggests to Imports (used in tidy_pool_obj()).
 * Added examples to gcomp_responder() documentation.
 * Standardized examples to use native pipe operator |>.
 
 # rbmiUtils 0.1.6
-CRAN release: 2025-09-13
-Added additional tests for all utility functions.
+
+## CRAN Release
+
+* Released to CRAN on 2025-09-13.
+
+## Improvements
+
+* Added additional tests for all utility functions.
 
 # rbmiUtils 0.1.4
-CRAN release: 2025-05-23
+
+## CRAN Release
+
+* Released to CRAN on 2025-05-23.
 
 # rbmiUtils 0.1.0
-* Preparation for CRAN submission.
+
+## New Features
+
 * Initial draft package.
 * Added a NEWS.md file to track changes to the package.
+
+## Improvements
+
+* Preparation for CRAN submission.
 * Added documentation via pkgdown.
