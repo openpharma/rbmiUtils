@@ -441,3 +441,73 @@ test_that("combined styling parameters work together", {
   expect_true(grepl("11px", html, fixed = TRUE))
   expect_true(grepl("3px", html, fixed = TRUE))
 })
+
+
+# =============================================================================
+# G-computation parameter handling tests
+# =============================================================================
+
+test_that("efficacy_table handles g-comp pool with actual arm names", {
+  skip_if_not_installed("gt")
+
+  mock_pool <- list(
+    pars = list(
+      `trt_Drug A-Placebo_Week 24` = list(
+        est = -0.10, se = 0.03, ci = c(-0.16, -0.04), pvalue = 0.001
+      ),
+      `lsm_Placebo_Week 24` = list(
+        est = 0.30, se = 0.03, ci = c(0.24, 0.36), pvalue = NA
+      ),
+      `lsm_Drug A_Week 24` = list(
+        est = 0.20, se = 0.04, ci = c(0.12, 0.28), pvalue = NA
+      ),
+      `trt_Drug A-Placebo_Week 48` = list(
+        est = -0.15, se = 0.03, ci = c(-0.21, -0.09), pvalue = 0.001
+      ),
+      `lsm_Placebo_Week 48` = list(
+        est = 0.35, se = 0.03, ci = c(0.29, 0.41), pvalue = NA
+      ),
+      `lsm_Drug A_Week 48` = list(
+        est = 0.20, se = 0.04, ci = c(0.12, 0.28), pvalue = NA
+      )
+    ),
+    conf.level = 0.95,
+    alternative = "two.sided",
+    N = 100,
+    method = "rubin"
+  )
+  class(mock_pool) <- "pool"
+
+  tbl <- efficacy_table(mock_pool)
+  expect_s3_class(tbl, "gt_tbl")
+
+  html <- gt::as_raw_html(tbl)
+
+  # Should show actual arm names as LS Mean labels
+  expect_true(grepl("LS Mean (Placebo)", html, fixed = TRUE))
+  expect_true(grepl("LS Mean (Drug A)", html, fixed = TRUE))
+
+  # Visit labels should be correct (not corrupted by toTitleCase)
+  expect_true(grepl("Week 24", html, fixed = TRUE))
+  expect_true(grepl("Week 48", html, fixed = TRUE))
+
+  # Treatment Difference row should be present
+  expect_true(grepl("Treatment Difference", html, fixed = TRUE))
+})
+
+
+test_that("efficacy_table preserves proper noun casing in visit labels", {
+  skip_if_not_installed("gt")
+
+  # Test that "Drug A" in arm_labels is not corrupted to "Drug a"
+  mock_pool <- make_mock_pool()
+  tbl <- efficacy_table(
+    mock_pool,
+    arm_labels = c(ref = "Placebo", alt = "Drug A")
+  )
+  html <- gt::as_raw_html(tbl)
+
+  # "Drug A" should appear exactly (not "Drug a")
+  expect_true(grepl("Drug A", html, fixed = TRUE))
+  expect_false(grepl("Drug a", html, fixed = TRUE))
+})

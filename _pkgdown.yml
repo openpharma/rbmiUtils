@@ -35,6 +35,8 @@ navbar:
           href: articles/data-preparation.html
         - text: "Efficient Storage of Imputed Data"
           href: articles/efficient-storage.html
+        - text: "Deriving Endpoints from Imputed Data"
+          href: articles/deriving-endpoints.html
         - text: "-------"
         - text: "Diagnostics"
         - text: "MI Diagnostics and Describe Helpers"

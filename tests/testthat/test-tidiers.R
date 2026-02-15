@@ -417,6 +417,33 @@ test_that("tidy_pool_obj handles gcomp-style parameter names", {
 })
 
 
+test_that("tidy_pool_obj handles gcomp-style trt parameter names", {
+  mock_pool <- make_mock_pool(
+    parameter_names = c(
+      "trt_Drug A-Placebo_Week 24",
+      "lsm_Placebo_Week 24", "lsm_Drug A_Week 24",
+      "trt_Drug A-Placebo_Week 48",
+      "lsm_Placebo_Week 48", "lsm_Drug A_Week 48"
+    ),
+    est = c(-0.10, 0.30, 0.20, -0.15, 0.35, 0.20),
+    se = c(0.03, 0.03, 0.04, 0.03, 0.03, 0.04),
+    lci = c(-0.16, 0.24, 0.12, -0.21, 0.29, 0.12),
+    uci = c(-0.04, 0.36, 0.28, -0.09, 0.41, 0.28),
+    pval = c(0.001, NA, NA, 0.001, NA, NA)
+  )
+
+  result <- tidy_pool_obj(mock_pool)
+
+  # trt rows should have visit extracted (not the full comparison string)
+  trt_rows <- result[result$parameter_type == "trt", ]
+  expect_equal(trt_rows$visit, c("Week 24", "Week 48"))
+
+  # lsm rows should have arm names as lsm_type
+  expect_true("Placebo" %in% result$lsm_type)
+  expect_true("Drug A" %in% result$lsm_type)
+})
+
+
 test_that("tidy_pool_obj errors with informative message for non-pool input", {
   expect_error(
     tidy_pool_obj(data.frame(x = 1)),
