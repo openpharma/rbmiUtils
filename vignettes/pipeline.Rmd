@@ -15,7 +15,9 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
@@ -138,7 +140,7 @@ sampling. Here we use a small number of samples and a short warmup period to kee
 vignette build time manageable. In a real analysis, you would typically use more samples
 (e.g., `n_samples = 500` or more) for better precision. For details on the statistical
 methodology, see the
-[rbmi quickstart vignette](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html).
+[rbmi quickstart vignette](https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html).
 
 ```{r method}
 set.seed(1974)
@@ -304,89 +306,9 @@ Both plot modes return a patchwork object that you can further customise using t
 plot_forest(pool_obj) & ggplot2::theme(text = ggplot2::element_text(size = 14))
 ```
 
-# Appendix: Binary/Responder Analysis {.appendix}
+# Binary/Responder Analysis
 
-The pipeline for binary responder endpoints follows the same overall structure, but
-differs in two key ways: the analysis function uses g-computation with logistic
-regression instead of ANCOVA, and the responder variable is derived from the
-continuous outcome.
-
-For this section, we use the pre-computed `ADMI` dataset bundled with rbmiUtils.
-This dataset already contains 100 imputed copies of the trial data with a binary
-responder variable (`CRIT1FLN`), so we skip the `draws()` and `impute()` steps.
-
-```{r binary-setup}
-data("ADMI", package = "rbmiUtils")
-
-ADMI_binary <- ADMI |>
-  mutate(
-    TRT = factor(TRT, levels = c("Placebo", "Drug A")),
-    USUBJID = factor(USUBJID),
-    AVISIT = factor(AVISIT),
-    STRATA = factor(STRATA),
-    REGION = factor(REGION)
-  )
-```
-
-The `gcomp_responder_multi()` function applies g-computation via
-[beeca](https://openpharma.github.io/beeca/) at each visit. It fits a logistic
-regression model and uses the method of Ge et al. to estimate covariate-adjusted
-marginal treatment effects.
-
-```{r binary-vars}
-vars_binary <- set_vars(
-  subjid = "USUBJID",
-  visit = "AVISIT",
-  group = "TRT",
-  outcome = "CRIT1FLN",
-  covariates = c("BASE", "STRATA", "REGION")
-)
-```
-
-```{r binary-method}
-method_binary <- method_bayes(
-  n_samples = 100,
-  control = control_bayes(warmup = 200, thin = 2)
-)
-```
-
-```{r binary-analyse}
-ana_obj_binary <- analyse_mi_data(
-  data = ADMI_binary,
-  vars = vars_binary,
-  method = method_binary,
-  fun = gcomp_responder_multi,
-  reference_levels = "Placebo"
-)
-```
-
-```{r binary-pool}
-pool_obj_binary <- pool(ana_obj_binary)
-print(pool_obj_binary)
-```
-
-The same reporting functions work seamlessly with the binary pool object:
-
-```{r binary-tidy}
-tidy_pool_obj(pool_obj_binary)
-```
-
-```{r binary-table, eval = requireNamespace("gt", quietly = TRUE)}
-efficacy_table(
-  pool_obj_binary,
-  title = "Table 14.2.2: Responder Analysis (CHG > 3)",
-  subtitle = "G-computation with Marginal Effects",
-  arm_labels = c(ref = "Placebo", alt = "Drug A")
-)
-```
-
-```{r binary-forest, fig.width = 10, fig.height = 3, eval = requireNamespace("ggplot2", quietly = TRUE) && requireNamespace("patchwork", quietly = TRUE)}
-plot_forest(
-  pool_obj_binary,
-  title = "Responder Rate Difference (Drug A vs Placebo)"
-)
-```
-
-This demonstrates that `efficacy_table()` and `plot_forest()` are output-agnostic:
-they work with any pool object produced by the rbmi pipeline, whether the underlying
-analysis used ANCOVA for a continuous endpoint or g-computation for a binary one.
+For binary responder endpoints using g-computation, see the
+[deriving endpoints vignette](deriving-endpoints.html), which demonstrates how to
+define responder thresholds and analyse them using the same reporting functions
+(`efficacy_table()`, `plot_forest()`).

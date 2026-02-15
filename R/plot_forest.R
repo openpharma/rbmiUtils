@@ -22,8 +22,8 @@
 #'   `"Treatment"`.
 #' @param title Optional character string for the plot title.
 #' @param text_size Numeric. Text size for the table and p-value panels.
-#'   Default is 3.
-#' @param point_size Numeric. Point size for the forest plot. Default is 3.
+#'   Default is 3.5.
+#' @param point_size Numeric. Point size for the forest plot. Default is 3.5.
 #' @param show_pvalues Logical. Whether to display the p-value panel on the
 #'   right side of the plot. Default is `TRUE`. Set to `FALSE` for a cleaner
 #'   two-panel layout without p-values.
@@ -63,6 +63,11 @@
 #' **Customization:** The returned patchwork object supports `& theme()` for
 #' applying theme changes to all panels. For example:
 #' `plot_forest(pool_obj) & theme(text = element_text(size = 14))`.
+#'
+#' **Suggested dimensions for regulatory documents:** For A4 or US Letter page
+#' sizes, `width = 10, height = 3 + 0.4 * n_visits` (in inches) provides good
+#' results when saving with `ggplot2::ggsave()`. For example, a 5-visit plot
+#' works well at 10 x 5 inches.
 #'
 #' **Example output (treatment difference mode):**
 #'
@@ -119,8 +124,8 @@ plot_forest <- function(
     ci_level = NULL,
     arm_labels = NULL,
     title = NULL,
-    text_size = 3,
-    point_size = 3,
+    text_size = 3.5,
+    point_size = 3.5,
     show_pvalues = TRUE,
     font_family = NULL,
     panel_widths = NULL
@@ -185,7 +190,7 @@ plot_forest <- function(
   # Clean visit labels (same pattern as efficacy_table)
   visit_clean <- gsub("_", " ", plot_data$visit)
   visit_clean <- gsub("([a-zA-Z])(\\d)", "\\1 \\2", visit_clean)
-  plot_data$visit_label <- tools::toTitleCase(visit_clean)
+  plot_data$visit_label <- visit_clean
 
   # Preserve first-appearance order (not alphabetical)
   visit_levels <- unique(plot_data$visit_label)
@@ -247,8 +252,8 @@ plot_forest <- function(
       ifelse(plot_data$lsm_type == "alt", alt_label, plot_data$lsm_type)
     )
 
-    # Factor to control legend order
-    arm_levels <- c(ref_label, alt_label)
+    # Factor to control legend order (include g-comp arm names that aren't ref/alt)
+    arm_levels <- unique(c(ref_label, alt_label, plot_data$arm))
     plot_data$arm <- factor(plot_data$arm, levels = arm_levels)
   }
 
@@ -267,16 +272,17 @@ plot_forest <- function(
         family = geom_family
       ) +
       ggplot2::geom_text(
-        ggplot2::aes(x = 1, label = .data$est_ci_label),
+        ggplot2::aes(x = 0.45, label = .data$est_ci_label),
         hjust = 0, size = text_size,
         family = geom_family
       ) +
-      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.3))) +
-      ggplot2::scale_y_discrete(limits = rev) +
+      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.6))) +
+      ggplot2::scale_y_discrete(limits = rev, expand = ggplot2::expansion(add = 0.3)) +
       ggplot2::coord_cartesian(clip = "off") +
       ggplot2::theme_void() +
       ggplot2::theme(plot.margin = ggplot2::margin(5.5, 5.5, 5.5, 5.5)) +
-      ggplot2::labs(subtitle = paste0("Visit / Estimate (", ci_label, ")"))
+      ggplot2::labs(subtitle = paste0("Visit / Estimate (", ci_label, ")")) +
+      ggplot2::theme(plot.subtitle = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1)))
   } else {
     # For LSM mode, create a combined label per row
     plot_data$row_label <- paste0(
@@ -300,16 +306,17 @@ plot_forest <- function(
         family = geom_family
       ) +
       ggplot2::geom_text(
-        ggplot2::aes(x = 1, label = .data$est_ci_label),
+        ggplot2::aes(x = 0.45, label = .data$est_ci_label),
         hjust = 0, size = text_size,
         family = geom_family
       ) +
-      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.05, 0.3))) +
-      ggplot2::scale_y_discrete(limits = rev) +
+      ggplot2::scale_x_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.6))) +
+      ggplot2::scale_y_discrete(limits = rev, expand = ggplot2::expansion(add = 0.3)) +
       ggplot2::coord_cartesian(clip = "off") +
       ggplot2::theme_void() +
       ggplot2::theme(plot.margin = ggplot2::margin(5.5, 5.5, 5.5, 5.5)) +
-      ggplot2::labs(subtitle = paste0("Arm / Estimate (", ci_label, ")"))
+      ggplot2::labs(subtitle = paste0("Arm / Estimate (", ci_label, ")")) +
+      ggplot2::theme(plot.subtitle = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1)))
   }
 
   # --- Build middle panel (forest plot) ---
@@ -323,7 +330,7 @@ plot_forest <- function(
         xmax = .data$uci
       )
     ) +
-      ggplot2::geom_linerange(linewidth = 0.6) +
+      ggplot2::geom_linerange(linewidth = 0.7) +
       ggplot2::geom_point(
         ggplot2::aes(shape = .data$significant),
         size = point_size
@@ -332,16 +339,16 @@ plot_forest <- function(
         values = c("TRUE" = 16, "FALSE" = 1),
         guide = "none"
       ) +
-      ggplot2::scale_y_discrete(limits = rev)
+      ggplot2::scale_y_discrete(limits = rev, expand = ggplot2::expansion(add = 0.3))
 
     # Add reference line
     if (!is.null(ref_value)) {
       p_mid <- p_mid +
-        ggplot2::geom_vline(xintercept = ref_value, linewidth = 0.5)
+        ggplot2::geom_vline(xintercept = ref_value, linewidth = 0.5, linetype = "dashed")
     }
 
     p_mid <- p_mid +
-      ggplot2::labs(x = "Treatment Difference") +
+      ggplot2::labs(x = paste0("Treatment Difference (", ci_label, ")")) +
       theme_forest(base_family = geom_family)
 
   } else {
@@ -362,19 +369,19 @@ plot_forest <- function(
         colour = .data$arm
       )
     ) +
-      ggplot2::geom_linerange(linewidth = 0.6) +
+      ggplot2::geom_linerange(linewidth = 0.7) +
       ggplot2::geom_point(size = point_size, shape = 16) +
       ggplot2::scale_colour_manual(values = forest_colors, name = NULL) +
-      ggplot2::scale_y_discrete(limits = rev)
+      ggplot2::scale_y_discrete(limits = rev, expand = ggplot2::expansion(add = 0.3))
 
     # Add reference line if provided
     if (!is.null(ref_value)) {
       p_mid <- p_mid +
-        ggplot2::geom_vline(xintercept = ref_value, linewidth = 0.5)
+        ggplot2::geom_vline(xintercept = ref_value, linewidth = 0.5, linetype = "dashed")
     }
 
     p_mid <- p_mid +
-      ggplot2::labs(x = "LS Mean Estimate") +
+      ggplot2::labs(x = paste0("LS Mean Estimate (", ci_label, ")")) +
       theme_forest(base_family = geom_family)
   }
 
@@ -389,9 +396,10 @@ plot_forest <- function(
         hjust = 0.5, size = text_size,
         family = geom_family
       ) +
-      ggplot2::scale_y_discrete(limits = rev) +
+      ggplot2::scale_y_discrete(limits = rev, expand = ggplot2::expansion(add = 0.3)) +
       ggplot2::theme_void() +
-      ggplot2::labs(subtitle = "P-value")
+      ggplot2::labs(subtitle = "P-value") +
+      ggplot2::theme(plot.subtitle = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1)))
   } else {
     p_right <- ggplot2::ggplot(
       plot_data,
@@ -402,9 +410,10 @@ plot_forest <- function(
         hjust = 0.5, size = text_size,
         family = geom_family
       ) +
-      ggplot2::scale_y_discrete(limits = rev) +
+      ggplot2::scale_y_discrete(limits = rev, expand = ggplot2::expansion(add = 0.3)) +
       ggplot2::theme_void() +
-      ggplot2::labs(subtitle = "P-value")
+      ggplot2::labs(subtitle = "P-value") +
+      ggplot2::theme(plot.subtitle = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.1)))
   }
 
   # --- Combine with patchwork ---
@@ -418,7 +427,12 @@ plot_forest <- function(
 
   if (!is.null(title)) {
     combined <- combined +
-      patchwork::plot_annotation(title = title)
+      patchwork::plot_annotation(
+        title = title,
+        theme = ggplot2::theme(
+          plot.title = ggplot2::element_text(face = "bold", size = ggplot2::rel(1.3))
+        )
+      )
   }
 
   combined
@@ -456,19 +470,19 @@ is_patchwork_available <- function() {
 #' Internal ggplot2 theme for the forest plot middle panel. White background,
 #' minimal gridlines, no y-axis text or title.
 #'
-#' @param base_size Numeric. Base font size. Default is 11.
+#' @param base_size Numeric. Base font size. Default is 12.
 #' @param base_family Character. Base font family. Default is `""` (ggplot2
 #'   default sans-serif).
 #'
 #' @return A ggplot2 theme object.
 #' @keywords internal
 #' @noRd
-theme_forest <- function(base_size = 11, base_family = "") {
+theme_forest <- function(base_size = 12, base_family = "") {
   ggplot2::theme_minimal(base_size = base_size, base_family = base_family) +
     ggplot2::theme(
-      panel.grid.major.y = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_line(colour = "grey90", linewidth = 0.3),
       panel.grid.minor = ggplot2::element_blank(),
-      panel.background = ggplot2::element_rect(fill = "white", colour = NA),
+      panel.background = ggplot2::element_rect(fill = "white", colour = "grey70", linewidth = 0.3),
       plot.background = ggplot2::element_rect(fill = "white", colour = NA),
       axis.text.y = ggplot2::element_blank(),
       axis.title.y = ggplot2::element_blank(),

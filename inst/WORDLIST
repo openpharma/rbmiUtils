@@ -50,6 +50,7 @@ fmi
 gcomp
 ggplot
 gt's
+gtsummary
 hjust
 intercurrent
 labelled
@@ -72,6 +73,7 @@ recognised
 responder
 rhat
 se
+standardised
 stanfit
 subjid
 tibble
@@ -79,6 +81,7 @@ tibbles
 tidyr
 trt
 uci
+unblinding
 walkthrough
 walkthroughs
 warmup

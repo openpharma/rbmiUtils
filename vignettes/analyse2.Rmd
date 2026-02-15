@@ -7,7 +7,7 @@ output:
     toc_depth: 2
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Storing and Analyzing with rbmiUtils}
+  %\VignetteIndexEntry{Storing and Analyzing Imputed Data with rbmiUtils}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,9 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE
 )
 ```
 
@@ -38,7 +40,7 @@ This pattern enables reproducible workflows where imputation and analysis can be
 
 # Statistical Context
 
-This approach applies **Rubin's Rules** for inference after multiple imputation (see the [rbmi quickstart vignette](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html) for background on the draws/impute/analyse/pool pipeline):
+This approach applies **Rubin's Rules** for inference after multiple imputation (see the [rbmi quickstart vignette](https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html) for background on the draws/impute/analyse/pool pipeline):
 
 > We fit a model to each imputed dataset, derive a response variable on the CHG score, extract marginal effects or other statistics of interest, and combine the results into a single inference using Rubin's combining rules.
 
@@ -74,7 +76,7 @@ ADEFF <- ADEFF %>%
 
 # Step 2: Define Imputation Model
 
-We use [`rbmi::set_vars()`](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html) to specify the key variable roles:
+We use [`rbmi::set_vars()`](https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html) to specify the key variable roles:
 
 ```{r define-vars}
 vars <- set_vars(
