@@ -120,6 +120,8 @@
 
 ## rbmiUtils 0.1.9
 
+### New Features
+
 - [`reduce_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/reduce_imputed_data.md)
   and
   [`expand_imputed_data()`](https://openpharma.github.io/rbmiUtils/reference/expand_imputed_data.md)
@@ -136,15 +138,22 @@
   [`format_results_table()`](https://openpharma.github.io/rbmiUtils/reference/format_results_table.md)
   formatting utilities.
 - `ADEFF` and `ADMI` example datasets.
+
+### Improvements
+
 - Initial documentation via pkgdown.
 
 ## rbmiUtils 0.1.8
 
 CRAN release: 2026-01-24
 
-CRAN release: 2026-01-24
+### CRAN Release
+
+- Released to CRAN on 2026-01-24.
 
 ## rbmiUtils 0.1.7
+
+### Improvements
 
 - Moved tidyr from Suggests to Imports (used in tidy_pool_obj()).
 - Added examples to gcomp_responder() documentation.
@@ -154,18 +163,30 @@ CRAN release: 2026-01-24
 
 CRAN release: 2025-09-13
 
-CRAN release: 2025-09-13 Added additional tests for all utility
-functions.
+### CRAN Release
+
+- Released to CRAN on 2025-09-13.
+
+### Improvements
+
+- Added additional tests for all utility functions.
 
 ## rbmiUtils 0.1.4
 
 CRAN release: 2025-05-23
 
-CRAN release: 2025-05-23
+### CRAN Release
+
+- Released to CRAN on 2025-05-23.
 
 ## rbmiUtils 0.1.0
 
-- Preparation for CRAN submission.
+### New Features
+
 - Initial draft package.
 - Added a NEWS.md file to track changes to the package.
+
+### Improvements
+
+- Preparation for CRAN submission.
 - Added documentation via pkgdown.

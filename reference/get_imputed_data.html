@@ -9,7 +9,7 @@ with the original IDs mapped back and renamed appropriately."><meta property="og
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ with the original IDs mapped back and renamed appropriately."><meta property="og
     <li><a class="dropdown-item" href="../articles/analyse2.html">Storing and Analyzing Imputed Data</a></li>
     <li><a class="dropdown-item" href="../articles/data-preparation.html">Data Preparation and Validation</a></li>
     <li><a class="dropdown-item" href="../articles/efficient-storage.html">Efficient Storage of Imputed Data</a></li>
+    <li><a class="dropdown-item" href="../articles/deriving-endpoints.html">Deriving Endpoints from Imputed Data</a></li>
     <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Diagnostics</h6></li>
     <li><a class="dropdown-item" href="../articles/diagnostics.html">MI Diagnostics and Describe Helpers</a></li>
@@ -110,8 +111,8 @@ with the original IDs mapped back and renamed appropriately.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 0.000523 seconds</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 5.23 seconds.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Gradient evaluation took 0.000415 seconds</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.15 seconds.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Adjust your expectations accordingly!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
@@ -128,9 +129,9 @@ with the original IDs mapped back and renamed appropriately.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.653 seconds (Warm-up)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.538 seconds (Sampling)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                1.191 seconds (Total)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:  Elapsed Time: 0.645 seconds (Warm-up)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                0.526 seconds (Sampling)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1:                1.171 seconds (Total)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Chain 1: </span>
 <span class="r-in"><span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>,</span></span>
 <span class="r-in"><span>  references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span></span>
