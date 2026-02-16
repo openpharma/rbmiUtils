@@ -211,8 +211,8 @@ draws_obj <- draws(data = dat, vars = vars, method = method)
 #> 
 #> SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).
 #> Chain 1: 
-#> Chain 1: Gradient evaluation took 0.000439 seconds
-#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.39 seconds.
+#> Chain 1: Gradient evaluation took 0.000436 seconds
+#> Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.36 seconds.
 #> Chain 1: Adjust your expectations accordingly!
 #> Chain 1: 
 #> Chain 1: 
@@ -229,9 +229,9 @@ draws_obj <- draws(data = dat, vars = vars, method = method)
 #> Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)
 #> Chain 1: Iteration: 400 / 400 [100%]  (Sampling)
 #> Chain 1: 
-#> Chain 1:  Elapsed Time: 0.622 seconds (Warm-up)
-#> Chain 1:                0.513 seconds (Sampling)
-#> Chain 1:                1.135 seconds (Total)
+#> Chain 1:  Elapsed Time: 0.643 seconds (Warm-up)
+#> Chain 1:                0.528 seconds (Sampling)
+#> Chain 1:                1.171 seconds (Total)
 #> Chain 1:
 ```
 
@@ -291,10 +291,10 @@ pool_obj <- pool(ana_obj)
 print(pool_obj)
 #>        parameter   visit   est   lci   uci    pval
 #>      trt_Week 24 Week 24 -2.18 -2.54 -1.82 < 0.001
-#>  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.557
+#>  lsm_ref_Week 24 Week 24  0.08 -0.18  0.33   0.559
 #>  lsm_alt_Week 24 Week 24 -2.10 -2.35 -1.85 < 0.001
 #>      trt_Week 48 Week 48 -3.81 -4.31 -3.30 < 0.001
-#>  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.811
+#>  lsm_ref_Week 48 Week 48  0.04 -0.32  0.41   0.812
 #>  lsm_alt_Week 48 Week 48 -3.76 -4.11 -3.42 < 0.001
 ```
 
@@ -312,10 +312,10 @@ print(tidy_df)
 #>   parameter       description visit parameter_type lsm_type     est    se    lci
 #>   <chr>           <chr>       <chr> <chr>          <chr>      <dbl> <dbl>  <dbl>
 #> 1 trt_Week 24     Treatment … Week… trt            NA       -2.18   0.182 -2.54 
-#> 2 lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.0770 0.131 -0.180
+#> 2 lsm_ref_Week 24 Least Squa… Week… lsm            ref       0.0765 0.131 -0.181
 #> 3 lsm_alt_Week 24 Least Squa… Week… lsm            alt      -2.10   0.126 -2.35 
 #> 4 trt_Week 48     Treatment … Week… trt            NA       -3.81   0.256 -4.31 
-#> 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0444 0.185 -0.319
+#> 5 lsm_ref_Week 48 Least Squa… Week… lsm            ref       0.0440 0.185 -0.320
 #> 6 lsm_alt_Week 48 Least Squa… Week… lsm            alt      -3.76   0.175 -4.11 
 #> # ℹ 2 more variables: uci <dbl>, pval <dbl>
 ```
@@ -349,11 +349,11 @@ tbl
 |                            | Estimate | Std. Error | 95% CI         | P-value  |
 |----------------------------|----------|------------|----------------|----------|
 | Week 24                    |          |            |                |          |
-| LS Mean (Reference)        | 0.08     | 0.13       | (-0.18, 0.33)  | 0.557    |
+| LS Mean (Reference)        | 0.08     | 0.13       | (-0.18, 0.33)  | 0.559    |
 | LS Mean (Treatment)        | −2.10    | 0.13       | (-2.35, -1.85) | \< 0.001 |
 | Treatment Difference       | −2.18    | 0.18       | (-2.54, -1.82) | \< 0.001 |
 | Week 48                    |          |            |                |          |
-| LS Mean (Reference)        | 0.04     | 0.18       | (-0.32, 0.41)  | 0.811    |
+| LS Mean (Reference)        | 0.04     | 0.18       | (-0.32, 0.41)  | 0.812    |
 | LS Mean (Treatment)        | −3.76    | 0.18       | (-4.11, -3.42) | \< 0.001 |
 | Treatment Difference       | −3.81    | 0.26       | (-4.31, -3.30) | \< 0.001 |
 | Pooling method: rubin      |          |            |                |          |
@@ -378,11 +378,11 @@ tbl_custom
 | Reference-Based Multiple Imputation (Jump to Reference) |          |            |                |          |
 |                                                         | Estimate | Std. Error | 95% CI         | P-value  |
 | Week 24                                                 |          |            |                |          |
-| LS Mean (Placebo)                                       | 0.08     | 0.13       | (-0.18, 0.33)  | 0.557    |
+| LS Mean (Placebo)                                       | 0.08     | 0.13       | (-0.18, 0.33)  | 0.559    |
 | LS Mean (Drug A)                                        | −2.10    | 0.13       | (-2.35, -1.85) | \< 0.001 |
 | Treatment Difference                                    | −2.18    | 0.18       | (-2.54, -1.82) | \< 0.001 |
 | Week 48                                                 |          |            |                |          |
-| LS Mean (Placebo)                                       | 0.04     | 0.18       | (-0.32, 0.41)  | 0.811    |
+| LS Mean (Placebo)                                       | 0.04     | 0.18       | (-0.32, 0.41)  | 0.812    |
 | LS Mean (Drug A)                                        | −3.76    | 0.18       | (-4.11, -3.42) | \< 0.001 |
 | Treatment Difference                                    | −3.81    | 0.26       | (-4.31, -3.30) | \< 0.001 |
 | Pooling method: rubin                                   |          |            |                |          |
