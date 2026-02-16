@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/openpharma/rbmiUtils/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/openpharma/rbmiUtils/blob/v0.3.0/DESCRIPTION)
 
 Baillie M, Mütze T, Talboys J (2026). *rbmiUtils: Utility Functions to
 Support and Extend the 'rbmi' Package*. R package version 0.3.0,
