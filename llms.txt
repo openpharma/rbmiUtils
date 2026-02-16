@@ -2,8 +2,9 @@
 
 `rbmiUtils` bridges [rbmi](https://github.com/openpharma/rbmi) analysis
 results into publication-ready regulatory tables and forest plots. It
-extends rbmi for clinical trial workflows, handling everything from data
-validation through to formatted efficacy outputs.
+extends rbmi for clinical trial workflows, providing additional
+utilities from data validation, storing imputed data sets, through to
+formatted efficacy outputs.
 
 ## Installation
 
@@ -17,9 +18,10 @@ GitHub:
 
 ## Quick Start
 
-`rbmiUtils` extends the [rbmi](https://openpharma.github.io/rbmi/)
-pipeline from raw data to publication-ready outputs. Here is the
-complete workflow using the bundled `ADEFF` dataset:
+`rbmiUtils` provides additional support for the
+[rbmi](https://openpharma.github.io/rbmi/) pipeline from raw data to
+publication-ready outputs. Here is an example workflow to illustrate
+these utilities using the bundled `ADEFF` dataset:
 
 ``` r
 library(rbmiUtils)
@@ -63,24 +65,17 @@ impute_obj <- impute(
 # Step 3: Extract stacked imputed data
 ADMI <- get_imputed_data(impute_obj)
 
+# Modification of the complete data is possible (i.e. collapsing variables).
+
 # Step 4: Analyse each imputed dataset
 ana_obj <- analyse_mi_data(data = ADMI, vars = vars, method = method, fun = ancova)
 
 # Step 5: Pool results using Rubin's rules
 pool_obj <- pool(ana_obj)
 
-# Publication-ready outputs
+# Publication-ready table
 efficacy_table(pool_obj, arm_labels = c(ref = "Placebo", alt = "Drug A"))
-plot_forest(pool_obj, arm_labels = c(ref = "Placebo", alt = "Drug A"))
 ```
-
-**Forest Plot**
-
-![Forest Plot](reference/figures/README-forest-plot-1.png)
-
-Forest Plot
-
-**Efficacy Table**
 
 ![Efficacy Table](reference/figures/README-efficacy-table-1.png)
 
@@ -99,7 +94,7 @@ for the complete walkthrough from raw data to these outputs.
 - [`tidy_pool_obj()`](https://openpharma.github.io/rbmiUtils/reference/tidy_pool_obj.md)
   – tidy pooled results with visit-level annotations
 - [`efficacy_table()`](https://openpharma.github.io/rbmiUtils/reference/efficacy_table.md)
-  – regulatory-style gt tables (CDISC/ICH Table 14.2.x format)
+  – regulatory-style gt tables (ICH Table 14.2.x format)
 - [`plot_forest()`](https://openpharma.github.io/rbmiUtils/reference/plot_forest.md)
   – three-panel forest plots with estimates, CIs, and p-values
 - [`pool_to_ard()`](https://openpharma.github.io/rbmiUtils/reference/pool_to_ard.md)

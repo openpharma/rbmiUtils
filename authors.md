@@ -5,7 +5,7 @@
 - **Mark Baillie**. Author, maintainer, copyright holder.
   [](https://orcid.org/0000-0002-5618-0667)
 
-- **Tobias Mütze**. Author. [](https://orcid.org/0000-0002-4111-1941)
+- **Tobias Muetze**. Author. [](https://orcid.org/0000-0002-4111-1941)
 
 - **Jack Talboys**. Author.
 
@@ -15,16 +15,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/openpharma/rbmiUtils/blob/v0.3.0/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/openpharma/rbmiUtils/blob/main/DESCRIPTION)
 
-Baillie M, Mütze T, Talboys J (2026). *rbmiUtils: Utility Functions to
-Support and Extend the 'rbmi' Package*. R package version 0.3.0,
+Baillie M, Muetze T, Talboys J (2026). *rbmiUtils: Utility Functions to
+Support and Extend the 'rbmi' Package*. R package version 0.3.0.9000,
 <https://github.com/openpharma/rbmiUtils>.
 
     @Manual{,
       title = {rbmiUtils: Utility Functions to Support and Extend the 'rbmi' Package},
-      author = {Mark Baillie and Tobias Mütze and Jack Talboys},
+      author = {Mark Baillie and Tobias Muetze and Jack Talboys},
       year = {2026},
-      note = {R package version 0.3.0},
+      note = {R package version 0.3.0.9000},
       url = {https://github.com/openpharma/rbmiUtils},
     }

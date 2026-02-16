@@ -21,7 +21,7 @@ Useful links:
 
 Authors:
 
-- Tobias Mütze <tobias.muetze@novartis.com>
+- Tobias Muetze <tobias.muetze@novartis.com>
   ([ORCID](https://orcid.org/0000-0002-4111-1941))
 
 - Jack Talboys <jack.talboys@novartis.com>

@@ -31,7 +31,7 @@
 
     <a class="navbar-brand me-2" href="index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,7 +80,7 @@
 </div>
 <!-- badges: start -->
 
-<p><code>rbmiUtils</code> bridges <a href="https://github.com/openpharma/rbmi" class="external-link">rbmi</a> analysis results into publication-ready regulatory tables and forest plots. It extends rbmi for clinical trial workflows, handling everything from data validation through to formatted efficacy outputs.</p>
+<p><code>rbmiUtils</code> bridges <a href="https://github.com/openpharma/rbmi" class="external-link">rbmi</a> analysis results into publication-ready regulatory tables and forest plots. It extends rbmi for clinical trial workflows, providing additional utilities from data validation, storing imputed data sets, through to formatted efficacy outputs.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -113,7 +113,7 @@
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p><code>rbmiUtils</code> extends the <a href="https://openpharma.github.io/rbmi/" class="external-link">rbmi</a> pipeline from raw data to publication-ready outputs. Here is the complete workflow using the bundled <code>ADEFF</code> dataset:</p>
+<p><code>rbmiUtils</code> provides additional support for the <a href="https://openpharma.github.io/rbmi/" class="external-link">rbmi</a> pipeline from raw data to publication-ready outputs. Here is an example workflow to illustrate these utilities using the bundled <code>ADEFF</code> dataset:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/openpharma/rbmiUtils" class="external-link">rbmiUtils</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://openpharma.github.io/rbmi/" class="external-link">rbmi</a></span><span class="op">)</span></span>
@@ -156,19 +156,16 @@
 <span><span class="co"># Step 3: Extract stacked imputed data</span></span>
 <span><span class="va">ADMI</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_imputed_data.html">get_imputed_data</a></span><span class="op">(</span><span class="va">impute_obj</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Modification of the complete data is possible (i.e. collapsing variables).</span></span>
+<span></span>
 <span><span class="co"># Step 4: Analyse each imputed dataset</span></span>
 <span><span class="va">ana_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/analyse_mi_data.html">analyse_mi_data</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ADMI</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span>, fun <span class="op">=</span> <span class="va">ancova</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Step 5: Pool results using Rubin's rules</span></span>
 <span><span class="va">pool_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">pool</a></span><span class="op">(</span><span class="va">ana_obj</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Publication-ready outputs</span></span>
-<span><span class="fu"><a href="reference/efficacy_table.html">efficacy_table</a></span><span class="op">(</span><span class="va">pool_obj</span>, arm_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ref <span class="op">=</span> <span class="st">"Placebo"</span>, alt <span class="op">=</span> <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/plot_forest.html">plot_forest</a></span><span class="op">(</span><span class="va">pool_obj</span>, arm_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ref <span class="op">=</span> <span class="st">"Placebo"</span>, alt <span class="op">=</span> <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Forest Plot</strong></p>
-<figure><img src="reference/figures/README-forest-plot-1.png" alt="Forest Plot"><figcaption aria-hidden="true">
-Forest Plot
-</figcaption></figure><p><strong>Efficacy Table</strong></p>
+<span><span class="co"># Publication-ready table</span></span>
+<span><span class="fu"><a href="reference/efficacy_table.html">efficacy_table</a></span><span class="op">(</span><span class="va">pool_obj</span>, arm_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ref <span class="op">=</span> <span class="st">"Placebo"</span>, alt <span class="op">=</span> <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <figure><img src="reference/figures/README-efficacy-table-1.png" alt="Efficacy Table"><figcaption aria-hidden="true">
 Efficacy Table
 </figcaption></figure><p>See the <a href="https://openpharma.github.io/rbmiUtils/articles/pipeline.html">end-to-end pipeline vignette</a> for the complete walkthrough from raw data to these outputs.</p>
@@ -184,7 +181,7 @@ Efficacy Table
 <li>
 <code><a href="reference/tidy_pool_obj.html">tidy_pool_obj()</a></code> – tidy pooled results with visit-level annotations</li>
 <li>
-<code><a href="reference/efficacy_table.html">efficacy_table()</a></code> – regulatory-style gt tables (CDISC/ICH Table 14.2.x format)</li>
+<code><a href="reference/efficacy_table.html">efficacy_table()</a></code> – regulatory-style gt tables (ICH Table 14.2.x format)</li>
 <li>
 <code><a href="reference/plot_forest.html">plot_forest()</a></code> – three-panel forest plots with estimates, CIs, and p-values</li>
 <li>
@@ -247,7 +244,7 @@ Efficacy Table
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Mark Baillie <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-5618-0667" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
-<li>Tobias Mütze <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4111-1941" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Tobias Muetze <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-4111-1941" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 <li>Jack Talboys <br><small class="roles"> Author </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
@@ -267,7 +264,7 @@ Efficacy Table
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mark Baillie, Tobias Mütze, Jack Talboys.</p>
+  <p>Developed by Mark Baillie, Tobias Muetze, Jack Talboys.</p>
 </div>
 
 <div class="pkgdown-footer-right">

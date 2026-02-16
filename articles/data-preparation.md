@@ -218,7 +218,7 @@ The three pattern types are:
 
 When subjects discontinue treatment, you may want to apply
 reference-based imputation strategies (see the [`{rbmi}`
-documentation](https://cran.r-project.org/web/packages/rbmi/vignettes/quickstart.html)
+documentation](https://openpharma.github.io/rbmi/latest-tag/articles/quickstart.html)
 for details on intercurrent event handling). The
 [`prepare_data_ice()`](https://openpharma.github.io/rbmiUtils/reference/prepare_data_ice.md)
 function builds the required `data_ice` data.frame from a
