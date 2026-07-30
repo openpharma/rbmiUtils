@@ -210,7 +210,7 @@ is_cards_available <- function() {
 #'
 #' Internal helper that orchestrates the computation of MI diagnostic
 #' statistics across all parameters. Checks the pooling method, extracts
-#' per-imputation estimates/SEs/dfs, calls [compute_rubin_diagnostics()]
+#' per-imputation estimates/SEs/dfs, calls `compute_rubin_diagnostics()`
 #' for each parameter, and returns diagnostic ARD rows.
 #'
 #' @param pool_obj A pooled analysis object of class `"pool"`.
@@ -266,7 +266,7 @@ compute_mi_diagnostics <- function(pool_obj, analysis_obj, tidy_df) {
 #' for a single parameter, using the same grouping columns as the base
 #' ARD rows.
 #'
-#' @param diag Named list from [compute_rubin_diagnostics()].
+#' @param diag Named list from `compute_rubin_diagnostics()`.
 #' @param param_row One-row data.frame from [tidy_pool_obj()] for this parameter.
 #' @param M Integer, number of imputations.
 #'
