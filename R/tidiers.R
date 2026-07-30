@@ -169,6 +169,22 @@ tidy_pool_obj <- function(pool_obj) {
       )
     )
 
+  # Structured group columns (issue #51). Placeholders by default; real
+  # group names when both `vars` and `data` are supplied (see below).
+  df <- df |>
+    dplyr::mutate(
+      group_var = NA_character_,
+      group_level_1 = dplyr::case_when(
+        parameter_type == "lsm" ~ lsm_type,
+        parameter_type == "trt" ~ "alt",
+        TRUE ~ NA_character_
+      ),
+      group_level_2 = dplyr::case_when(
+        parameter_type == "trt" ~ "ref",
+        TRUE ~ NA_character_
+      )
+    )
+
   # Select and arrange the columns for the publication-ready table
   df <- df |>
     dplyr::select(
@@ -181,7 +197,10 @@ tidy_pool_obj <- function(pool_obj) {
       se,
       lci,
       uci,
-      pval
+      pval,
+      group_var,
+      group_level_1,
+      group_level_2
     )
 
   return(df)
