@@ -33,7 +33,7 @@ test_that("positive test get_imputed_data (from vignettes)", {
 
   # Subset relevant columns
   dat <- ADEFF %>%
-    select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
+    dplyr::select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
   # Fit the imputation model and perform imputation
   draws_obj <- rbmi::draws(
