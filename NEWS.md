@@ -1,5 +1,12 @@
 # rbmiUtils (development version)
 
+## New features
+
+* `tidy_pool_obj()` gains structured group columns (`group_var`,
+  `group_level_1`, `group_level_2`) and optional `vars`/`data` arguments
+  that replace the generic `ref`/`alt` labels with real treatment-group
+  names in both the group columns and the `description` text (#51).
+
 # rbmiUtils 0.3.0
 
 ## CRAN Release

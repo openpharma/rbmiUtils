@@ -4,11 +4,20 @@
 \alias{tidy_pool_obj}
 \title{Tidy and Annotate a Pooled Object for Publication}
 \usage{
-tidy_pool_obj(pool_obj)
+tidy_pool_obj(pool_obj, vars = NULL, data = NULL)
 }
 \arguments{
 \item{pool_obj}{A pooled analysis object of class \code{pool}, typically obtained from \code{\link[rbmi:pool]{rbmi::pool()}}
 after calling \code{\link[=analyse_mi_data]{analyse_mi_data()}}.}
+
+\item{vars}{Optional. The \code{vars} object (from \code{\link[rbmi:set_vars]{rbmi::set_vars()}}) used in
+the analysis. Together with \code{data}, enables mapping of the \code{ref}/\code{alt}
+placeholders in \code{group_level_1}/\code{group_level_2} to real group names.}
+
+\item{data}{Optional. The analysis dataset containing the group variable
+named by \code{vars$group}. The first factor level is taken as the reference
+(matching rbmi convention). Enrichment requires exactly two levels;
+otherwise placeholders are returned with a warning.}
 }
 \value{
 A tibble containing the processed pooled analysis results with the following columns:
@@ -23,6 +32,13 @@ A tibble containing the processed pooled analysis results with the following col
 \item{lci}{Lower confidence interval}
 \item{uci}{Upper confidence interval}
 \item{pval}{P-value}
+\item{group_var}{Name of the treatment/group variable (\code{NA} unless \code{vars}
+and \code{data} are supplied)}
+\item{group_level_1}{For LSM rows the group level of the estimate; for
+comparison rows the comparator level. \code{ref}/\code{alt} placeholders unless
+enriched}
+\item{group_level_2}{For comparison rows the reference level; \code{NA} for
+LSM rows}
 }
 }
 \description{
@@ -91,6 +107,9 @@ tidy_df <- tidy_pool_obj(pool_obj_ancova)
 
 # Print tidy data frames
 print(tidy_df)
+
+# With vars and data, group columns carry real treatment names
+tidy_df2 <- tidy_pool_obj(pool_obj_ancova, vars = vars, data = ADMI)
 
 }
 \seealso{

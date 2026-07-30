@@ -7,6 +7,13 @@
 #'
 #' @param pool_obj A pooled analysis object of class `pool`, typically obtained from [rbmi::pool()]
 #'   after calling [analyse_mi_data()].
+#' @param vars Optional. The `vars` object (from [rbmi::set_vars()]) used in
+#'   the analysis. Together with `data`, enables mapping of the `ref`/`alt`
+#'   placeholders in `group_level_1`/`group_level_2` to real group names.
+#' @param data Optional. The analysis dataset containing the group variable
+#'   named by `vars$group`. The first factor level is taken as the reference
+#'   (matching rbmi convention). Enrichment requires exactly two levels;
+#'   otherwise placeholders are returned with a warning.
 #'
 #' @return A tibble containing the processed pooled analysis results with the following columns:
 #' \describe{
@@ -20,6 +27,13 @@
 #'   \item{lci}{Lower confidence interval}
 #'   \item{uci}{Upper confidence interval}
 #'   \item{pval}{P-value}
+#'   \item{group_var}{Name of the treatment/group variable (`NA` unless `vars`
+#'     and `data` are supplied)}
+#'   \item{group_level_1}{For LSM rows the group level of the estimate; for
+#'     comparison rows the comparator level. `ref`/`alt` placeholders unless
+#'     enriched}
+#'   \item{group_level_2}{For comparison rows the reference level; `NA` for
+#'     LSM rows}
 #' }
 #'
 #' @details The function dynamically processes the `parameter` column by separating it into
@@ -84,6 +98,9 @@
 #'
 #' # Print tidy data frames
 #' print(tidy_df)
+#'
+#' # With vars and data, group columns carry real treatment names
+#' tidy_df2 <- tidy_pool_obj(pool_obj_ancova, vars = vars, data = ADMI)
 #'
 #' @export
 tidy_pool_obj <- function(pool_obj, vars = NULL, data = NULL) {
