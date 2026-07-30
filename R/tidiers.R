@@ -7,6 +7,13 @@
 #'
 #' @param pool_obj A pooled analysis object of class `pool`, typically obtained from [rbmi::pool()]
 #'   after calling [analyse_mi_data()].
+#' @param vars Optional. The `vars` object (from [rbmi::set_vars()]) used in
+#'   the analysis. Together with `data`, enables mapping of the `ref`/`alt`
+#'   placeholders in `group_level_1`/`group_level_2` to real group names.
+#' @param data Optional. The analysis dataset containing the group variable
+#'   named by `vars$group`. The first factor level is taken as the reference
+#'   (matching rbmi convention). Enrichment requires exactly two levels;
+#'   otherwise placeholders are returned with a warning.
 #'
 #' @return A tibble containing the processed pooled analysis results with the following columns:
 #' \describe{
@@ -20,6 +27,13 @@
 #'   \item{lci}{Lower confidence interval}
 #'   \item{uci}{Upper confidence interval}
 #'   \item{pval}{P-value}
+#'   \item{group_var}{Name of the treatment/group variable (`NA` unless `vars`
+#'     and `data` are supplied and valid)}
+#'   \item{group_level_1}{For LSM rows the group level of the estimate; for
+#'     comparison rows the comparator level. `ref`/`alt` placeholders unless
+#'     enriched}
+#'   \item{group_level_2}{For comparison rows the reference level; `NA` for
+#'     LSM rows}
 #' }
 #'
 #' @details The function dynamically processes the `parameter` column by separating it into
@@ -85,8 +99,11 @@
 #' # Print tidy data frames
 #' print(tidy_df)
 #'
+#' # With vars and data, group columns carry real treatment names
+#' tidy_df2 <- tidy_pool_obj(pool_obj_ancova, vars = vars, data = ADMI)
+#'
 #' @export
-tidy_pool_obj <- function(pool_obj) {
+tidy_pool_obj <- function(pool_obj, vars = NULL, data = NULL) {
 
   # --- Input validation ---
   if (!inherits(pool_obj, "pool")) {
@@ -94,6 +111,35 @@ tidy_pool_obj <- function(pool_obj) {
       "Input {.arg pool_obj} must be of class {.cls pool}, not {.cls {class(pool_obj)}}.",
       class = c("rbmiUtils_error_validation", "rbmiUtils_error")
     )
+  }
+
+  # --- Resolve optional group enrichment (issue #51) ---
+  # Both vars and data are needed to map ref/alt placeholders to real
+  # group names. Reference = first factor level (rbmi convention).
+  group_info <- NULL
+  if (!is.null(vars) || !is.null(data)) {
+    if (is.null(vars) || is.null(data)) {
+      cli::cli_warn(
+        "{.arg vars} and {.arg data} must both be supplied for group-name enrichment. Returning placeholder group columns."
+      )
+    } else if (!is.character(vars$group) || length(vars$group) != 1 || !vars$group %in% names(data)) {
+      cli::cli_warn(
+        "{.arg vars} must contain a {.field group} element naming a column in {.arg data}. Returning placeholder group columns."
+      )
+    } else if (!is.factor(data[[vars$group]])) {
+      cli::cli_warn(
+        "{.field {vars$group}} must be a factor whose first level is the reference group; deriving levels alphabetically from a non-factor column may not match the analysis. Returning placeholder group columns."
+      )
+    } else {
+      lvls <- levels(data[[vars$group]])
+      if (length(lvls) != 2) {
+        cli::cli_warn(
+          "Group variable {.field {vars$group}} must have exactly two levels for enrichment (found {length(lvls)}). Returning placeholder group columns."
+        )
+      } else {
+        group_info <- list(var = vars$group, ref = lvls[1], alt = lvls[2])
+      }
+    }
   }
 
   # Convert pool_obj to tibble
@@ -169,6 +215,49 @@ tidy_pool_obj <- function(pool_obj) {
       )
     )
 
+  # Structured group columns (issue #51). Placeholders by default; real
+  # group names when both `vars` and `data` are supplied (see below).
+  df <- df |>
+    dplyr::mutate(
+      group_var = NA_character_,
+      group_level_1 = dplyr::case_when(
+        parameter_type == "lsm" ~ lsm_type,
+        parameter_type == "trt" ~ "alt",
+        TRUE ~ NA_character_
+      ),
+      group_level_2 = dplyr::case_when(
+        parameter_type == "trt" ~ "ref",
+        TRUE ~ NA_character_
+      )
+    )
+
+  if (!is.null(group_info)) {
+    map_level <- function(x) {
+      dplyr::case_when(
+        x == "ref" ~ group_info$ref,
+        x == "alt" ~ group_info$alt,
+        TRUE ~ x
+      )
+    }
+    df <- df |>
+      dplyr::mutate(
+        group_var = group_info$var,
+        group_level_1 = map_level(group_level_1),
+        group_level_2 = map_level(group_level_2),
+        description = dplyr::case_when(
+          parameter_type == "trt" & !is.na(visit) ~
+            paste0("Difference: ", group_level_1, " vs ", group_level_2, " at ", visit),
+          parameter_type == "trt" ~
+            paste0("Difference: ", group_level_1, " vs ", group_level_2),
+          parameter_type == "lsm" & !is.na(group_level_1) & !is.na(visit) ~
+            paste("Least Squares Mean for", group_level_1, "at", visit),
+          parameter_type == "lsm" & !is.na(group_level_1) ~
+            paste("Least Squares Mean for", group_level_1),
+          TRUE ~ description
+        )
+      )
+  }
+
   # Select and arrange the columns for the publication-ready table
   df <- df |>
     dplyr::select(
@@ -181,7 +270,10 @@ tidy_pool_obj <- function(pool_obj) {
       se,
       lci,
       uci,
-      pval
+      pval,
+      group_var,
+      group_level_1,
+      group_level_2
     )
 
   return(df)

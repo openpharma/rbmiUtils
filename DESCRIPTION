@@ -19,7 +19,7 @@ Description: Provides utility functions that extend the capabilities of the
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests:
     cards,
     ggplot2,

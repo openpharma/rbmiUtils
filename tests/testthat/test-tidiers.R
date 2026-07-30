@@ -61,7 +61,10 @@ test_that("positive test tidy_pool_obj", {
       "se",
       "lci",
       "uci",
-      "pval"
+      "pval",
+      "group_var",
+      "group_level_1",
+      "group_level_2"
     )
   )
 
@@ -78,7 +81,10 @@ test_that("positive test tidy_pool_obj", {
       se = "numeric",
       lci = "numeric",
       uci = "numeric",
-      pval = "numeric"
+      pval = "numeric",
+      group_var = "character",
+      group_level_1 = "character",
+      group_level_2 = "character"
     )
   )
 
@@ -455,4 +461,164 @@ test_that("tidy_pool_obj errors with informative message for non-pool input", {
     tidy_pool_obj(data.frame(x = 1)),
     class = "rbmiUtils_error"
   )
+})
+
+
+# ---- Shared fixture for group-column tests (small, fast) ----
+make_pool_fixture <- function() {
+  data("ADMI", package = "rbmiUtils")
+  ADMI$TRT <- factor(ADMI$TRT, levels = c("Placebo", "Drug A"))
+  ADMI$USUBJID <- factor(ADMI$USUBJID)
+  ADMI$AVISIT <- factor(ADMI$AVISIT)
+  ADMI <- ADMI[ADMI$IMPID %in% 1:5, ]
+
+  vars <- rbmi::set_vars(
+    subjid = "USUBJID",
+    visit = "AVISIT",
+    group = "TRT",
+    outcome = "CHG",
+    covariates = c("BASE", "STRATA", "REGION")
+  )
+  method <- rbmi::method_bayes(
+    n_samples = 5,
+    control = rbmi::control_bayes(warmup = 200, thin = 5)
+  )
+  ana <- analyse_mi_data(data = ADMI, vars = vars, method = method, fun = rbmi::ancova)
+  list(pool = rbmi::pool(ana), vars = vars, data = ADMI)
+}
+fixture <- make_pool_fixture()
+
+test_that("tidy_pool_obj adds placeholder group columns by default", {
+  tidy_df <- tidy_pool_obj(fixture$pool)
+
+  expect_true(all(c("group_var", "group_level_1", "group_level_2") %in% names(tidy_df)))
+  expect_true(all(is.na(tidy_df$group_var)))
+
+  lsm_rows <- tidy_df[tidy_df$parameter_type == "lsm", ]
+  expect_identical(lsm_rows$group_level_1, lsm_rows$lsm_type)
+  expect_true(all(is.na(lsm_rows$group_level_2)))
+
+  trt_rows <- tidy_df[tidy_df$parameter_type == "trt", ]
+  expect_true(all(trt_rows$group_level_1 == "alt"))
+  expect_true(all(trt_rows$group_level_2 == "ref"))
+})
+
+test_that("legacy columns are byte-identical to pre-change output by default", {
+  tidy_df <- tidy_pool_obj(fixture$pool)
+
+  # Reconstruct the legacy expectations directly from the pool object
+  expect_identical(tidy_df$parameter, names(fixture$pool$pars))
+  expect_identical(
+    tidy_df$est,
+    unname(vapply(fixture$pool$pars, function(p) p$est, numeric(1)))
+  )
+  # Legacy description wording unchanged on the default path
+  expect_true(all(
+    tidy_df$description[tidy_df$parameter_type == "trt"] == "Treatment Comparison"
+  ))
+  expect_true(all(grepl(
+    "^Least Squares Mean for (Reference|Alternative)",
+    tidy_df$description[tidy_df$parameter_type == "lsm"]
+  )))
+})
+
+test_that("tidy_pool_obj enriches group columns from vars and data", {
+  tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = fixture$data)
+
+  expect_true(all(tidy_df$group_var == "TRT"))
+
+  lsm_ref <- tidy_df[tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "ref", ]
+  lsm_alt <- tidy_df[tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "alt", ]
+  expect_true(all(lsm_ref$group_level_1 == "Placebo"))
+  expect_true(all(lsm_alt$group_level_1 == "Drug A"))
+  expect_true(all(is.na(lsm_ref$group_level_2)))
+
+  trt_rows <- tidy_df[tidy_df$parameter_type == "trt", ]
+  expect_true(all(trt_rows$group_level_1 == "Drug A"))
+  expect_true(all(trt_rows$group_level_2 == "Placebo"))
+})
+
+test_that("descriptions upgrade to real names when enriched", {
+  tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = fixture$data)
+
+  trt_rows <- tidy_df[tidy_df$parameter_type == "trt", ]
+  expect_true(all(grepl("^Difference: Drug A vs Placebo at ", trt_rows$description)))
+
+  lsm_rows <- tidy_df[tidy_df$parameter_type == "lsm", ]
+  expect_true(all(grepl("^Least Squares Mean for (Placebo|Drug A) at ", lsm_rows$description)))
+
+  # Legacy columns other than description are unaffected by enrichment
+  base_df <- tidy_pool_obj(fixture$pool)
+  expect_identical(tidy_df$est, base_df$est)
+  expect_identical(tidy_df$parameter, base_df$parameter)
+  expect_identical(tidy_df$lsm_type, base_df$lsm_type)
+})
+
+test_that("supplying only one of vars/data warns and returns placeholders", {
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars),
+    "both"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("group variable without exactly two levels warns and returns placeholders", {
+  dat3 <- fixture$data
+  dat3$TRT <- factor(
+    as.character(dat3$TRT),
+    levels = c("Placebo", "Drug A", "Drug B")
+  )
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = dat3),
+    "two"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("vars missing the group element warns and returns placeholders", {
+  vars_nogroup <- fixture$vars
+  vars_nogroup$group <- NULL
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = vars_nogroup, data = fixture$data),
+    "group"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("vars$group naming a column absent from data warns and returns placeholders", {
+  vars_bad <- fixture$vars
+  vars_bad$group <- "NOT_A_COLUMN"
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = vars_bad, data = fixture$data),
+    "group"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("vars$group of length != 1 warns and returns placeholders", {
+  vars_bad <- fixture$vars
+  vars_bad$group <- c("TRT", "AVISIT")
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = vars_bad, data = fixture$data),
+    "group"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("supplying only data (no vars) warns and returns placeholders", {
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, data = fixture$data),
+    "both"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("non-factor group column warns and returns placeholders", {
+  dat_char <- fixture$data
+  dat_char$TRT <- as.character(dat_char$TRT)
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = dat_char),
+    "factor"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
 })
