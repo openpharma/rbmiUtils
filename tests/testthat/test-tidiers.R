@@ -521,3 +521,66 @@ test_that("legacy columns are byte-identical to pre-change output by default", {
     tidy_df$description[tidy_df$parameter_type == "lsm"]
   )))
 })
+
+test_that("tidy_pool_obj enriches group columns from vars and data", {
+  tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = fixture$data)
+
+  expect_true(all(tidy_df$group_var == "TRT"))
+
+  lsm_ref <- tidy_df[tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "ref", ]
+  lsm_alt <- tidy_df[tidy_df$parameter_type == "lsm" & tidy_df$lsm_type == "alt", ]
+  expect_true(all(lsm_ref$group_level_1 == "Placebo"))
+  expect_true(all(lsm_alt$group_level_1 == "Drug A"))
+  expect_true(all(is.na(lsm_ref$group_level_2)))
+
+  trt_rows <- tidy_df[tidy_df$parameter_type == "trt", ]
+  expect_true(all(trt_rows$group_level_1 == "Drug A"))
+  expect_true(all(trt_rows$group_level_2 == "Placebo"))
+})
+
+test_that("descriptions upgrade to real names when enriched", {
+  tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = fixture$data)
+
+  trt_rows <- tidy_df[tidy_df$parameter_type == "trt", ]
+  expect_true(all(grepl("^Difference: Drug A vs Placebo at ", trt_rows$description)))
+
+  lsm_rows <- tidy_df[tidy_df$parameter_type == "lsm", ]
+  expect_true(all(grepl("^Least Squares Mean for (Placebo|Drug A) at ", lsm_rows$description)))
+
+  # Legacy columns other than description are unaffected by enrichment
+  base_df <- tidy_pool_obj(fixture$pool)
+  expect_identical(tidy_df$est, base_df$est)
+  expect_identical(tidy_df$parameter, base_df$parameter)
+  expect_identical(tidy_df$lsm_type, base_df$lsm_type)
+})
+
+test_that("supplying only one of vars/data warns and returns placeholders", {
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars),
+    "both"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("group variable without exactly two levels warns and returns placeholders", {
+  dat3 <- fixture$data
+  dat3$TRT <- factor(
+    as.character(dat3$TRT),
+    levels = c("Placebo", "Drug A", "Drug B")
+  )
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = dat3),
+    "two"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("vars missing the group element warns and returns placeholders", {
+  vars_nogroup <- fixture$vars
+  vars_nogroup$group <- NULL
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = vars_nogroup, data = fixture$data),
+    "group"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})

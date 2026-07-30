@@ -86,7 +86,7 @@
 #' print(tidy_df)
 #'
 #' @export
-tidy_pool_obj <- function(pool_obj) {
+tidy_pool_obj <- function(pool_obj, vars = NULL, data = NULL) {
 
   # --- Input validation ---
   if (!inherits(pool_obj, "pool")) {
@@ -94,6 +94,31 @@ tidy_pool_obj <- function(pool_obj) {
       "Input {.arg pool_obj} must be of class {.cls pool}, not {.cls {class(pool_obj)}}.",
       class = c("rbmiUtils_error_validation", "rbmiUtils_error")
     )
+  }
+
+  # --- Resolve optional group enrichment (issue #51) ---
+  # Both vars and data are needed to map ref/alt placeholders to real
+  # group names. Reference = first factor level (rbmi convention).
+  group_info <- NULL
+  if (!is.null(vars) || !is.null(data)) {
+    if (is.null(vars) || is.null(data)) {
+      cli::cli_warn(
+        "{.arg vars} and {.arg data} must both be supplied for group-name enrichment. Returning placeholder group columns."
+      )
+    } else if (is.null(vars$group) || !vars$group %in% names(data)) {
+      cli::cli_warn(
+        "{.arg vars} must contain a {.field group} element naming a column in {.arg data}. Returning placeholder group columns."
+      )
+    } else {
+      lvls <- levels(as.factor(data[[vars$group]]))
+      if (length(lvls) != 2) {
+        cli::cli_warn(
+          "Group variable {.field {vars$group}} must have exactly two levels for enrichment (found {length(lvls)}). Returning placeholder group columns."
+        )
+      } else {
+        group_info <- list(var = vars$group, ref = lvls[1], alt = lvls[2])
+      }
+    }
   }
 
   # Convert pool_obj to tibble
@@ -184,6 +209,33 @@ tidy_pool_obj <- function(pool_obj) {
         TRUE ~ NA_character_
       )
     )
+
+  if (!is.null(group_info)) {
+    map_level <- function(x) {
+      dplyr::case_when(
+        x == "ref" ~ group_info$ref,
+        x == "alt" ~ group_info$alt,
+        TRUE ~ x
+      )
+    }
+    df <- df |>
+      dplyr::mutate(
+        group_var = group_info$var,
+        group_level_1 = map_level(group_level_1),
+        group_level_2 = map_level(group_level_2),
+        description = dplyr::case_when(
+          parameter_type == "trt" & !is.na(visit) ~
+            paste0("Difference: ", group_level_1, " vs ", group_level_2, " at ", visit),
+          parameter_type == "trt" ~
+            paste0("Difference: ", group_level_1, " vs ", group_level_2),
+          parameter_type == "lsm" & !is.na(group_level_1) & !is.na(visit) ~
+            paste("Least Squares Mean for", group_level_1, "at", visit),
+          parameter_type == "lsm" & !is.na(group_level_1) ~
+            paste("Least Squares Mean for", group_level_1),
+          TRUE ~ description
+        )
+      )
+  }
 
   # Select and arrange the columns for the publication-ready table
   df <- df |>
