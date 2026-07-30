@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Storing and Analyzing Imputed Data with rbmiUtils</h1>
             
-            <h4 data-toc-skip class="date">2026-02-16</h4>
+            <h4 data-toc-skip class="date">2026-07-30</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/openpharma/rbmiUtils/blob/HEAD/vignettes/analyse2.Rmd" class="external-link"><code>vignettes/analyse2.Rmd</code></a></small>
       <div class="d-none name"><code>analyse2.Rmd</code></div>
@@ -143,7 +143,7 @@ rules.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ADEFF"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">ADEFF</span> <span class="op">&lt;-</span> <span class="va">ADEFF</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">ADEFF</span> <span class="op">&lt;-</span> <span class="va">ADEFF</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    TRT <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">TRT01P</span>, levels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span>, <span class="st">"Drug A"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    USUBJID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">USUBJID</span><span class="op">)</span>,</span>
@@ -169,29 +169,15 @@ to specify the key variable roles:</p>
 <span>  control <span class="op">=</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/control.html" class="external-link">control_bayes</a></span><span class="op">(</span>warmup <span class="op">=</span> <span class="fl">200</span>, thin <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">ADEFF</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="va">ADEFF</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">USUBJID</span>, <span class="va">STRATA</span>, <span class="va">REGION</span>, <span class="va">REGIONC</span>, <span class="va">TRT</span>, <span class="va">BASE</span>, <span class="va">CHG</span>, <span class="va">AVISIT</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">draws_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/draws.html" class="external-link">draws</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">dat</span>, vars <span class="op">=</span> <span class="va">vars</span>, method <span class="op">=</span> <span class="va">method</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Running /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/bin/R \</span></span>
-<span><span class="co">#&gt;   CMD SHLIB foo.c</span></span>
-<span><span class="co">#&gt; using C compiler: ‘Apple clang version 17.0.0 (clang-1700.6.3.2)’</span></span>
-<span><span class="co">#&gt; using SDK: ‘MacOSX26.2.sdk’</span></span>
-<span><span class="co">#&gt; clang -arch arm64 -I"/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/include" -DNDEBUG   -I"/Users/bailliem/Library/R/arm64/4.4/library/Rcpp/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/unsupported"  -I"/Users/bailliem/Library/R/arm64/4.4/library/BH/include" -I"/Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/src/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/RcppParallel/include/"  -I"/Users/bailliem/Library/R/arm64/4.4/library/rstan/include" -DEIGEN_NO_DEBUG  -DBOOST_DISABLE_ASSERTS  -DBOOST_PENDING_INTEGER_LOG2_HPP  -DSTAN_THREADS  -DUSE_STANC3 -DSTRICT_R_HEADERS  -DBOOST_PHOENIX_NO_VARIADIC_EXPRESSION  -D_HAS_AUTO_PTR_ETC=0  -include '/Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp'  -D_REENTRANT -DRCPP_PARALLEL_USE_TBB=1   -I/opt/R/arm64/include    -fPIC  -falign-functions=64 -Wall -g -O2  -c foo.c -o foo.o</span></span>
-<span><span class="co">#&gt; In file included from &lt;built-in&gt;:1:</span></span>
-<span><span class="co">#&gt; In file included from /Users/bailliem/Library/R/arm64/4.4/library/StanHeaders/include/stan/math/prim/fun/Eigen.hpp:22:</span></span>
-<span><span class="co">#&gt; In file included from /Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/Eigen/Dense:1:</span></span>
-<span><span class="co">#&gt; In file included from /Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/Eigen/Core:19:</span></span>
-<span><span class="co">#&gt; /Users/bailliem/Library/R/arm64/4.4/library/RcppEigen/include/Eigen/src/Core/util/Macros.h:679:10: fatal error: 'cmath' file not found</span></span>
-<span><span class="co">#&gt;   679 | #include &lt;cmath&gt;</span></span>
-<span><span class="co">#&gt;       |          ^~~~~~~</span></span>
-<span><span class="co">#&gt; 1 error generated.</span></span>
-<span><span class="co">#&gt; make: *** [foo.o] Error 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SAMPLING FOR MODEL 'rbmi_MMRM_us_default' NOW (CHAIN 1).</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000251 seconds</span></span>
-<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.51 seconds.</span></span>
+<span><span class="co">#&gt; Chain 1: Gradient evaluation took 0.000174 seconds</span></span>
+<span><span class="co">#&gt; Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.74 seconds.</span></span>
 <span><span class="co">#&gt; Chain 1: Adjust your expectations accordingly!</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
@@ -208,9 +194,9 @@ to specify the key variable roles:</p>
 <span><span class="co">#&gt; Chain 1: Iteration: 360 / 400 [ 90%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: Iteration: 400 / 400 [100%]  (Sampling)</span></span>
 <span><span class="co">#&gt; Chain 1: </span></span>
-<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.324 seconds (Warm-up)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.279 seconds (Sampling)</span></span>
-<span><span class="co">#&gt; Chain 1:                0.603 seconds (Total)</span></span>
+<span><span class="co">#&gt; Chain 1:  Elapsed Time: 0.228 seconds (Warm-up)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.17 seconds (Sampling)</span></span>
+<span><span class="co">#&gt; Chain 1:                0.398 seconds (Total)</span></span>
 <span><span class="co">#&gt; Chain 1:</span></span>
 <span></span>
 <span><span class="va">impute_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/impute.html" class="external-link">impute</a></span><span class="op">(</span><span class="va">draws_obj</span>, references <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Placebo"</span> <span class="op">=</span> <span class="st">"Placebo"</span>, <span class="st">"Drug A"</span> <span class="op">=</span> <span class="st">"Placebo"</span><span class="op">)</span><span class="op">)</span></span>
@@ -221,7 +207,7 @@ to specify the key variable roles:</p>
 <h2 id="step-3-add-responder-variables">Step 3: Add Responder Variables<a class="anchor" aria-label="anchor" href="#step-3-add-responder-variables"></a>
 </h2>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ADMI</span> <span class="op">&lt;-</span> <span class="va">ADMI</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">ADMI</span> <span class="op">&lt;-</span> <span class="va">ADMI</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    CRIT1FLN <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">CHG</span> <span class="op">&gt;</span> <span class="fl">3</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>    CRIT1FL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">CRIT1FLN</span> <span class="op">==</span> <span class="fl">1</span>, <span class="st">"Y"</span>, <span class="st">"N"</span><span class="op">)</span>,</span>
@@ -355,7 +341,7 @@ data to regulatory tables, see <code><a href="../articles/pipeline.html">vignett
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mark Baillie, Tobias Mütze, Jack Talboys.</p>
+  <p>Developed by Mark Baillie, Tobias Muetze, Jack Talboys.</p>
 </div>
 
 <div class="pkgdown-footer-right">

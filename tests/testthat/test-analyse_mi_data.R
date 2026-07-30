@@ -40,7 +40,7 @@ test_that("Error when data is NULL", {
 })
 
 test_that("Error when IMPID is missing from data", {
-  ADMI_no_impid <- ADMI %>% select(-IMPID)
+  ADMI_no_impid <- ADMI |> dplyr::select(-IMPID)
   expect_error(
     analyse_mi_data(data = ADMI_no_impid, vars = vars),
     class = "rbmiUtils_error_validation"
