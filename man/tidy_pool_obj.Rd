@@ -33,7 +33,7 @@ A tibble containing the processed pooled analysis results with the following col
 \item{uci}{Upper confidence interval}
 \item{pval}{P-value}
 \item{group_var}{Name of the treatment/group variable (\code{NA} unless \code{vars}
-and \code{data} are supplied)}
+and \code{data} are supplied and valid)}
 \item{group_level_1}{For LSM rows the group level of the estimate; for
 comparison rows the comparator level. \code{ref}/\code{alt} placeholders unless
 enriched}

@@ -28,7 +28,7 @@
 #'   \item{uci}{Upper confidence interval}
 #'   \item{pval}{P-value}
 #'   \item{group_var}{Name of the treatment/group variable (`NA` unless `vars`
-#'     and `data` are supplied)}
+#'     and `data` are supplied and valid)}
 #'   \item{group_level_1}{For LSM rows the group level of the estimate; for
 #'     comparison rows the comparator level. `ref`/`alt` placeholders unless
 #'     enriched}
@@ -122,12 +122,16 @@ tidy_pool_obj <- function(pool_obj, vars = NULL, data = NULL) {
       cli::cli_warn(
         "{.arg vars} and {.arg data} must both be supplied for group-name enrichment. Returning placeholder group columns."
       )
-    } else if (is.null(vars$group) || !vars$group %in% names(data)) {
+    } else if (!is.character(vars$group) || length(vars$group) != 1 || !vars$group %in% names(data)) {
       cli::cli_warn(
         "{.arg vars} must contain a {.field group} element naming a column in {.arg data}. Returning placeholder group columns."
       )
+    } else if (!is.factor(data[[vars$group]])) {
+      cli::cli_warn(
+        "{.field {vars$group}} must be a factor whose first level is the reference group; deriving levels alphabetically from a non-factor column may not match the analysis. Returning placeholder group columns."
+      )
     } else {
-      lvls <- levels(as.factor(data[[vars$group]]))
+      lvls <- levels(data[[vars$group]])
       if (length(lvls) != 2) {
         cli::cli_warn(
           "Group variable {.field {vars$group}} must have exactly two levels for enrichment (found {length(lvls)}). Returning placeholder group columns."

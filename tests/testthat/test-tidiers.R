@@ -584,3 +584,41 @@ test_that("vars missing the group element warns and returns placeholders", {
   )
   expect_true(all(is.na(tidy_df$group_var)))
 })
+
+test_that("vars$group naming a column absent from data warns and returns placeholders", {
+  vars_bad <- fixture$vars
+  vars_bad$group <- "NOT_A_COLUMN"
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = vars_bad, data = fixture$data),
+    "group"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("vars$group of length != 1 warns and returns placeholders", {
+  vars_bad <- fixture$vars
+  vars_bad$group <- c("TRT", "AVISIT")
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = vars_bad, data = fixture$data),
+    "group"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("supplying only data (no vars) warns and returns placeholders", {
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, data = fixture$data),
+    "both"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})
+
+test_that("non-factor group column warns and returns placeholders", {
+  dat_char <- fixture$data
+  dat_char$TRT <- as.character(dat_char$TRT)
+  expect_warning(
+    tidy_df <- tidy_pool_obj(fixture$pool, vars = fixture$vars, data = dat_char),
+    "factor"
+  )
+  expect_true(all(is.na(tidy_df$group_var)))
+})

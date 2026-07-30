@@ -1,6 +1,6 @@
 # rbmiUtils (development version)
 
-## New features
+## New Features
 
 * `tidy_pool_obj()` gains structured group columns (`group_var`,
   `group_level_1`, `group_level_2`) and optional `vars`/`data` arguments
