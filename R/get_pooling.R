@@ -31,6 +31,9 @@ get_pooling <- function(method) {
   if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
     "rubin"
   } else if (inherits(method, "condmean")) {
+    # rbmi::method_condmean()$type is currently only ever "jackknife" or
+    # "bootstrap"; this assumes that domain is exhaustive and treats
+    # anything not "jackknife" as "bootstrap".
     if (identical(method$type, "jackknife")) "jackknife" else "bootstrap"
   } else if (inherits(method, "bmlmi")) {
     "bmlmi"

@@ -25,7 +25,11 @@
 #'   and `"bmlmi"` cannot be selected via `pooling` alone because the number
 #'   of analyses per imputation (D) is not inferable from the data. When only
 #'   `pooling` is supplied, the number of imputations is taken from the data
-#'   and no sample-count check is performed.
+#'   and no sample-count check is performed. In this case, the returned
+#'   object's `method` element is a constructed stand-in consistent with the
+#'   chosen pooling strategy, not the true imputation method — it exists only
+#'   to satisfy [rbmi::pool()]'s internal validation, and `print()`/`summary()`
+#'   report it as not supplied rather than as a real method.
 #'
 #' @details
 #' The function loops through distinct imputation datasets (identified by `IMPID`), applies the provided analysis function `fun`, and stores the results for later pooling. If a `delta` dataset is provided, it will be merged with the imputed data to apply the specified delta adjustment before analysis.
@@ -425,7 +429,9 @@ print.analysis <- function(x, ...) {
   cli::cli_rule()
 
   # Method detection (inherits-based, hardened in 01-02)
-  method_class <- if (inherits(x$method, "bayes")) {
+  method_class <- if (inherits(x$method, "rbmiUtils_standin")) {
+    sprintf("<not supplied; pooling = \"%s\">", get_pooling(x$method))
+  } else if (inherits(x$method, "bayes")) {
     "bayes"
   } else if (inherits(x$method, "approxbayes")) {
     "approxbayes"
@@ -514,7 +520,10 @@ summary.analysis <- function(object, n_preview = 5, ...) {
 
   # Method section (inherits-based, hardened in 01-02)
   cli::cli_h2("Method")
-  method_class <- if (inherits(object$method, "bayes")) {
+  is_standin <- inherits(object$method, "rbmiUtils_standin")
+  method_class <- if (is_standin) {
+    sprintf("<not supplied; pooling = \"%s\">", get_pooling(object$method))
+  } else if (inherits(object$method, "bayes")) {
     "bayes"
   } else if (inherits(object$method, "approxbayes")) {
     "approxbayes"
@@ -527,7 +536,7 @@ summary.analysis <- function(object, n_preview = 5, ...) {
   }
   cli::cli_text("{.field Type}: {method_class}")
 
-  if (method_class %in% c("bayes", "approxbayes")) {
+  if (!is_standin && method_class %in% c("bayes", "approxbayes")) {
     if (!is.null(object$method$n_samples)) {
       n_samples <- object$method$n_samples
       cli::cli_text("{.field Samples}: {n_samples}")
@@ -585,7 +594,6 @@ summary.analysis <- function(object, n_preview = 5, ...) {
   invisible(summary_info)
 }
 
-
 #' Construct a Stand-in Method Object for a Pooling Strategy
 #'
 #' When [analyse_mi_data()] is called with `pooling` but no `method`, a
@@ -597,11 +605,25 @@ summary.analysis <- function(object, n_preview = 5, ...) {
 #'   `"jackknife"`, or `"bmlmi"`.
 #' @param n_imps Number of distinct imputations observed in the data.
 #'
-#' @return An `rbmi` method object.
+#' @return An `rbmi` method object, additionally classed
+#'   `"rbmiUtils_standin"` so callers (e.g. `print.analysis()`,
+#'   `summary.analysis()`) can detect that the method was constructed rather
+#'   than supplied by the user, without affecting `inherits()` checks against
+#'   the underlying `rbmi` method classes (`bayes`, `condmean`, etc.).
 #' @keywords internal
 #' @noRd
 make_standin_method <- function(pooling, n_imps) {
-  switch(
+  if (identical(pooling, "bootstrap") && n_imps < 2) {
+    cli::cli_abort(
+      c(
+        "{.val bootstrap} pooling needs at least 2 imputations, got {n_imps}.",
+        "i" = "Bootstrap pooling treats the first imputation as the original-data estimate and the rest as bootstrap replicates, so at least one replicate is required."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
+
+  m <- switch(
     pooling,
     rubin = rbmi::method_bayes(n_samples = n_imps),
     bootstrap = rbmi::method_condmean(type = "bootstrap", n_samples = n_imps - 1),
@@ -613,6 +635,12 @@ make_standin_method <- function(pooling, n_imps) {
         "i" = "Supply {.code method = rbmi::method_bmlmi(B = , D = )} instead."
       ),
       class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    ),
+    cli::cli_abort(
+      "Internal error: unrecognized pooling strategy {.val {pooling}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
     )
   )
+
+  structure(m, class = c("rbmiUtils_standin", class(m)))
 }

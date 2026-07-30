@@ -44,7 +44,11 @@ first for bootstrap) that cannot be verified without the method object,
 and \code{"bmlmi"} cannot be selected via \code{pooling} alone because the number
 of analyses per imputation (D) is not inferable from the data. When only
 \code{pooling} is supplied, the number of imputations is taken from the data
-and no sample-count check is performed.}
+and no sample-count check is performed. In this case, the returned
+object's \code{method} element is a constructed stand-in consistent with the
+chosen pooling strategy, not the true imputation method — it exists only
+to satisfy \code{\link[rbmi:pool]{rbmi::pool()}}'s internal validation, and \code{print()}/\code{summary()}
+report it as not supplied rather than as a real method.}
 }
 \value{
 An object of class \code{analysis} containing the results from applying the analysis function to each imputed dataset.
