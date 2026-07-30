@@ -3,7 +3,7 @@
 ## New features
 
 * `analyse_mi_data()` gains a `pooling` argument so already-imputed (ADMI)
-  data can be analysed when the imputation method is unknown. Supply either
+  data can be analyzed when the imputation method is unknown. Supply either
   `method` or `pooling`; `pooling = "rubin"` is recommended for data of
   unknown provenance (#50).
 * New exported helper `get_pooling()` maps an `rbmi` method object to its
