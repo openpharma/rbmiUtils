@@ -10,7 +10,8 @@ analyse_mi_data(
   method = NULL,
   fun = rbmi::ancova,
   delta = NULL,
-  ...
+  ...,
+  pooling = NULL
 )
 }
 \arguments{
@@ -21,7 +22,8 @@ Typically obtained from \code{\link[=get_imputed_data]{get_imputed_data()}} or \
 Created using \code{\link[rbmi:set_vars]{rbmi::set_vars()}}. Required.}
 
 \item{method}{A method object specifying the imputation method used (e.g., Bayesian imputation).
-Created using \code{\link[rbmi:method]{rbmi::method_bayes()}}, \code{\link[rbmi:method]{rbmi::method_approxbayes()}}, or \code{\link[rbmi:method]{rbmi::method_condmean()}}. Required.}
+Created using \code{\link[rbmi:method]{rbmi::method_bayes()}}, \code{\link[rbmi:method]{rbmi::method_approxbayes()}}, or \code{\link[rbmi:method]{rbmi::method_condmean()}}.
+Optional if \code{pooling} is supplied.}
 
 \item{fun}{A function that will be applied to each imputed dataset. Defaults to \link[rbmi:ancova]{rbmi::ancova}.
 Other options include \code{\link[=gcomp_responder_multi]{gcomp_responder_multi()}} for binary outcomes. Must be a valid analysis function.}
@@ -30,6 +32,19 @@ Other options include \code{\link[=gcomp_responder_multi]{gcomp_responder_multi(
 Must contain columns matching \code{vars$subjid}, \code{vars$visit}, \code{vars$group}, and a \code{delta} column.}
 
 \item{...}{Additional arguments passed to the analysis function \code{fun}.}
+
+\item{pooling}{Optional length-one character giving the pooling strategy
+directly: \code{"rubin"}, \code{"bootstrap"}, \code{"jackknife"}, or \code{"bmlmi"}. Use this
+when the imputation method that produced \code{data} is unknown. Supply either
+\code{method} or \code{pooling}; if both are given they must agree (see
+\code{\link[=get_pooling]{get_pooling()}}). For an imputed dataset of unknown provenance,
+\code{pooling = "rubin"} is recommended: \code{"bootstrap"} and \code{"jackknife"}
+pooling assume a specific ordering of samples (original-data estimate
+first for bootstrap) that cannot be verified without the method object,
+and \code{"bmlmi"} cannot be selected via \code{pooling} alone because the number
+of analyses per imputation (D) is not inferable from the data. When only
+\code{pooling} is supplied, the number of imputations is taken from the data
+and no sample-count check is performed.}
 }
 \value{
 An object of class \code{analysis} containing the results from applying the analysis function to each imputed dataset.
@@ -90,6 +105,14 @@ ana_obj_ancova <- analyse_mi_data(
   delta = NULL   # No sensitivity analysis adjustment
 )
 
+# When the imputation method is unknown, specify pooling directly:
+ana_obj <- analyse_mi_data(
+  data = ADMI,
+  vars = vars,
+  pooling = "rubin",
+  fun = ancova
+)
+
 }
 \seealso{
 \itemize{
@@ -97,6 +120,7 @@ ana_obj_ancova <- analyse_mi_data(
 \item \code{\link[rbmi:pool]{rbmi::pool()}} for pooling the analysis results
 \item The \href{https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html}{rbmi quickstart vignette}
 \item \code{\link[=tidy_pool_obj]{tidy_pool_obj()}} to format pooled results for publication
+\item \code{\link[=get_pooling]{get_pooling()}} for the method-to-pooling mapping
 \item \code{\link[=get_imputed_data]{get_imputed_data()}} to extract imputed datasets from rbmi objects
 \item \code{\link[=expand_imputed_data]{expand_imputed_data()}} to reconstruct full imputed data from reduced form
 \item \code{\link[=gcomp_responder_multi]{gcomp_responder_multi()}} for binary outcome analysis

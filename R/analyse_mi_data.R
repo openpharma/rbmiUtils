@@ -7,12 +7,25 @@
 #' @param vars A list specifying key variables used in the analysis (e.g., `subjid`, `visit`, `group`, `outcome`).
 #'   Created using [rbmi::set_vars()]. Required.
 #' @param method A method object specifying the imputation method used (e.g., Bayesian imputation).
-#'   Created using [rbmi::method_bayes()], [rbmi::method_approxbayes()], or [rbmi::method_condmean()]. Required.
+#'   Created using [rbmi::method_bayes()], [rbmi::method_approxbayes()], or [rbmi::method_condmean()].
+#'   Optional if `pooling` is supplied.
 #' @param fun A function that will be applied to each imputed dataset. Defaults to [rbmi::ancova].
 #'   Other options include [gcomp_responder_multi()] for binary outcomes. Must be a valid analysis function.
 #' @param delta A `data.frame` used for delta adjustments, or `NULL` if no delta adjustments are needed. Defaults to `NULL`.
 #'   Must contain columns matching `vars$subjid`, `vars$visit`, `vars$group`, and a `delta` column.
 #' @param ... Additional arguments passed to the analysis function `fun`.
+#' @param pooling Optional length-one character giving the pooling strategy
+#'   directly: `"rubin"`, `"bootstrap"`, `"jackknife"`, or `"bmlmi"`. Use this
+#'   when the imputation method that produced `data` is unknown. Supply either
+#'   `method` or `pooling`; if both are given they must agree (see
+#'   [get_pooling()]). For an imputed dataset of unknown provenance,
+#'   `pooling = "rubin"` is recommended: `"bootstrap"` and `"jackknife"`
+#'   pooling assume a specific ordering of samples (original-data estimate
+#'   first for bootstrap) that cannot be verified without the method object,
+#'   and `"bmlmi"` cannot be selected via `pooling` alone because the number
+#'   of analyses per imputation (D) is not inferable from the data. When only
+#'   `pooling` is supplied, the number of imputations is taken from the data
+#'   and no sample-count check is performed.
 #'
 #' @details
 #' The function loops through distinct imputation datasets (identified by `IMPID`), applies the provided analysis function `fun`, and stores the results for later pooling. If a `delta` dataset is provided, it will be merged with the imputed data to apply the specified delta adjustment before analysis.
@@ -32,6 +45,7 @@
 #' * [rbmi::pool()] for pooling the analysis results
 #' * The [rbmi quickstart vignette](https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html)
 #' * [tidy_pool_obj()] to format pooled results for publication
+#' * [get_pooling()] for the method-to-pooling mapping
 
 #' * [get_imputed_data()] to extract imputed datasets from rbmi objects
 #' * [expand_imputed_data()] to reconstruct full imputed data from reduced form
@@ -76,6 +90,14 @@
 #'   method = method,
 #'   fun = ancova,  # Apply ANCOVA
 #'   delta = NULL   # No sensitivity analysis adjustment
+#' )
+#'
+#' # When the imputation method is unknown, specify pooling directly:
+#' ana_obj <- analyse_mi_data(
+#'   data = ADMI,
+#'   vars = vars,
+#'   pooling = "rubin",
+#'   fun = ancova
 #' )
 #'
 #' @export
