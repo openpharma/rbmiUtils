@@ -9,3 +9,6 @@ inst/doc
 /Meta/
 scratch.R
 .gitlab-ci.yml
+.positai
+docs/
+.remember/

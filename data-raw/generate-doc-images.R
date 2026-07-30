@@ -22,7 +22,7 @@ library(gt)
 # --- Data preparation (same as README.Rmd) ---
 data("ADMI", package = "rbmiUtils")
 
-ADMI <- ADMI %>%
+ADMI <- ADMI |>
   mutate(
     TRT = factor(TRT, levels = c("Placebo", "Drug A")),
     USUBJID = factor(USUBJID),

@@ -65,7 +65,7 @@ set.seed(1974)
 ```{r load-data}
 data("ADEFF")
 
-ADEFF <- ADEFF %>%
+ADEFF <- ADEFF |>
   mutate(
     TRT = factor(TRT01P, levels = c("Placebo", "Drug A")),
     USUBJID = factor(USUBJID),
@@ -96,7 +96,7 @@ method <- method_bayes(
 ```
 
 ```{r impute}
-dat <- ADEFF %>%
+dat <- ADEFF |>
   select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
 draws_obj <- draws(data = dat, vars = vars, method = method)
@@ -110,7 +110,7 @@ ADMI <- get_imputed_data(impute_obj)
 # Step 3: Add Responder Variables
 
 ```{r derive-responder}
-ADMI <- ADMI %>%
+ADMI <- ADMI |>
   mutate(
     CRIT1FLN = ifelse(CHG > 3, 1, 0),
     CRIT1FL = ifelse(CRIT1FLN == 1, "Y", "N"),

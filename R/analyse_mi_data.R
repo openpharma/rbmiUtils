@@ -7,12 +7,29 @@
 #' @param vars A list specifying key variables used in the analysis (e.g., `subjid`, `visit`, `group`, `outcome`).
 #'   Created using [rbmi::set_vars()]. Required.
 #' @param method A method object specifying the imputation method used (e.g., Bayesian imputation).
-#'   Created using [rbmi::method_bayes()], [rbmi::method_approxbayes()], or [rbmi::method_condmean()]. Required.
+#'   Created using [rbmi::method_bayes()], [rbmi::method_approxbayes()], or [rbmi::method_condmean()].
+#'   Optional if `pooling` is supplied.
 #' @param fun A function that will be applied to each imputed dataset. Defaults to [rbmi::ancova].
 #'   Other options include [gcomp_responder_multi()] for binary outcomes. Must be a valid analysis function.
 #' @param delta A `data.frame` used for delta adjustments, or `NULL` if no delta adjustments are needed. Defaults to `NULL`.
 #'   Must contain columns matching `vars$subjid`, `vars$visit`, `vars$group`, and a `delta` column.
 #' @param ... Additional arguments passed to the analysis function `fun`.
+#' @param pooling Optional length-one character giving the pooling strategy
+#'   directly: `"rubin"`, `"bootstrap"`, `"jackknife"`, or `"bmlmi"`. Use this
+#'   when the imputation method that produced `data` is unknown. Supply either
+#'   `method` or `pooling`; if both are given they must agree (see
+#'   [get_pooling()]). For an imputed dataset of unknown provenance,
+#'   `pooling = "rubin"` is recommended: `"bootstrap"` and `"jackknife"`
+#'   pooling assume a specific ordering of samples (original-data estimate
+#'   first for bootstrap) that cannot be verified without the method object,
+#'   and `"bmlmi"` cannot be selected via `pooling` alone because the number
+#'   of analyses per imputation (D) is not inferable from the data. When only
+#'   `pooling` is supplied, the number of imputations is taken from the data
+#'   and no sample-count check is performed. In this case, the returned
+#'   object's `method` element is a constructed stand-in consistent with the
+#'   chosen pooling strategy, not the true imputation method — it exists only
+#'   to satisfy [rbmi::pool()]'s internal validation, and `print()`/`summary()`
+#'   report it as not supplied rather than as a real method.
 #'
 #' @details
 #' The function loops through distinct imputation datasets (identified by `IMPID`), applies the provided analysis function `fun`, and stores the results for later pooling. If a `delta` dataset is provided, it will be merged with the imputed data to apply the specified delta adjustment before analysis.
@@ -32,6 +49,7 @@
 #' * [rbmi::pool()] for pooling the analysis results
 #' * The [rbmi quickstart vignette](https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html)
 #' * [tidy_pool_obj()] to format pooled results for publication
+#' * [get_pooling()] for the method-to-pooling mapping
 
 #' * [get_imputed_data()] to extract imputed datasets from rbmi objects
 #' * [expand_imputed_data()] to reconstruct full imputed data from reduced form
@@ -78,6 +96,14 @@
 #'   delta = NULL   # No sensitivity analysis adjustment
 #' )
 #'
+#' # When the imputation method is unknown, specify pooling directly:
+#' ana_obj <- analyse_mi_data(
+#'   data = ADMI,
+#'   vars = vars,
+#'   pooling = "rubin",
+#'   fun = ancova
+#' )
+#'
 #' @export
 analyse_mi_data <- function(
   data = NULL,
@@ -85,8 +111,11 @@ analyse_mi_data <- function(
   method = NULL,
   fun = rbmi::ancova,
   delta = NULL,
-  ...
+  ...,
+  pooling = NULL
 ) {
+  method_supplied <- !is.null(method)
+
   # Check for missing inputs
   if (is.null(data)) {
     cli::cli_abort(
@@ -150,12 +179,35 @@ analyse_mi_data <- function(
     )
   }
 
-  # Check method is provided
-  if (is.null(method)) {
+  # Resolve method / pooling: either may be supplied; both must agree
+  valid_pooling <- c("rubin", "bootstrap", "jackknife", "bmlmi")
+  if (!is.null(pooling) &&
+      (!is.character(pooling) || length(pooling) != 1 ||
+         !pooling %in% valid_pooling)) {
     cli::cli_abort(
-      "{.arg method} cannot be NULL. Specify a method using {.fn rbmi::method_bayes} or similar.",
+      "{.arg pooling} must be one of {.val {valid_pooling}}.",
       class = c("rbmiUtils_error_validation", "rbmiUtils_error")
     )
+  }
+  if (is.null(method) && is.null(pooling)) {
+    cli::cli_abort(
+      c(
+        "Either {.arg method} or {.arg pooling} must be supplied.",
+        "i" = "Use {.fn rbmi::method_bayes} or similar if the imputation method is known.",
+        "i" = "If it is unknown, specify the pooling strategy directly, e.g. {.code pooling = \"rubin\"}."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
+  if (!is.null(method)) {
+    method_pooling <- get_pooling(method)
+    if (!is.null(pooling) && !identical(pooling, method_pooling)) {
+      cli::cli_abort(
+        "{.arg pooling} ({.val {pooling}}) conflicts with {.arg method}, which implies {.val {method_pooling}}. Supply one or the other.",
+        class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+      )
+    }
+    pooling <- method_pooling
   }
 
   # Check for empty data
@@ -175,45 +227,51 @@ analyse_mi_data <- function(
     )
   }
 
-  # Extract expected number of samples from method using inherits()
-  n_expected <- if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
-    method$n_samples
-  } else if (inherits(method, "condmean")) {
-    method$n_samples
-  } else if (inherits(method, "bmlmi")) {
-    method$n_samples
-  } else {
-    NULL
-  }
-
-  # Check and filter IMPID values to match expected sample size
+  # Count imputations present in the data
   unique_impids <- sort(unique(data$IMPID))
   n_impids <- length(unique_impids)
 
-  if (!is.null(n_expected) && n_impids != n_expected) {
-    if (n_impids > n_expected) {
-      # Filter to first n_expected imputations
-      cli::cli_warn(
-        "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Using first {n_expected} imputation{?s}."
-      )
-      # Filter data to only include the first n_expected IMPID values
-      keep_impids <- unique_impids[seq_len(n_expected)]
-      data <- data[data$IMPID %in% keep_impids, ]
+  if (method_supplied) {
+    # Extract expected number of samples from method using inherits()
+    n_expected <- if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
+      method$n_samples
+    } else if (inherits(method, "condmean")) {
+      method$n_samples
+    } else if (inherits(method, "bmlmi")) {
+      method$n_samples
+    } else {
+      NULL
+    }
 
-      # Verify filtering worked
-      n_after <- length(unique(data$IMPID))
-      if (n_after != n_expected) {
+    # Check and filter IMPID values to match expected sample size
+    if (!is.null(n_expected) && n_impids != n_expected) {
+      if (n_impids > n_expected) {
+        # Filter to first n_expected imputations
+        cli::cli_warn(
+          "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Using first {n_expected} imputation{?s}."
+        )
+        keep_impids <- unique_impids[seq_len(n_expected)]
+        data <- data[data$IMPID %in% keep_impids, ]
+
+        n_after <- length(unique(data$IMPID))
+        if (n_after != n_expected) {
+          cli::cli_abort(
+            "Internal error: filtering failed. Expected {n_expected} imputations, got {n_after}.",
+            class = c("rbmiUtils_error_internal", "rbmiUtils_error")
+          )
+        }
+      } else {
         cli::cli_abort(
-          "Internal error: filtering failed. Expected {n_expected} imputations, got {n_after}.",
-          class = c("rbmiUtils_error_internal", "rbmiUtils_error")
+          "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Need more imputations.",
+          class = c("rbmiUtils_error_validation", "rbmiUtils_error")
         )
       }
-    } else {
-      cli::cli_abort(
-        "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Need more imputations.",
-        class = c("rbmiUtils_error_validation", "rbmiUtils_error")
-      )
     }
+  } else {
+    # No method supplied: the data defines the number of imputations.
+    # Build a stand-in method so downstream rbmi::pool() validation
+    # (which asserts result counts against method$n_samples) passes.
+    method <- make_standin_method(pooling, n_impids)
   }
 
   ## check delta has correct variables and then apply
@@ -305,18 +363,7 @@ as_analysis2 <- function(
     details = "Internal helper will be removed. Use inherits()-based class detection directly."
   )
 
-  next_class <- if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
-    "rubin"
-  } else if (inherits(method, "condmean")) {
-    if (method$type == "jackknife") "jackknife" else "bootstrap"
-  } else if (inherits(method, "bmlmi")) {
-    "bmlmi"
-  } else {
-    cli::cli_abort(
-      "Unrecognized method class: {.cls {class(method)}}. Expected one of: bayes, approxbayes, condmean, bmlmi.",
-      class = c("rbmiUtils_error_dependency", "rbmiUtils_error")
-    )
-  }
+  next_class <- get_pooling(method)
 
   if (!is.list(results)) {
     cli::cli_abort(
@@ -382,7 +429,9 @@ print.analysis <- function(x, ...) {
   cli::cli_rule()
 
   # Method detection (inherits-based, hardened in 01-02)
-  method_class <- if (inherits(x$method, "bayes")) {
+  method_class <- if (inherits(x$method, "rbmiUtils_standin")) {
+    sprintf("<not supplied; pooling = \"%s\">", get_pooling(x$method))
+  } else if (inherits(x$method, "bayes")) {
     "bayes"
   } else if (inherits(x$method, "approxbayes")) {
     "approxbayes"
@@ -471,7 +520,10 @@ summary.analysis <- function(object, n_preview = 5, ...) {
 
   # Method section (inherits-based, hardened in 01-02)
   cli::cli_h2("Method")
-  method_class <- if (inherits(object$method, "bayes")) {
+  is_standin <- inherits(object$method, "rbmiUtils_standin")
+  method_class <- if (is_standin) {
+    sprintf("<not supplied; pooling = \"%s\">", get_pooling(object$method))
+  } else if (inherits(object$method, "bayes")) {
     "bayes"
   } else if (inherits(object$method, "approxbayes")) {
     "approxbayes"
@@ -484,7 +536,7 @@ summary.analysis <- function(object, n_preview = 5, ...) {
   }
   cli::cli_text("{.field Type}: {method_class}")
 
-  if (method_class %in% c("bayes", "approxbayes")) {
+  if (!is_standin && method_class %in% c("bayes", "approxbayes")) {
     if (!is.null(object$method$n_samples)) {
       n_samples <- object$method$n_samples
       cli::cli_text("{.field Samples}: {n_samples}")
@@ -540,4 +592,55 @@ summary.analysis <- function(object, n_preview = 5, ...) {
   )
 
   invisible(summary_info)
+}
+
+#' Construct a Stand-in Method Object for a Pooling Strategy
+#'
+#' When [analyse_mi_data()] is called with `pooling` but no `method`, a
+#' method object consistent with the observed number of imputations is
+#' required so that `rbmi::pool()` validation passes (`rbmi` asserts result
+#' counts against `method$n_samples`).
+#'
+#' @param pooling Length-one character: `"rubin"`, `"bootstrap"`,
+#'   `"jackknife"`, or `"bmlmi"`.
+#' @param n_imps Number of distinct imputations observed in the data.
+#'
+#' @return An `rbmi` method object, additionally classed
+#'   `"rbmiUtils_standin"` so callers (e.g. `print.analysis()`,
+#'   `summary.analysis()`) can detect that the method was constructed rather
+#'   than supplied by the user, without affecting `inherits()` checks against
+#'   the underlying `rbmi` method classes (`bayes`, `condmean`, etc.).
+#' @keywords internal
+#' @noRd
+make_standin_method <- function(pooling, n_imps) {
+  if (identical(pooling, "bootstrap") && n_imps < 2) {
+    cli::cli_abort(
+      c(
+        "{.val bootstrap} pooling needs at least 2 imputations, got {n_imps}.",
+        "i" = "Bootstrap pooling treats the first imputation as the original-data estimate and the rest as bootstrap replicates, so at least one replicate is required."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
+
+  m <- switch(
+    pooling,
+    rubin = rbmi::method_bayes(n_samples = n_imps),
+    bootstrap = rbmi::method_condmean(type = "bootstrap", n_samples = n_imps - 1),
+    jackknife = rbmi::method_condmean(type = "jackknife"),
+    bmlmi = cli::cli_abort(
+      c(
+        "{.val bmlmi} pooling cannot be selected via {.arg pooling} alone.",
+        "i" = "BMLMI pooling needs the number of analyses per imputation (D), which cannot be inferred from the data.",
+        "i" = "Supply {.code method = rbmi::method_bmlmi(B = , D = )} instead."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    ),
+    cli::cli_abort(
+      "Internal error: unrecognized pooling strategy {.val {pooling}}.",
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  )
+
+  structure(m, class = c("rbmiUtils_standin", class(m)))
 }

@@ -18,3 +18,5 @@
 ^pkgdown$
 ^check\.sh$
 ^\.Rprofile$
+^\.positai$
+^\.remember$

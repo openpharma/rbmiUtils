@@ -40,7 +40,7 @@ test_that("Error when data is NULL", {
 })
 
 test_that("Error when IMPID is missing from data", {
-  ADMI_no_impid <- ADMI %>% select(-IMPID)
+  ADMI_no_impid <- ADMI |> dplyr::select(-IMPID)
   expect_error(
     analyse_mi_data(data = ADMI_no_impid, vars = vars),
     class = "rbmiUtils_error_validation"
@@ -533,6 +533,52 @@ test_that("analyse_mi_data output is compatible with rbmi::pool", {
 
 
 # =============================================================================
+# Tests for pooling argument validation (Task 2)
+# =============================================================================
+
+test_that("Error when both method and pooling are NULL", {
+  expect_error(
+    analyse_mi_data(data = ADMI, vars = vars, fun = dummy_analysis_fun),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("Error when pooling is not a valid strategy", {
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, pooling = "banana", fun = dummy_analysis_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, pooling = c("rubin", "bootstrap"),
+      fun = dummy_analysis_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("Error when method and pooling conflict", {
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, method = method, pooling = "jackknife",
+      fun = dummy_analysis_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("Consistent method and pooling together are accepted", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, method = method, pooling = "rubin",
+    fun = dummy_analysis_fun
+  )
+  expect_s3_class(ana_obj, "analysis")
+})
+
+
+# =============================================================================
 # Tests for enhanced print.analysis and summary.analysis (02-02)
 # =============================================================================
 
@@ -659,4 +705,207 @@ test_that("summary.analysis returns summary list", {
   expect_false(result$has_delta)
   expect_equal(result$method_type, "bayes")
   expect_equal(result$pooling_method, "rubin")
+})
+
+
+# =============================================================================
+# Tests for pooling-only path (Task 3)
+# =============================================================================
+
+# Analysis function returning the structure rbmi::pool() expects:
+# a named list of parameters, each with est/se/df
+pool_ready_fun <- function(data, vars, ...) {
+  x <- data[[vars$outcome]]
+  list(
+    trt = list(
+      est = mean(x, na.rm = TRUE),
+      se = stats::sd(x, na.rm = TRUE) / sqrt(sum(!is.na(x))),
+      df = sum(!is.na(x)) - 1
+    )
+  )
+}
+
+test_that("pooling-only path produces an object rbmi::pool() accepts", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "rubin", fun = pool_ready_fun
+  )
+  expect_s3_class(ana_obj, "analysis")
+  expect_s3_class(ana_obj$results, "rubin")
+
+  pool_obj <- rbmi::pool(ana_obj)
+  expect_s3_class(pool_obj, "pool")
+  expect_true(is.finite(pool_obj$pars$trt$est))
+})
+
+test_that("pooling-only and method paths give identical pooled results", {
+  ana_pooling <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "rubin", fun = pool_ready_fun
+  )
+  ana_method <- analyse_mi_data(
+    data = ADMI, vars = vars, method = method, fun = pool_ready_fun
+  )
+  expect_identical(
+    rbmi::pool(ana_pooling)$pars,
+    rbmi::pool(ana_method)$pars
+  )
+})
+
+test_that("pooling-only path skips the n_samples check", {
+  # method expects 5 imputations; take only 3 and use pooling directly
+  admi_3 <- ADMI[ADMI$IMPID %in% 1:3, ]
+  expect_no_warning(
+    ana_obj <- analyse_mi_data(
+      data = admi_3, vars = vars, pooling = "rubin", fun = pool_ready_fun
+    )
+  )
+  expect_length(ana_obj$results, 3)
+  expect_s3_class(rbmi::pool(ana_obj), "pool")
+})
+
+test_that("n_samples check still enforced when method is supplied", {
+  admi_3 <- ADMI[ADMI$IMPID %in% 1:3, ]
+  expect_error(
+    analyse_mi_data(
+      data = admi_3, vars = vars, method = method, fun = pool_ready_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("pooling = 'bmlmi' without method errors with guidance", {
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, pooling = "bmlmi", fun = pool_ready_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("jackknife pooling-only path sets the jackknife results class", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "jackknife", fun = pool_ready_fun
+  )
+  expect_s3_class(ana_obj$results, "jackknife")
+
+  # rbmi::pool() should succeed on the jackknife stand-in path (F2)
+  pool_obj <- rbmi::pool(ana_obj)
+  expect_s3_class(pool_obj, "pool")
+})
+
+
+# =============================================================================
+# Tests for bootstrap pooling-only path (final review F2)
+# =============================================================================
+
+test_that("pooling = 'bootstrap' without method produces a bootstrap analysis and pool() succeeds", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "bootstrap", fun = pool_ready_fun
+  )
+  expect_s3_class(ana_obj, "analysis")
+  expect_s3_class(ana_obj$results, "bootstrap")
+
+  pool_obj <- rbmi::pool(ana_obj)
+  expect_s3_class(pool_obj, "pool")
+})
+
+
+# =============================================================================
+# Tests for bootstrap stand-in guard with too few imputations (final review F3)
+# =============================================================================
+
+test_that("pooling = 'bootstrap' errors informatively with fewer than 2 imputations", {
+  admi_1 <- ADMI[ADMI$IMPID == 1, ]
+  expect_error(
+    analyse_mi_data(
+      data = admi_1, vars = vars, pooling = "bootstrap", fun = pool_ready_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("make_standin_method errors informatively for bootstrap with n_imps < 2", {
+  expect_error(
+    make_standin_method("bootstrap", 1),
+    class = "rbmiUtils_error_validation"
+  )
+  expect_error(
+    make_standin_method("bootstrap", 0),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# =============================================================================
+# Tests for make_standin_method() default arm (final review F4)
+# =============================================================================
+
+test_that("make_standin_method aborts informatively on an unknown pooling string", {
+  expect_error(
+    make_standin_method("banana", 5),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+
+# =============================================================================
+# Tests for stand-in method provenance tagging (final review F1)
+# =============================================================================
+
+test_that("make_standin_method tags the stand-in without breaking class detection", {
+  m_rubin <- make_standin_method("rubin", 5)
+  expect_true(inherits(m_rubin, "bayes"))
+  expect_true(inherits(m_rubin, "rbmiUtils_standin"))
+  expect_identical(get_pooling(m_rubin), "rubin")
+
+  m_boot <- make_standin_method("bootstrap", 5)
+  expect_true(inherits(m_boot, "condmean"))
+  expect_true(inherits(m_boot, "rbmiUtils_standin"))
+  expect_identical(get_pooling(m_boot), "bootstrap")
+
+  m_jack <- make_standin_method("jackknife", 5)
+  expect_true(inherits(m_jack, "condmean"))
+  expect_true(inherits(m_jack, "rbmiUtils_standin"))
+  expect_identical(get_pooling(m_jack), "jackknife")
+})
+
+test_that("print.analysis for a pooling-only object does not claim a fabricated method", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "rubin", fun = pool_ready_fun
+  )
+  out_text <- capture_cli_output(print(ana_obj))
+
+  # Must NOT assert Bayesian provenance the user never claimed
+  expect_false(grepl("Method:\\s*bayes\\b", out_text))
+  # Must indicate the method was not supplied, and show the pooling used
+  expect_true(grepl("not supplied", out_text, ignore.case = TRUE))
+  expect_true(grepl("rubin", out_text))
+})
+
+test_that("summary.analysis for a pooling-only object does not claim a fabricated method", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "jackknife", fun = pool_ready_fun
+  )
+  out_text <- capture_cli_output(summary(ana_obj))
+
+  # Must NOT assert condmean provenance the user never claimed
+  expect_false(grepl("Type:\\s*condmean\\b", out_text))
+  expect_true(grepl("not supplied", out_text, ignore.case = TRUE))
+  expect_true(grepl("jackknife", out_text))
+
+  result <- NULL
+  capture_cli_output(result <- summary(ana_obj))
+  expect_false(identical(result$method_type, "condmean"))
+})
+
+test_that("print.analysis and summary.analysis are unaffected when method is supplied (no regression)", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, method = method, fun = pool_ready_fun
+  )
+  out_print <- capture_cli_output(print(ana_obj))
+  expect_true(grepl("Method:\\s*bayes\\b", out_print))
+  expect_false(grepl("not supplied", out_print, ignore.case = TRUE))
+
+  out_summary <- capture_cli_output(summary(ana_obj))
+  expect_true(grepl("Type:\\s*bayes\\b", out_summary))
+  expect_false(grepl("not supplied", out_summary, ignore.case = TRUE))
 })

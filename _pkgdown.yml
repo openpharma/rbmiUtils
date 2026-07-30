@@ -53,6 +53,7 @@ reference:
     desc: "Apply analysis functions across imputed datasets"
     contents:
       - analyse_mi_data
+      - get_pooling
       - gcomp_responder
       - gcomp_responder_multi
       - gcomp_binary

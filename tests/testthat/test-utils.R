@@ -6,7 +6,7 @@ test_that("positive test get_imputed_data (from vignettes)", {
   N_IMPUTATIONS <- 100
 
   # Prepare the data
-  ADEFF <- ADEFF %>%
+  ADEFF <- ADEFF |>
     dplyr::mutate(
       TRT = factor(TRT01P, levels = c("Placebo", "Drug A")),
       USUBJID = factor(USUBJID),
@@ -32,8 +32,8 @@ test_that("positive test get_imputed_data (from vignettes)", {
   )
 
   # Subset relevant columns
-  dat <- ADEFF %>%
-    select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
+  dat <- ADEFF |>
+    dplyr::select(USUBJID, STRATA, REGION, REGIONC, TRT, BASE, CHG, AVISIT)
 
   # Fit the imputation model and perform imputation
   draws_obj <- rbmi::draws(
