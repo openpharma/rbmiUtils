@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,8 @@
 <span>  method <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fun <span class="op">=</span> <span class="fu">rbmi</span><span class="fu">::</span><span class="va"><a href="https://openpharma.github.io/rbmi/latest-tag/reference/ancova.html" class="external-link">ancova</a></span>,</span>
 <span>  delta <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  <span class="va">...</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  pooling <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -79,7 +80,8 @@ Created using <code><a href="https://openpharma.github.io/rbmi/latest-tag/refere
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>A method object specifying the imputation method used (e.g., Bayesian imputation).
-Created using <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_bayes()</a></code>, <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_approxbayes()</a></code>, or <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_condmean()</a></code>. Required.</p></dd>
+Created using <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_bayes()</a></code>, <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_approxbayes()</a></code>, or <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/method.html" class="external-link">rbmi::method_condmean()</a></code>.
+Optional if <code>pooling</code> is supplied.</p></dd>
 
 
 <dt id="arg-fun">fun<a class="anchor" aria-label="anchor" href="#arg-fun"></a></dt>
@@ -94,6 +96,25 @@ Must contain columns matching <code>vars$subjid</code>, <code>vars$visit</code>,
 
 <dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
 <dd><p>Additional arguments passed to the analysis function <code>fun</code>.</p></dd>
+
+
+<dt id="arg-pooling">pooling<a class="anchor" aria-label="anchor" href="#arg-pooling"></a></dt>
+<dd><p>Optional length-one character giving the pooling strategy
+directly: <code>"rubin"</code>, <code>"bootstrap"</code>, <code>"jackknife"</code>, or <code>"bmlmi"</code>. Use this
+when the imputation method that produced <code>data</code> is unknown. Supply either
+<code>method</code> or <code>pooling</code>; if both are given they must agree (see
+<code><a href="get_pooling.html">get_pooling()</a></code>). For an imputed dataset of unknown provenance,
+<code>pooling = "rubin"</code> is recommended: <code>"bootstrap"</code> and <code>"jackknife"</code>
+pooling assume a specific ordering of samples (original-data estimate
+first for bootstrap) that cannot be verified without the method object,
+and <code>"bmlmi"</code> cannot be selected via <code>pooling</code> alone because the number
+of analyses per imputation (D) is not inferable from the data. When only
+<code>pooling</code> is supplied, the number of imputations is taken from the data
+and no sample-count check is performed. In this case, the returned
+object's <code>method</code> element is a constructed stand-in consistent with the
+chosen pooling strategy, not the true imputation method — it exists only
+to satisfy <code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code>'s internal validation, and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code>
+report it as not supplied rather than as a real method.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -117,6 +138,7 @@ Pass this to <code><a href="https://openpharma.github.io/rbmi/latest-tag/referen
 <li><p><code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code> for pooling the analysis results</p></li>
 <li><p>The <a href="https://CRAN.R-project.org/package=rbmi/vignettes/quickstart.html" class="external-link">rbmi quickstart vignette</a></p></li>
 <li><p><code><a href="tidy_pool_obj.html">tidy_pool_obj()</a></code> to format pooled results for publication</p></li>
+<li><p><code><a href="get_pooling.html">get_pooling()</a></code> for the method-to-pooling mapping</p></li>
 <li><p><code><a href="get_imputed_data.html">get_imputed_data()</a></code> to extract imputed datasets from rbmi objects</p></li>
 <li><p><code><a href="expand_imputed_data.html">expand_imputed_data()</a></code> to reconstruct full imputed data from reduced form</p></li>
 <li><p><code><a href="gcomp_responder_multi.html">gcomp_responder_multi()</a></code> for binary outcome analysis</p></li>
@@ -177,6 +199,14 @@ Pass this to <code><a href="https://openpharma.github.io/rbmi/latest-tag/referen
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Data contains 100 imputations but method expects 20. Using first 20</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> imputations.</span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># When the imputation method is unknown, specify pooling directly:</span></span></span>
+<span class="r-in"><span><span class="va">ana_obj</span> <span class="op">&lt;-</span> <span class="fu">analyse_mi_data</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">ADMI</span>,</span></span>
+<span class="r-in"><span>  vars <span class="op">=</span> <span class="va">vars</span>,</span></span>
+<span class="r-in"><span>  pooling <span class="op">=</span> <span class="st">"rubin"</span>,</span></span>
+<span class="r-in"><span>  fun <span class="op">=</span> <span class="va">ancova</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -184,7 +214,7 @@ Pass this to <code><a href="https://openpharma.github.io/rbmi/latest-tag/referen
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mark Baillie, Tobias Mütze, Jack Talboys.</p>
+  <p>Developed by Mark Baillie, Tobias Muetze, Jack Talboys.</p>
 </div>
 
 <div class="pkgdown-footer-right">

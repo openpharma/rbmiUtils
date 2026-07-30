@@ -15,7 +15,7 @@ least-squares-mean type."><meta property="og:image" content="https://openpharma.
 
     <a class="navbar-brand me-2" href="../index.html">rbmiUtils</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,14 +109,14 @@ and m.imputations.</p>
 <li><p>Adding grouping columns (visit, parameter_type, lsm_type)</p></li>
 <li><p>Optionally enriching with MI diagnostic statistics when <code>analysis_obj</code>
 is provided</p></li>
-<li><p>Applying <code><a href="https://insightsengineering.github.io/cards/latest-tag/reference/as_card.html" class="external-link">cards::as_card()</a></code> and <code><a href="https://insightsengineering.github.io/cards/latest-tag/reference/tidy_ard_order.html" class="external-link">cards::tidy_ard_column_order()</a></code> for
+<li><p>Applying <code><a href="https://rdrr.io/pkg/cards/man/as_card.html" class="external-link">cards::as_card()</a></code> and <code><a href="https://rdrr.io/pkg/cards/man/tidy_ard_order.html" class="external-link">cards::tidy_ard_column_order()</a></code> for
 standard ARD structure</p></li>
 </ol><p>When <code>analysis_obj</code> is provided:</p><ul><li><p>For Rubin's rules pooling: diagnostic statistics (FMI, lambda, RIV,
 Barnard-Rubin adjusted df, relative efficiency) are computed per parameter
 using the per-imputation estimates, standard errors, and degrees of freedom.</p></li>
 <li><p>For non-Rubin pooling methods: an informative message is emitted and the
 base ARD is returned without diagnostic rows.</p></li>
-</ul><p>The resulting ARD passes <code><a href="https://insightsengineering.github.io/cards/latest-tag/reference/check_ard_structure.html" class="external-link">cards::check_ard_structure()</a></code> validation and is
+</ul><p>The resulting ARD passes <code><a href="https://rdrr.io/pkg/cards/man/check_ard_structure.html" class="external-link">cards::check_ard_structure()</a></code> validation and is
 suitable for downstream use with <span class="pkg">gtsummary</span>.</p>
     </div>
     <div class="section level2">
@@ -125,7 +125,7 @@ suitable for downstream use with <span class="pkg">gtsummary</span>.</p>
 <ul><li><p><code><a href="https://openpharma.github.io/rbmi/latest-tag/reference/pool.html" class="external-link">rbmi::pool()</a></code> for creating pool objects</p></li>
 <li><p><code><a href="analyse_mi_data.html">analyse_mi_data()</a></code> for creating analysis objects</p></li>
 <li><p><code><a href="tidy_pool_obj.html">tidy_pool_obj()</a></code> for the underlying data transformation</p></li>
-<li><p><code><a href="https://insightsengineering.github.io/cards/latest-tag/reference/as_card.html" class="external-link">cards::as_card()</a></code> and <code><a href="https://insightsengineering.github.io/cards/latest-tag/reference/check_ard_structure.html" class="external-link">cards::check_ard_structure()</a></code> for ARD validation</p></li>
+<li><p><code><a href="https://rdrr.io/pkg/cards/man/as_card.html" class="external-link">cards::as_card()</a></code> and <code><a href="https://rdrr.io/pkg/cards/man/check_ard_structure.html" class="external-link">cards::check_ard_structure()</a></code> for ARD validation</p></li>
 </ul></div>
     </div>
 
@@ -168,7 +168,7 @@ suitable for downstream use with <span class="pkg">gtsummary</span>.</p>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Mark Baillie, Tobias Mütze, Jack Talboys.</p>
+  <p>Developed by Mark Baillie, Tobias Muetze, Jack Talboys.</p>
 </div>
 
 <div class="pkgdown-footer-right">
