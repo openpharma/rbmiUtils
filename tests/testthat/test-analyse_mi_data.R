@@ -533,6 +533,52 @@ test_that("analyse_mi_data output is compatible with rbmi::pool", {
 
 
 # =============================================================================
+# Tests for pooling argument validation (Task 2)
+# =============================================================================
+
+test_that("Error when both method and pooling are NULL", {
+  expect_error(
+    analyse_mi_data(data = ADMI, vars = vars, fun = dummy_analysis_fun),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("Error when pooling is not a valid strategy", {
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, pooling = "banana", fun = dummy_analysis_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, pooling = c("rubin", "bootstrap"),
+      fun = dummy_analysis_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("Error when method and pooling conflict", {
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, method = method, pooling = "jackknife",
+      fun = dummy_analysis_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("Consistent method and pooling together are accepted", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, method = method, pooling = "rubin",
+    fun = dummy_analysis_fun
+  )
+  expect_s3_class(ana_obj, "analysis")
+})
+
+
+# =============================================================================
 # Tests for enhanced print.analysis and summary.analysis (02-02)
 # =============================================================================
 

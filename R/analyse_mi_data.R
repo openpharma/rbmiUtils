@@ -85,7 +85,8 @@ analyse_mi_data <- function(
   method = NULL,
   fun = rbmi::ancova,
   delta = NULL,
-  ...
+  ...,
+  pooling = NULL
 ) {
   # Check for missing inputs
   if (is.null(data)) {
@@ -150,12 +151,35 @@ analyse_mi_data <- function(
     )
   }
 
-  # Check method is provided
-  if (is.null(method)) {
+  # Resolve method / pooling: either may be supplied; both must agree
+  valid_pooling <- c("rubin", "bootstrap", "jackknife", "bmlmi")
+  if (!is.null(pooling) &&
+      (!is.character(pooling) || length(pooling) != 1 ||
+         !pooling %in% valid_pooling)) {
     cli::cli_abort(
-      "{.arg method} cannot be NULL. Specify a method using {.fn rbmi::method_bayes} or similar.",
+      "{.arg pooling} must be one of {.val {valid_pooling}}.",
       class = c("rbmiUtils_error_validation", "rbmiUtils_error")
     )
+  }
+  if (is.null(method) && is.null(pooling)) {
+    cli::cli_abort(
+      c(
+        "Either {.arg method} or {.arg pooling} must be supplied.",
+        "i" = "Use {.fn rbmi::method_bayes} or similar if the imputation method is known.",
+        "i" = "If it is unknown, specify the pooling strategy directly, e.g. {.code pooling = \"rubin\"}."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  }
+  if (!is.null(method)) {
+    method_pooling <- get_pooling(method)
+    if (!is.null(pooling) && !identical(pooling, method_pooling)) {
+      cli::cli_abort(
+        "{.arg pooling} ({.val {pooling}}) conflicts with {.arg method}, which implies {.val {method_pooling}}. Supply one or the other.",
+        class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+      )
+    }
+    pooling <- method_pooling
   }
 
   # Check for empty data
