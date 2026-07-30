@@ -706,3 +706,84 @@ test_that("summary.analysis returns summary list", {
   expect_equal(result$method_type, "bayes")
   expect_equal(result$pooling_method, "rubin")
 })
+
+
+# =============================================================================
+# Tests for pooling-only path (Task 3)
+# =============================================================================
+
+# Analysis function returning the structure rbmi::pool() expects:
+# a named list of parameters, each with est/se/df
+pool_ready_fun <- function(data, vars, ...) {
+  x <- data[[vars$outcome]]
+  list(
+    trt = list(
+      est = mean(x, na.rm = TRUE),
+      se = stats::sd(x, na.rm = TRUE) / sqrt(sum(!is.na(x))),
+      df = sum(!is.na(x)) - 1
+    )
+  )
+}
+
+test_that("pooling-only path produces an object rbmi::pool() accepts", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "rubin", fun = pool_ready_fun
+  )
+  expect_s3_class(ana_obj, "analysis")
+  expect_s3_class(ana_obj$results, "rubin")
+
+  pool_obj <- rbmi::pool(ana_obj)
+  expect_s3_class(pool_obj, "pool")
+  expect_true(is.finite(pool_obj$pars$trt$est))
+})
+
+test_that("pooling-only and method paths give identical pooled results", {
+  ana_pooling <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "rubin", fun = pool_ready_fun
+  )
+  ana_method <- analyse_mi_data(
+    data = ADMI, vars = vars, method = method, fun = pool_ready_fun
+  )
+  expect_identical(
+    rbmi::pool(ana_pooling)$pars,
+    rbmi::pool(ana_method)$pars
+  )
+})
+
+test_that("pooling-only path skips the n_samples check", {
+  # method expects 5 imputations; take only 3 and use pooling directly
+  admi_3 <- ADMI[ADMI$IMPID %in% 1:3, ]
+  expect_no_warning(
+    ana_obj <- analyse_mi_data(
+      data = admi_3, vars = vars, pooling = "rubin", fun = pool_ready_fun
+    )
+  )
+  expect_length(ana_obj$results, 3)
+  expect_s3_class(rbmi::pool(ana_obj), "pool")
+})
+
+test_that("n_samples check still enforced when method is supplied", {
+  admi_3 <- ADMI[ADMI$IMPID %in% 1:3, ]
+  expect_error(
+    analyse_mi_data(
+      data = admi_3, vars = vars, method = method, fun = pool_ready_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("pooling = 'bmlmi' without method errors with guidance", {
+  expect_error(
+    analyse_mi_data(
+      data = ADMI, vars = vars, pooling = "bmlmi", fun = pool_ready_fun
+    ),
+    class = "rbmiUtils_error_validation"
+  )
+})
+
+test_that("jackknife pooling-only path sets the jackknife results class", {
+  ana_obj <- analyse_mi_data(
+    data = ADMI, vars = vars, pooling = "jackknife", fun = pool_ready_fun
+  )
+  expect_s3_class(ana_obj$results, "jackknife")
+})

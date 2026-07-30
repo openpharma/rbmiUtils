@@ -88,6 +88,8 @@ analyse_mi_data <- function(
   ...,
   pooling = NULL
 ) {
+  method_supplied <- !is.null(method)
+
   # Check for missing inputs
   if (is.null(data)) {
     cli::cli_abort(
@@ -199,45 +201,51 @@ analyse_mi_data <- function(
     )
   }
 
-  # Extract expected number of samples from method using inherits()
-  n_expected <- if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
-    method$n_samples
-  } else if (inherits(method, "condmean")) {
-    method$n_samples
-  } else if (inherits(method, "bmlmi")) {
-    method$n_samples
-  } else {
-    NULL
-  }
-
-  # Check and filter IMPID values to match expected sample size
+  # Count imputations present in the data
   unique_impids <- sort(unique(data$IMPID))
   n_impids <- length(unique_impids)
 
-  if (!is.null(n_expected) && n_impids != n_expected) {
-    if (n_impids > n_expected) {
-      # Filter to first n_expected imputations
-      cli::cli_warn(
-        "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Using first {n_expected} imputation{?s}."
-      )
-      # Filter data to only include the first n_expected IMPID values
-      keep_impids <- unique_impids[seq_len(n_expected)]
-      data <- data[data$IMPID %in% keep_impids, ]
+  if (method_supplied) {
+    # Extract expected number of samples from method using inherits()
+    n_expected <- if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
+      method$n_samples
+    } else if (inherits(method, "condmean")) {
+      method$n_samples
+    } else if (inherits(method, "bmlmi")) {
+      method$n_samples
+    } else {
+      NULL
+    }
 
-      # Verify filtering worked
-      n_after <- length(unique(data$IMPID))
-      if (n_after != n_expected) {
+    # Check and filter IMPID values to match expected sample size
+    if (!is.null(n_expected) && n_impids != n_expected) {
+      if (n_impids > n_expected) {
+        # Filter to first n_expected imputations
+        cli::cli_warn(
+          "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Using first {n_expected} imputation{?s}."
+        )
+        keep_impids <- unique_impids[seq_len(n_expected)]
+        data <- data[data$IMPID %in% keep_impids, ]
+
+        n_after <- length(unique(data$IMPID))
+        if (n_after != n_expected) {
+          cli::cli_abort(
+            "Internal error: filtering failed. Expected {n_expected} imputations, got {n_after}.",
+            class = c("rbmiUtils_error_internal", "rbmiUtils_error")
+          )
+        }
+      } else {
         cli::cli_abort(
-          "Internal error: filtering failed. Expected {n_expected} imputations, got {n_after}.",
-          class = c("rbmiUtils_error_internal", "rbmiUtils_error")
+          "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Need more imputations.",
+          class = c("rbmiUtils_error_validation", "rbmiUtils_error")
         )
       }
-    } else {
-      cli::cli_abort(
-        "Data contains {n_impids} imputation{?s} but method expects {n_expected}. Need more imputations.",
-        class = c("rbmiUtils_error_validation", "rbmiUtils_error")
-      )
     }
+  } else {
+    # No method supplied: the data defines the number of imputations.
+    # Build a stand-in method so downstream rbmi::pool() validation
+    # (which asserts result counts against method$n_samples) passes.
+    method <- make_standin_method(pooling, n_impids)
   }
 
   ## check delta has correct variables and then apply
@@ -553,4 +561,36 @@ summary.analysis <- function(object, n_preview = 5, ...) {
   )
 
   invisible(summary_info)
+}
+
+
+#' Construct a Stand-in Method Object for a Pooling Strategy
+#'
+#' When [analyse_mi_data()] is called with `pooling` but no `method`, a
+#' method object consistent with the observed number of imputations is
+#' required so that `rbmi::pool()` validation passes (`rbmi` asserts result
+#' counts against `method$n_samples`).
+#'
+#' @param pooling Length-one character: `"rubin"`, `"bootstrap"`,
+#'   `"jackknife"`, or `"bmlmi"`.
+#' @param n_imps Number of distinct imputations observed in the data.
+#'
+#' @return An `rbmi` method object.
+#' @keywords internal
+#' @noRd
+make_standin_method <- function(pooling, n_imps) {
+  switch(
+    pooling,
+    rubin = rbmi::method_bayes(n_samples = n_imps),
+    bootstrap = rbmi::method_condmean(type = "bootstrap", n_samples = n_imps - 1),
+    jackknife = rbmi::method_condmean(type = "jackknife"),
+    bmlmi = cli::cli_abort(
+      c(
+        "{.val bmlmi} pooling cannot be selected via {.arg pooling} alone.",
+        "i" = "BMLMI pooling needs the number of analyses per imputation (D), which cannot be inferred from the data.",
+        "i" = "Supply {.code method = rbmi::method_bmlmi(B = , D = )} instead."
+      ),
+      class = c("rbmiUtils_error_validation", "rbmiUtils_error")
+    )
+  )
 }
