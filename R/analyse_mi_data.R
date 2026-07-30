@@ -305,18 +305,7 @@ as_analysis2 <- function(
     details = "Internal helper will be removed. Use inherits()-based class detection directly."
   )
 
-  next_class <- if (inherits(method, "bayes") || inherits(method, "approxbayes")) {
-    "rubin"
-  } else if (inherits(method, "condmean")) {
-    if (method$type == "jackknife") "jackknife" else "bootstrap"
-  } else if (inherits(method, "bmlmi")) {
-    "bmlmi"
-  } else {
-    cli::cli_abort(
-      "Unrecognized method class: {.cls {class(method)}}. Expected one of: bayes, approxbayes, condmean, bmlmi.",
-      class = c("rbmiUtils_error_dependency", "rbmiUtils_error")
-    )
-  }
+  next_class <- get_pooling(method)
 
   if (!is.list(results)) {
     cli::cli_abort(
