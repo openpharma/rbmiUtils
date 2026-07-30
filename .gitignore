@@ -11,3 +11,4 @@ scratch.R
 .gitlab-ci.yml
 .positai
 docs/superpowers/
+.remember/

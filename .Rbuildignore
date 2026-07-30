@@ -19,3 +19,4 @@
 ^check\.sh$
 ^\.Rprofile$
 ^\.positai$
+^\.remember$
